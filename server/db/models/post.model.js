@@ -9,14 +9,18 @@ const PostSchema = new mongoose.Schema({
 		unique: true,
 		lowercase: true
 	},
-	created: { type: Date, default: moment().format("L, h:mm:ss a") },
-	author: { type: String },
+	created: {
+		type: Date,
+		default: moment().format("L, h:mm:ss a"),
+		required: true
+	},
+	author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 	updatedAt: { type: Date, default: moment().format("L") },
 	body: String,
 	featuredImage: String,
 	tags: [String],
-	category: [{ type: mongoose.Schema.Types.ObjectId, ref: "category" }],
-	comments: [mongoose.Schema.Types.ObjectId],
+	category: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
+	comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comments" }],
 	status: {
 		type: String,
 		required: true,

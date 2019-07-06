@@ -3,6 +3,7 @@ const config = require("./db.config");
 
 // require models
 require("./models/post.model");
+require("./models/category.model");
 
 module.exports.connect = () => {
 	mongoose
