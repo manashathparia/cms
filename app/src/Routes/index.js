@@ -1,11 +1,12 @@
 import React from "react";
-import { Switch } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import Error404 from "../Containers/404";
+import NewPost from "../Containers/Post/NewPost";
 
 export default function(props) {
 	return (
 		<Switch>
-			<Error404 />
+			<Route exact path="/posts/new" component={NewPost} />
 		</Switch>
 	);
 }

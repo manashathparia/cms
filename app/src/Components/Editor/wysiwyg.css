@@ -1,0 +1,10 @@
+.wysiwyg-editor {
+	padding: 10px !important;
+	border: 1px solid #f1f1f1;
+	min-height: 400px !important;
+	max-height: 550px;
+}
+
+.wysiwyg {
+	border: 1px solid #dad5d5;
+}

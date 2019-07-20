@@ -7,7 +7,7 @@
 		"build": "cd ./app/ && npm run build && cp -r build/* ../public",
 		"start": "npm run build && node src/server/server.js",
 		"client": "cd ./app/ && npm start ",
-		"server": "nodemon server/server.js",
+		"server": "nodemon --ignore /app/**/* server/server.js",
 		"dev": "concurrently \"npm run server\" \"npm run client\""
 	},
 	"author": "Manash athparia",

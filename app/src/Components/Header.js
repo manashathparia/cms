@@ -11,7 +11,7 @@ import { toogleDrawer } from "../Actions/navigationActions";
 
 const useStyles = makeStyles(theme => ({
 	appBar: {
-		position: "absolute",
+		background: "#6200ee",
 		zIndex: 9999999
 	},
 	menuButton: {

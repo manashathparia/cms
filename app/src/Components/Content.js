@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 
 const styles = makeStyles(theme => ({
 	toolbar: theme.mixins.toolbar,
@@ -25,11 +25,12 @@ const styles = makeStyles(theme => ({
 	}
 }));
 
-function Content({ children, drawerOpen }) {
+export default function Content({ children }) {
+	const drawerOpen = useSelector(state => state.navigation.desktopDrawerOpen);
 	const classes = styles();
 	return (
 		<main
-			style={{ paddingTop: "0 !important", padding: "14px" }}
+			style={{ padding: 0 }}
 			className={clsx(classes.content, {
 				[classes.contentShift]: drawerOpen
 			})}
@@ -39,7 +40,3 @@ function Content({ children, drawerOpen }) {
 		</main>
 	);
 }
-
-export default connect(({ navigation }) => ({
-	drawerOpen: navigation.desktopDrawerOpen
-}))(Content);
