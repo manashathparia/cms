@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
+import Paper from "@material-ui/core/Paper";
 import { useSelector } from "react-redux";
 
 const styles = makeStyles(theme => ({
@@ -36,7 +37,7 @@ export default function Content({ children }) {
 			})}
 		>
 			<div className={classes.toolbar} />
-			{children}
+			<Paper style={{ padding: "14px" }}>{children}</Paper>
 		</main>
 	);
 }

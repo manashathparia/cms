@@ -10,7 +10,7 @@ import {
 const initialState = {
 	title: "",
 	slug: "",
-	body: "<p>hello manash</p>",
+	body: "<p></p>",
 	category: [],
 	tags: [],
 	featuredImage: "",

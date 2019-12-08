@@ -93,7 +93,6 @@ const Category = mongoose.model("Category");
 
 const getCategories = async (req, res) => {
 	try {
-		// Get all the categories since, the number of categories are limited.
 		const _categories = await Category.find();
 		res.json({ success: true, data: _categories });
 	} catch (e) {
@@ -115,7 +114,7 @@ const saveCategory = async (req, res) => {
 	}
 	try {
 		await Category.create(req.body);
-		res.json({ success: true });
+		res.json({ success: true, data: req.body });
 	} catch (e) {
 		res.status(400).json({
 			success: true,

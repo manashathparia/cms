@@ -7,6 +7,7 @@ export default function(props) {
 	return (
 		<Switch>
 			<Route exact path="/posts/new" component={NewPost} />
+			<Route component={Error404} />
 		</Switch>
 	);
 }

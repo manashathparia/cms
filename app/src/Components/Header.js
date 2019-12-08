@@ -37,7 +37,7 @@ function Header(props) {
 						<MenuIcon />
 					</IconButton>
 					<Typography variant="h6" noWrap>
-						Responsive drawer
+						Node CMS
 					</Typography>
 				</Toolbar>
 			</AppBar>
