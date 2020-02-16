@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+import Checkbox from "@material-ui/core/Checkbox";
+import Button from "@material-ui/core/Button";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { connect } from "react-redux";
 import Wysiwyg from "./wysiwyg";
 import {
 	updateEditorBody,
 	updateEditorTitle,
-	updateEditorSlug
+	updateEditorSlug,
+	saveDraft
 } from "../../Actions/editorActions";
 import FeaturedImage from "./FeaturedImage";
 import Categories from "./categories";
+import Tags from "./tags";
 
 const capitalize = s => {
 	if (typeof s !== "string") return s;
@@ -48,6 +53,21 @@ function Editor(props) {
 			<Grid style={{ padding: "10px", paddingTop: 0 }} item xs={12} sm={2}>
 				<FeaturedImage />
 				<Categories />
+				<Tags />
+				<br />
+				<FormControlLabel
+					control={
+						<Checkbox
+							checked={props.saveDraft}
+							onChange={props.handleStatusChange}
+						></Checkbox>
+					}
+					label="Draft"
+				/>
+				<br />
+				<Button variant="contained">
+					{props.saveDraft ? "Save Draft" : "Publish"}
+				</Button>
 			</Grid>
 		</Grid>
 	);
@@ -56,7 +76,8 @@ function Editor(props) {
 const mapStateToProps = ({ editor }) => ({
 	body: editor.body,
 	title: editor.title,
-	slug: editor.slug
+	slug: editor.slug,
+	saveDraft: editor.saveDraft
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -76,6 +97,9 @@ const mapDispatchToProps = dispatch => ({
 		dispatch(
 			updateEditorSlug(e.target.value.replace(/\s/g, "-").toLowerCase())
 		);
+	},
+	handleStatusChange() {
+		dispatch(saveDraft());
 	}
 });
 

@@ -21,6 +21,7 @@ import {
 	addCategory,
 	updateaAllCategories
 } from "../../Actions/categoryActions";
+import { updateCategory } from "../../Actions/editorActions";
 
 const styles = theme => ({
 	root: {
@@ -73,17 +74,17 @@ const Category = props => {
 		if (addCategoryValue === "") {
 			return;
 		}
-		const category = await Axios.post("/api/categories", {
+		const res = await Axios.post("/api/categories", {
 			category: addCategoryValue
 		});
-		if (category.status === 201) {
-			props.AddCategory(category.data);
+		if (res.status === 200) {
+			props.addCategory(res.data.data);
 		}
 		handleAddCategoryDialog();
 	};
 
 	const checkedCategories = id => {
-		const categories = props.postForm.category;
+		const categories = props.editorCategory;
 		let checked = false;
 		for (let i = 0; i < categories.length; i++) {
 			if (categories[i] === id) {
@@ -165,11 +166,13 @@ const Category = props => {
 };
 
 const mapStateToProps = state => ({
-	categories: state.content.categories
+	categories: state.content.categories,
+	editorCategory: state.editor.category
 });
 const mapDispatchToProps = dispatch => ({
 	addCategory: category => dispatch(addCategory(category)),
-	getCategories: () => dispatch(updateaAllCategories())
+	getCategories: () => dispatch(updateaAllCategories()),
+	handleChange: e => dispatch(updateCategory(e.target.value))
 });
 
 export default connect(

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 import Add from "@material-ui/icons/Add";
+import axios from "axios";
+import { connect } from "react-redux";
+import { updateEditorFeaturedImage } from "../../Actions/editorActions";
 
 function readFile(file) {
 	return new Promise((resolve, reject) => {
@@ -16,7 +19,7 @@ function readFile(file) {
 	});
 }
 
-export default function FeaturedImage(props) {
+function FeaturedImage(props) {
 	const AddIcon = (
 		<Add
 			style={{
@@ -31,11 +34,24 @@ export default function FeaturedImage(props) {
 	);
 	const [image, updateImage] = useState(props.featuredImage || AddIcon);
 
-	async function readImage(e) {
-		const img = await readFile(e.target.files[0]);
-		updateImage(
-			<img alt="" style={{ width: "100%", height: "100%" }} src={img} />
-		);
+	async function handleUploadImage(e) {
+		const file = e.target.files[0];
+		try {
+			const image = await readFile(file);
+			updateImage(
+				<img
+					alt="featured"
+					style={{ width: "100%", height: "100%" }}
+					src={image}
+				/>
+			);
+			let formData = new FormData();
+			formData.append("image", file);
+			const res = await axios.post("/api/upload/image", formData);
+			props.updateToEditor(`/uploads/${res.data.filename}`);
+		} catch (e) {
+			updateImage(AddIcon);
+		}
 	}
 
 	return (
@@ -56,7 +72,7 @@ export default function FeaturedImage(props) {
 						style={{ display: "none" }}
 						id="featuredImage"
 						type="file"
-						onChange={readImage}
+						onChange={handleUploadImage}
 					/>
 
 					{image}
@@ -65,3 +81,12 @@ export default function FeaturedImage(props) {
 		</div>
 	);
 }
+
+export default connect(
+	state => ({
+		featuredImage: state.editor.featuredImage
+	}),
+	dispatch => ({
+		updateToEditor: url => dispatch(updateEditorFeaturedImage(url))
+	})
+)(FeaturedImage);
