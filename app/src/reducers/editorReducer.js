@@ -6,7 +6,9 @@ import {
 	ADD_EDITOR_TAG,
 	REMOVE_EDITOR_TAG,
 	UPDATE_EDITOR_FEATURED_IMAGE,
-	SAVE_AS_DRAFT
+	SAVE_AS_DRAFT,
+	CLEAR_EDITOR,
+	LOAD_POST_TO_EDITOR
 } from "../constants";
 
 const initialState = {
@@ -47,6 +49,12 @@ export default function editorReducer(state = initialState, { type, payload }) {
 
 		case SAVE_AS_DRAFT:
 			return { ...state, saveDraft: !state.saveDraft };
+
+		case CLEAR_EDITOR:
+			return initialState;
+
+		case LOAD_POST_TO_EDITOR:
+			return { ...payload[0] };
 
 		default:
 			return state;

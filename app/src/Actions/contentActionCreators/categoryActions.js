@@ -3,7 +3,7 @@ import {
 	UPDATE_ALL_CATEGORIES,
 	ADD_CATEGORY,
 	REMOVE_CATEGORY
-} from "../constants";
+} from "../../constants";
 
 export const updateaAllCategories = () => dispatch => {
 	axios.get("/api/categories").then(res =>

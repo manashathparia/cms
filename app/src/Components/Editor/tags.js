@@ -8,7 +8,7 @@ import { addTag, deleteTag } from "../../Actions/editorActions";
 
 const styles = () => ({
 	parent: {
-		width: "95%",
+		width: "100%",
 		marginTop: "10px",
 		border: "0.5px solid #ccc",
 		borderRadius: "2px"
@@ -16,7 +16,6 @@ const styles = () => ({
 	div: {
 		padding: "10px"
 	},
-	inputDiv: { padding: "0 5px" },
 	chip: {
 		marginBottom: "5px",
 		marginLeft: "auto",
@@ -42,7 +41,9 @@ const Tags = props => {
 
 	const { classes, handleDeleteTag, tags } = props;
 	return (
-		<div className={classes.parent}>
+		<div className={`${classes.parent} tags`}>
+			{" "}
+			{/* adding aditional class to use global CSS. refer to ./app.css */}
 			<div className={classes.div}>
 				<Label>Tags</Label>
 			</div>

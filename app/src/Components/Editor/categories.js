@@ -20,7 +20,7 @@ import Add from "@material-ui/icons/Add";
 import {
 	addCategory,
 	updateaAllCategories
-} from "../../Actions/categoryActions";
+} from "../../Actions/contentActionCreators/categoryActions";
 import { updateCategory } from "../../Actions/editorActions";
 
 const styles = theme => ({
@@ -29,11 +29,12 @@ const styles = theme => ({
 		flexWrap: "wrap",
 
 		borderRadius: "3px",
-		width: "95%",
-		marginTop: "10px"
+		width: "100%",
+		marginTop: "10px",
+		border: "1px solid rgba(0, 0, 0, 0.23)"
 	},
 	formControl: {
-		margin: theme.spacing.unit,
+		margin: theme.spacing(),
 		minWidth: 120,
 		maxWidth: 300,
 		width: "100%"
@@ -43,13 +44,15 @@ const styles = theme => ({
 		flexWrap: "wrap"
 	},
 	chip: {
-		margin: theme.spacing.unit / 4
+		margin: theme.spacing(4)
 	},
 	noLabel: {
-		marginTop: theme.spacing.unit * 3
+		marginTop: theme.spacing(3)
 	},
 	width: {
-		width: "100%"
+		width: "100%",
+		paddingTop: 0,
+		paddingBottom: 0
 	}
 });
 

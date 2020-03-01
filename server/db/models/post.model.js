@@ -9,13 +9,13 @@ const PostSchema = new mongoose.Schema({
 		unique: true,
 		lowercase: true
 	},
-	created: {
-		type: Date,
+	createdAt: {
+		type: String,
 		default: moment().format("L, h:mm:ss a"),
 		required: true
 	},
 	author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-	updatedAt: { type: Date, default: moment().format("L") },
+	updatedAt: { type: String, default: moment().format("L") },
 	body: String,
 	featuredImage: String,
 	tags: [String],

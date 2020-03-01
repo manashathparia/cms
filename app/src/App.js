@@ -3,6 +3,7 @@ import Header from "./Components/Header";
 import SideBar from "./Components/SideBar";
 import Content from "./Components/Content";
 import Routes from "./Routes";
+import "./App.css";
 
 function App() {
 	return (

@@ -60,7 +60,7 @@ function FeaturedImage(props) {
 			<label htmlFor="featuredImage">
 				<div
 					style={{
-						border: "1px solid #dad5d5",
+						border: "1px solid rgba(0, 0, 0, 0.23)",
 						height: "130px",
 						marginTop: "5px",
 						borderRadius: "2px",

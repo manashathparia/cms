@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -7,10 +7,13 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { connect } from "react-redux";
 import Wysiwyg from "./wysiwyg";
 import {
+	submitPost,
 	updateEditorBody,
 	updateEditorTitle,
 	updateEditorSlug,
-	saveDraft
+	saveDraft,
+	clearEditor,
+	loadPostToEditor
 } from "../../Actions/editorActions";
 import FeaturedImage from "./FeaturedImage";
 import Categories from "./categories";
@@ -21,8 +24,22 @@ const capitalize = s => {
 	return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
-function Editor(props) {
+function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
+	const postID = props.path.split("/")[3];
+	//It is to determine if the slug is edited or not, if not then it is binded with title
 	const [slugChanged, changed] = useState(props.slug.length > 0 ? true : false);
+
+	// different submit url for different forms i.e Edit Post and New Post
+	const [submitUrl] = useState(
+		edit ? [`/api/posts/${postID}`, "put"] : ["/api/posts", "post"]
+	);
+
+	useEffect(() => {
+		if (edit) {
+			initilizeEditor(postID);
+		}
+		return clearEditorOnExit;
+	}, [edit, initilizeEditor, clearEditorOnExit, postID]);
 
 	function handleSlugChange(e) {
 		if (!slugChanged) changed(true);
@@ -65,7 +82,10 @@ function Editor(props) {
 					label="Draft"
 				/>
 				<br />
-				<Button variant="contained">
+				<Button
+					variant="outlined"
+					onClick={() => props.handleSubmit(...submitUrl)}
+				>
 					{props.saveDraft ? "Save Draft" : "Publish"}
 				</Button>
 			</Grid>
@@ -73,11 +93,12 @@ function Editor(props) {
 	);
 }
 
-const mapStateToProps = ({ editor }) => ({
+const mapStateToProps = ({ editor, router }) => ({
 	body: editor.body,
 	title: editor.title,
 	slug: editor.slug,
-	saveDraft: editor.saveDraft
+	saveDraft: editor.saveDraft,
+	path: router.location.pathname
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -85,12 +106,12 @@ const mapDispatchToProps = dispatch => ({
 		dispatch(updateEditorBody(state));
 	},
 	handleTitleUpdate(e, slugChanged) {
-		const val = capitalize(e.target.value);
+		const title = capitalize(e.target.value);
 		if (!slugChanged) {
-			dispatch(updateEditorTitle(val));
-			dispatch(updateEditorSlug(val.replace(/\s/g, "-").toLowerCase()));
+			dispatch(updateEditorTitle(title));
+			dispatch(updateEditorSlug(title.replace(/\s/g, "-").toLowerCase()));
 		} else {
-			dispatch(updateEditorTitle(val));
+			dispatch(updateEditorTitle(title));
 		}
 	},
 	handleSlugChange(e) {
@@ -100,6 +121,15 @@ const mapDispatchToProps = dispatch => ({
 	},
 	handleStatusChange() {
 		dispatch(saveDraft());
+	},
+	handleSubmit(url, method) {
+		dispatch(submitPost(url, method));
+	},
+	clearEditorOnExit() {
+		dispatch(clearEditor());
+	},
+	initilizeEditor(id) {
+		dispatch(loadPostToEditor(id));
 	}
 });
 

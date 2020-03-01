@@ -1,3 +1,6 @@
+import axios from "axios";
+import { push } from "connected-react-router";
+
 import {
 	UPDATE_EDITOR_BODY,
 	UPDATE_EDITOR_TITLE,
@@ -6,8 +9,25 @@ import {
 	UPDATE_EDITOR_FEATURED_IMAGE,
 	ADD_EDITOR_TAG,
 	REMOVE_EDITOR_TAG,
-	SAVE_AS_DRAFT
+	SAVE_AS_DRAFT,
+	CLEAR_EDITOR,
+	LOAD_POST_TO_EDITOR
 } from "../constants";
+
+export function submitPost(url, method) {
+	return function submitPostThunk(dispatch, getState) {
+		const state = getState();
+		const { editor } = state;
+		axios({
+			url,
+			data: { ...editor },
+			method
+		}).then(({ data }) => {
+			console.log(data);
+			dispatch(push(`edit/${data.post._id}`));
+		});
+	};
+}
 
 export const updateEditorBody = body => ({
 	type: UPDATE_EDITOR_BODY,
@@ -23,6 +43,7 @@ export const updateCategory = category => {
 	return function(dispatch, getState) {
 		const state = getState();
 		const categories = state.editor.category;
+		// Remove the category if it already exists i.e Delete request, else Add it i.e Post request
 		if (categories.includes(category)) {
 			const i = categories.indexOf(category);
 			categories.splice(i, 1);
@@ -66,3 +87,23 @@ export const deleteTag = tag => {
 export const saveDraft = () => ({
 	type: SAVE_AS_DRAFT
 });
+
+export const clearEditor = () => ({
+	type: CLEAR_EDITOR
+});
+
+/*  
+This function loads data from state-->contents-->posts[] into editor.
+Required when initilizing the edit post page.
+*/
+export const loadPostToEditor = id => (dispatch, getState) => {
+	const state = getState();
+	const allPosts = state.content.posts;
+	console.log(allPosts);
+	const post = allPosts.filter(_post => _post._id === id);
+	console.log(post);
+	dispatch({
+		type: LOAD_POST_TO_EDITOR,
+		payload: post
+	});
+};

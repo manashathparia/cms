@@ -35,8 +35,8 @@ router
 				const postsWithSlug = await Post.find({ slug });
 
 				if (postsWithSlug.length === 0) {
-					await Post.create(req.body);
-					res.status(200).json({ success: true });
+					const post = await Post.create(req.body);
+					res.status(200).json({ success: true, post });
 				} else {
 					req.body.slug = `${slug}-${postsWithSlug.length + 1}`; // add 1 to the end of the slug
 					await Post.create(req.body);
