@@ -4,6 +4,7 @@ import applyStyle from "@material-ui/core/styles/withStyles";
 import Input from "@material-ui/core/TextField";
 import Label from "@material-ui/core/FormLabel";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { addTag, deleteTag } from "../../Actions/editorActions";
 
 const styles = () => ({
@@ -34,12 +35,12 @@ const Tags = props => {
 		if (e.charCode === 13) {
 			e.preventDefault();
 			if (props.tags.includes(tagValue)) return;
-			props.handleAddTag(tagValue);
+			props.addTag(tagValue);
 			tagChange("");
 		}
 	};
 
-	const { classes, handleDeleteTag, tags } = props;
+	const { classes, deleteTag, tags } = props;
 	return (
 		<div className={`${classes.parent} tags`}>
 			{" "}
@@ -50,11 +51,7 @@ const Tags = props => {
 			<div className={classes.chipsDiv}>
 				{Array.isArray(tags)
 					? tags.map(tag => (
-							<Chip
-								key={tag}
-								label={tag}
-								onDelete={() => handleDeleteTag(tag)}
-							/>
+							<Chip key={tag} label={tag} onDelete={() => deleteTag(tag)} />
 					  ))
 					: null}
 			</div>
@@ -76,14 +73,8 @@ const mapStateToProps = state => ({
 	tags: state.editor.tags
 });
 
-const mapDispatchToProps = dispatch => ({
-	handleAddTag(tag) {
-		dispatch(addTag(tag));
-	},
-	handleDeleteTag(tag) {
-		dispatch(deleteTag(tag));
-	}
-});
+const mapDispatchToProps = dispatch =>
+	bindActionCreators({ addTag, deleteTag }, dispatch);
 
 export default connect(
 	mapStateToProps,

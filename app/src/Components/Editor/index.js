@@ -18,6 +18,7 @@ import {
 import FeaturedImage from "./FeaturedImage";
 import Categories from "./categories";
 import Tags from "./tags";
+import { bindActionCreators } from "redux";
 
 const capitalize = s => {
 	if (typeof s !== "string") return s;
@@ -102,14 +103,22 @@ const mapStateToProps = ({ editor, router }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	handleEditorChange(state) {
-		dispatch(updateEditorBody(state));
-	},
+	...bindActionCreators(
+		{
+			handleEditorChange: updateEditorBody,
+			handleStatusChange: saveDraft,
+			handleSubmit: submitPost,
+			clearEditorOnExit: clearEditor,
+			initilizeEditor: loadPostToEditor
+		},
+		dispatch
+	),
+
 	handleTitleUpdate(e, slugChanged) {
 		const title = capitalize(e.target.value);
 		if (!slugChanged) {
 			dispatch(updateEditorTitle(title));
-			dispatch(updateEditorSlug(title.replace(/\s/g, "-").toLowerCase()));
+			this.handleSlugChange(e);
 		} else {
 			dispatch(updateEditorTitle(title));
 		}
@@ -118,18 +127,6 @@ const mapDispatchToProps = dispatch => ({
 		dispatch(
 			updateEditorSlug(e.target.value.replace(/\s/g, "-").toLowerCase())
 		);
-	},
-	handleStatusChange() {
-		dispatch(saveDraft());
-	},
-	handleSubmit(url, method) {
-		dispatch(submitPost(url, method));
-	},
-	clearEditorOnExit() {
-		dispatch(clearEditor());
-	},
-	initilizeEditor(id) {
-		dispatch(loadPostToEditor(id));
 	}
 });
 
