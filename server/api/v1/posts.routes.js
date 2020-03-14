@@ -76,6 +76,7 @@ router
 			try {
 				const post = await Post.findById(doc_id);
 				if (post) {
+					console.log(req.body);
 					await Post.updateOne({ _id: doc_id }, req.body);
 					res.json({ sucess: true, message: "Post updated sucessfully" });
 				} else {
