@@ -9,7 +9,7 @@ const app = express();
 // Connect to database
 db.connect();
 
-app.use(express.static("dist"));
+app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
