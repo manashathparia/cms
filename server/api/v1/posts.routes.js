@@ -9,13 +9,10 @@ router
 		const { sort = [], query, id } = req.query;
 		try {
 			if (id) {
-				const _post = await Post.findById(id)
-					.populate("category")
-					.exec();
+				const _post = await Post.findById(id).exec();
 				res.json({ success: true, data: _post });
 			} else {
 				const _posts = await Post.find(query)
-					.populate("category")
 					.sort([sort])
 					.exec();
 				res.json({ success: true, data: _posts });
@@ -23,7 +20,7 @@ router
 		} catch (e) {
 			res.status(500).json({
 				sucess: false,
-				error: e.message || "Failed to retrive Posts from Database"
+				error: e.message || "Failed to retrive Posts from Database",
 			});
 		}
 	})
@@ -44,7 +41,7 @@ router
 					// send the modified slug with the response to notify the edits in the frontend.
 					res.status(200).json({
 						success: true,
-						modified: { slug: req.body.slug }
+						modified: { slug: req.body.slug },
 					});
 				}
 			} else {
@@ -54,8 +51,8 @@ router
 			res.status(500).json({
 				success: false,
 				error: {
-					message: e.message || "Error while saving the Post into Database"
-				}
+					message: e.message || "Error while saving the Post into Database",
+				},
 			});
 		}
 	})
@@ -70,6 +67,19 @@ router
 				.json({ success: true, data: { deleted: ids.split(",") } });
 		}
 	})
+	.put("/trash", async (req, res) => {
+		try {
+			const { ids } = req.query;
+			await Post.updateMany(
+				{ _id: { $in: ids } },
+				{ $set: { status: "trash" } },
+				{ multi: true }
+			);
+			res.sendStatus(200);
+		} catch (e) {
+			res.status(500).send(e);
+		}
+	})
 	.put("/:id", async (req, res) => {
 		const doc_id = req.params.id;
 		if (mongoose.Types.ObjectId.isValid(doc_id)) {
@@ -78,17 +88,21 @@ router
 				if (post) {
 					console.log(req.body);
 					await Post.updateOne({ _id: doc_id }, req.body);
-					res.json({ sucess: true, message: "Post updated sucessfully" });
+					res.json({
+						sucess: true,
+						message: "Post updated sucessfully",
+						_id: doc_id,
+					});
 				} else {
 					res.status(404).json({
 						success: false,
-						error: `Post with id ${doc_id} not found`
+						error: `Post with id ${doc_id} not found`,
 					});
 				}
 			} catch (e) {
 				res.status(500).json({
 					sucess: false,
-					error: e.message || "Error while updating the Post into Database"
+					error: e.message || "Error while updating the Post into Database",
 				});
 			}
 		} else {

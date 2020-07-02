@@ -4,6 +4,8 @@ import Grid from "@material-ui/core/Grid";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 import { connect } from "react-redux";
 import Wysiwyg from "./wysiwyg";
 import {
@@ -11,16 +13,16 @@ import {
 	updateEditorBody,
 	updateEditorTitle,
 	updateEditorSlug,
-	saveDraft,
+	updateStatus,
 	clearEditor,
-	loadPostToEditor
+	loadPostToEditor,
 } from "../../Actions/editorActions";
 import FeaturedImage from "./FeaturedImage";
 import Categories from "./categories";
 import Tags from "./tags";
 import { bindActionCreators } from "redux";
 
-const capitalize = s => {
+const capitalize = (s) => {
 	if (typeof s !== "string") return s;
 	return s.charAt(0).toUpperCase() + s.slice(1);
 };
@@ -28,7 +30,9 @@ const capitalize = s => {
 function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
 	const postID = props.path.split("/")[3];
 	//It is to determine if the slug is edited or not, if not then it is binded with title
-	const [slugChanged, changed] = useState(props.slug.length > 0 ? true : false);
+	const [slugChanged, changed] = useState(
+		props.slug?.length > 0 ? true : false
+	);
 
 	// different submit url for different forms i.e Edit Post and New Post
 	const [submitUrl] = useState(
@@ -52,7 +56,7 @@ function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
 			<Grid item xs={12} sm={10}>
 				<TextField
 					value={props.title}
-					onChange={e => props.handleTitleUpdate(e, slugChanged)}
+					onChange={(e) => props.handleTitleUpdate(e, slugChanged)}
 					fullWidth
 					variant="outlined"
 					label="Title"
@@ -73,21 +77,24 @@ function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
 				<Categories />
 				<Tags />
 				<br />
-				<FormControlLabel
-					control={
-						<Checkbox
-							checked={props.saveDraft}
-							onChange={props.handleStatusChange}
-						></Checkbox>
-					}
-					label="Draft"
-				/>
+				<div>
+					<Select
+						value={props.status}
+						onChange={(e) => props.handleStatusChange(e.target.value)}
+						displayEmpty
+						style={{ width: "100%" }}
+					>
+						<MenuItem value={"draft"}>Draft</MenuItem>
+						<MenuItem value={"published"}>Publish</MenuItem>
+						<MenuItem value={"trash"}>Trash</MenuItem>
+					</Select>
+				</div>
 				<br />
 				<Button
 					variant="outlined"
 					onClick={() => props.handleSubmit(...submitUrl)}
 				>
-					{props.saveDraft ? "Save Draft" : "Publish"}
+					Save
 				</Button>
 			</Grid>
 		</Grid>
@@ -98,18 +105,20 @@ const mapStateToProps = ({ editor, router }) => ({
 	body: editor.body,
 	title: editor.title,
 	slug: editor.slug,
+	category: editor.category,
 	saveDraft: editor.saveDraft,
-	path: router.location.pathname
+	path: router.location.pathname,
+	status: editor.status,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
 	...bindActionCreators(
 		{
 			handleEditorChange: updateEditorBody,
-			handleStatusChange: saveDraft,
+			handleStatusChange: updateStatus,
 			handleSubmit: submitPost,
 			clearEditorOnExit: clearEditor,
-			initilizeEditor: loadPostToEditor
+			initilizeEditor: loadPostToEditor,
 		},
 		dispatch
 	),
@@ -127,7 +136,7 @@ const mapDispatchToProps = dispatch => ({
 		dispatch(
 			updateEditorSlug(e.target.value.replace(/\s/g, "-").toLowerCase())
 		);
-	}
+	},
 });
 
 export default connect(

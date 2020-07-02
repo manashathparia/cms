@@ -19,11 +19,11 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import Add from "@material-ui/icons/Add";
 import {
 	addCategory,
-	updateaAllCategories
+	updateaAllCategories,
 } from "../../Actions/contentActionCreators/categoryActions";
 import { updateCategory } from "../../Actions/editorActions";
 
-const styles = theme => ({
+const styles = (theme) => ({
 	root: {
 		display: "flex",
 		flexWrap: "wrap",
@@ -31,32 +31,32 @@ const styles = theme => ({
 		borderRadius: "3px",
 		width: "100%",
 		marginTop: "10px",
-		border: "1px solid rgba(0, 0, 0, 0.23)"
+		border: "1px solid rgba(0, 0, 0, 0.23)",
 	},
 	formControl: {
 		margin: theme.spacing(),
 		minWidth: 120,
 		maxWidth: 300,
-		width: "100%"
+		width: "100%",
 	},
 	chips: {
 		display: "flex",
-		flexWrap: "wrap"
+		flexWrap: "wrap",
 	},
 	chip: {
-		margin: theme.spacing(4)
+		margin: theme.spacing(4),
 	},
 	noLabel: {
-		marginTop: theme.spacing(3)
+		marginTop: theme.spacing(3),
 	},
 	width: {
 		width: "100%",
 		paddingTop: 0,
-		paddingBottom: 0
-	}
+		paddingBottom: 0,
+	},
 });
 
-const Category = props => {
+const Category = (props) => {
 	const [addCategoryValue, handleAddCategoryValue] = useState("");
 	const [promptState, tooglePrompt] = useState(false);
 	const [expanded, toogleExpanded] = useState(false);
@@ -68,7 +68,7 @@ const Category = props => {
 	const handleAddCategoryDialog = () => tooglePrompt(!promptState);
 	const toggleCategories = () => toogleExpanded(!expanded);
 
-	const handleKeyPress = e => {
+	const handleKeyPress = (e) => {
 		if (e.key === "Enter") handleAddCategory();
 		return;
 	};
@@ -78,7 +78,7 @@ const Category = props => {
 			return;
 		}
 		const res = await Axios.post("/api/categories", {
-			category: addCategoryValue
+			category: addCategoryValue,
 		});
 		if (res.status === 200) {
 			props.addCategory(res.data.data);
@@ -86,11 +86,11 @@ const Category = props => {
 		handleAddCategoryDialog();
 	};
 
-	const checkedCategories = id => {
+	const checkedCategories = (id) => {
 		const categories = props.editorCategory;
 		let checked = false;
-		for (let i = 0; i < categories.length; i++) {
-			if (categories[i] === id) {
+		for (let i = 0; i < categories?.length; i++) {
+			if (categories[i]._id === id) {
 				checked = true;
 			}
 		}
@@ -119,14 +119,14 @@ const Category = props => {
 						<ListItemText disableTypography primary="Add category" />
 						<Add />
 					</ListItem>
-					{props.categories.map(category => (
+					{props.categories.map((category) => (
 						<ListItem style={{ height: "40px" }} key={category._id}>
 							<FormControlLabel
 								control={<CheckBox />}
 								value={category._id}
 								label={category.category}
 								style={{ padding: 0 }}
-								onChange={props.handleChange}
+								onChange={() => props.handleChange(category)}
 								checked={checkedCategories(category._id)}
 							/>
 						</ListItem>
@@ -149,7 +149,7 @@ const Category = props => {
 						fullWidth
 						onKeyDown={handleKeyPress}
 						value={addCategoryValue}
-						onChange={e => handleAddCategoryValue(e.target.value)}
+						onChange={(e) => handleAddCategoryValue(e.target.value)}
 						//eslint-disable-next-line
 						autoFocus={true}
 						error={false}
@@ -168,14 +168,14 @@ const Category = props => {
 	);
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
 	categories: state.content.categories,
-	editorCategory: state.editor.category
+	editorCategory: state.editor.category,
 });
-const mapDispatchToProps = dispatch => ({
-	addCategory: category => dispatch(addCategory(category)),
+const mapDispatchToProps = (dispatch) => ({
+	addCategory: (category) => dispatch(addCategory(category)),
 	getCategories: () => dispatch(updateaAllCategories()),
-	handleChange: e => dispatch(updateCategory(e.target.value))
+	handleChange: (category) => dispatch(updateCategory(category)),
 });
 
 export default connect(

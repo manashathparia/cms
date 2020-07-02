@@ -19,7 +19,7 @@ const PostSchema = new mongoose.Schema({
 	body: String,
 	featuredImage: String,
 	tags: [String],
-	category: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
+	category: [{ type: Object }],
 	comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comments" }],
 	status: {
 		type: String,
