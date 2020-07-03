@@ -6,7 +6,7 @@ import {
 const initial = {
 	varient: "info",
 	show: false,
-	autoHideDuration: 6000,
+	autoHide: true,
 	message: "",
 };
 

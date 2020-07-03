@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -20,10 +20,10 @@ import Add from "@material-ui/icons/Add";
 import {
 	addCategory,
 	updateaAllCategories,
-} from "../../Actions/contentActionCreators/categoryActions";
+} from "../../Actions/category,actions";
 import { updateCategory } from "../../Actions/editorActions";
 
-const styles = (theme) => ({
+const styles = makeStyles((theme) => ({
 	root: {
 		display: "flex",
 		flexWrap: "wrap",
@@ -54,7 +54,7 @@ const styles = (theme) => ({
 		paddingTop: 0,
 		paddingBottom: 0,
 	},
-});
+}));
 
 const Category = (props) => {
 	const [addCategoryValue, handleAddCategoryValue] = useState("");
@@ -97,7 +97,7 @@ const Category = (props) => {
 		return checked;
 	};
 
-	const { classes } = props;
+	const classes = styles();
 	const Ico = expanded ? ExpandLess : ExpandMore;
 	return (
 		<div className={classes.root}>
@@ -181,4 +181,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(withStyles(styles, { withTheme: true })(Category));
+)(Category);

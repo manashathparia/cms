@@ -8,6 +8,7 @@ import Description from "@material-ui/icons/Description";
 import Comment from "@material-ui/icons/Comment";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
+import Image from "@material-ui/icons/Image";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Collapse from "@material-ui/core/Collapse";
@@ -21,14 +22,14 @@ import { toogleDrawer } from "../Actions/navigationActions";
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
 	toolbar: theme.mixins.toolbar,
 	drawer: {
 		width: drawerWidth,
-		flexShrink: 0
+		flexShrink: 0,
 	},
 	drawerPaper: {
-		width: drawerWidth
+		width: drawerWidth,
 	},
 	item: {
 		padding: "0",
@@ -36,19 +37,19 @@ const useStyles = makeStyles(theme => ({
 		paddingLeft: "6px",
 		width: "90%",
 		borderRadius: "4px",
-		height: "40px"
+		height: "40px",
 	},
 	link: {
 		color: "black",
-		textDecoration: "none"
-	}
+		textDecoration: "none",
+	},
 }));
 
 const menuItems = [
 	{
 		name: "Dashboard",
 		icon: Dashboard,
-		to: "/"
+		to: "/",
 	},
 	{
 		name: "Posts",
@@ -56,19 +57,24 @@ const menuItems = [
 		child: [
 			{
 				name: "New post",
-				to: "/posts/new"
+				to: "/posts/new",
 			},
 			{
 				name: "All Posts",
-				to: "/posts/all"
-			}
-		]
+				to: "/posts/all",
+			},
+		],
 	},
 	{
 		name: "Comments",
 		icon: Comment,
-		to: "/comments"
-	}
+		to: "/comments",
+	},
+	{
+		name: "Media",
+		icon: Image,
+		to: "/media/images",
+	},
 ];
 
 function SideBar(props) {
@@ -76,7 +82,7 @@ function SideBar(props) {
 
 	const [openNo, changeOpenNo] = useState(0);
 
-	const handleDropdown = num => {
+	const handleDropdown = (num) => {
 		const no = openNo === num ? 0 : num;
 		changeOpenNo(no);
 	};
@@ -116,7 +122,7 @@ function SideBar(props) {
 									)}
 								</ListItem>
 							</Typography>
-							{item.child.map(nested => (
+							{item.child.map((nested) => (
 								<Collapse
 									in={openNo === index + 1}
 									timeout="auto"
@@ -170,11 +176,11 @@ function SideBar(props) {
 						open={props.navigation.mobileDrawerOpen}
 						onClose={props.toogleDrawer}
 						classes={{
-							paper: classes.drawerPaper
+							paper: classes.drawerPaper,
 							//toolbar: classes.toolbar
 						}}
 						ModalProps={{
-							keepMounted: true // Better open performance on mobile.
+							keepMounted: true, // Better open performance on mobile.
 						}}
 					>
 						{items}
@@ -183,7 +189,7 @@ function SideBar(props) {
 				<Hidden xsDown implementation="css">
 					<Drawer
 						classes={{
-							paper: classes.drawerPaper
+							paper: classes.drawerPaper,
 						}}
 						className={classes.drawer}
 						variant="persistent"
@@ -199,11 +205,11 @@ function SideBar(props) {
 
 export default connect(
 	({ navigation }) => ({
-		navigation
+		navigation,
 	}),
-	dispatch => ({
+	(dispatch) => ({
 		toogleDrawer() {
 			dispatch(toogleDrawer());
-		}
+		},
 	})
 )(SideBar);

@@ -7,12 +7,12 @@ const PostSchema = new mongoose.Schema({
 		type: String,
 		required: [true, "slug is required"],
 		unique: true,
-		lowercase: true
+		lowercase: true,
 	},
-	createdAt: {
+	date: {
 		type: String,
-		default: moment().format("L, h:mm:ss a"),
-		required: true
+		default: moment().format("L"),
+		required: true,
 	},
 	author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 	updatedAt: { type: String, default: moment().format("L") },
@@ -25,8 +25,8 @@ const PostSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 		enum: ["published", "draft", "trashed"],
-		default: "draft"
-	}
+		default: "draft",
+	},
 });
 
 PostSchema.pre("findOneAndUpdate", function(next) {

@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
 
 const ImageSchema = new mongoose.Schema({
-	name: { type: String, required: true, unique: true },
-	location: { type: String, required: true, unique: true },
-	thumbnailName: [String],
-	type: String,
-	size: String
+	filename: { type: String, required: true, unique: true },
+	path: { type: String, required: true, unique: true },
+	mimetype: { type: String, required: true },
+	thumbnails: [String],
+	size: String,
+	destination: String,
+	description: String,
 });
 
 mongoose.model("Image", ImageSchema);

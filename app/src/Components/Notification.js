@@ -4,12 +4,12 @@ import Alert from "@material-ui/lab/Alert";
 import { connect } from "react-redux";
 import { clearNotification } from "../Actions/notification.actions";
 
-function Notification({ varient, message, show, onClose, autoHideDuration }) {
+function Notification({ varient, message, show, onClose, autoHide }) {
 	return (
 		<Snackbar
 			anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
 			open={show}
-			autoHideDuration={autoHideDuration}
+			autoHideDuration={autoHide ? 6000 : null}
 			onClose={onClose}
 		>
 			<Alert onClose={onClose} severity={varient}>
@@ -24,6 +24,7 @@ export default connect(
 		varient: notification.varient,
 		show: notification.show,
 		message: notification.message,
+		autoHide: notification.autoHide,
 	}),
 	(dispatch) => ({
 		onClose() {

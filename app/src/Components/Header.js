@@ -9,14 +9,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { toogleDrawer } from "../Actions/navigationActions";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
 	appBar: {
 		background: "#6200ee",
-		zIndex: 9999999
+		zIndex: 99,
 	},
 	menuButton: {
-		marginRight: theme.spacing(2)
-	}
+		marginRight: theme.spacing(2),
+	},
 }));
 
 function Header(props) {
@@ -47,9 +47,9 @@ function Header(props) {
 
 export default connect(
 	null,
-	dispatch => ({
+	(dispatch) => ({
 		toogleDrawer() {
 			dispatch(toogleDrawer());
-		}
+		},
 	})
 )(Header);

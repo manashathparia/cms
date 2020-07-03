@@ -12,10 +12,11 @@ import "tinymce/plugins/imagetools";
 import "tinymce/plugins/image";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/wordcount";
+import Plugin from "./tinyplugin";
 
 import "./wysiwyg.css";
 const options =
-	"formatselect |  bold italic | alignleft aligncenter alignright | numlist bullist | image table link  | undo redo | code  | searchreplace ";
+	"formatselect |  example bold italic | alignleft aligncenter alignright | numlist bullist | image table link  | undo redo | code  | searchreplace ";
 
 export default function Wysiwyg({ body, onChange }) {
 	useEffect(() => {
@@ -26,11 +27,12 @@ export default function Wysiwyg({ body, onChange }) {
 	});
 	return (
 		<div>
+			<Plugin />
 			<Editor
 				value={body}
 				init={{
 					plugins:
-						"visualblocks link image code lists searchreplace wordcount imagetools ",
+						"visualblocks example link image code lists searchreplace wordcount imagetools ",
 					toolbar: options,
 					menubar: false,
 					height: 500,

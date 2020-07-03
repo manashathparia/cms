@@ -4,6 +4,7 @@ import Error404 from "../Containers/404";
 import NewPost from "../Containers/Post/NewPost";
 import AllPost from "../Containers/Post/AllPost";
 import EditPost from "../Containers/Post/EditPost";
+import MediaPage from "../Containers/MediaPage";
 
 export default function(props) {
 	return (
@@ -11,6 +12,7 @@ export default function(props) {
 			<Route exact path="/posts/new" component={NewPost} />
 			<Route exact path="/posts/all" component={AllPost} />
 			<Route exact path="/posts/edit/:id" component={EditPost} />
+			<Route exact path="/media/images" component={MediaPage} />
 			<Route component={Error404} />
 		</Switch>
 	);

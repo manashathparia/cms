@@ -12,10 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import { withStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
-import {
-	updateAllPosts,
-	deletePosts,
-} from "../../Actions/contentActionCreators/allPostsActions";
+import { updateAllPosts, deletePosts } from "../../Actions/allPosts.actions";
 import { connect } from "react-redux";
 
 const styles = (theme) => ({
@@ -79,7 +76,7 @@ function AllPosts({ getPosts, classes, posts, deletePosts }) {
 	useEffect(() => {
 		document.title = "All posts";
 		getPosts();
-	}, [getPosts]);
+	}, []);
 
 	const [selected, _handleSelect] = useState([]);
 	const [allSelected, _handleAllSelect] = useState(false);
@@ -115,14 +112,13 @@ function AllPosts({ getPosts, classes, posts, deletePosts }) {
 		_handleSelect([]);
 	};
 
-	const tableOptions = [
-		"Title",
-		"Category",
-		"State",
-		"Author",
-		"Updated",
-		"Options",
-	];
+	const handleDelete = () => {
+		deletePosts(selected);
+		_handleSelect([]);
+		_handleAllSelect(false);
+	};
+
+	const tableOptions = ["Title", "Category", "State", "Author", "Updated"];
 
 	const filteredPosts = posts?.filter((post) => {
 		const a = JSON.parse(show);
@@ -134,7 +130,7 @@ function AllPosts({ getPosts, classes, posts, deletePosts }) {
 			<Paper className={classes.root}>
 				<ActionBar
 					selected={selected}
-					handleDelete={() => deletePosts(selected)}
+					handleDelete={handleDelete}
 					className={classes.actionBar}
 					show={show}
 					handleShow={handleShow}
@@ -173,10 +169,20 @@ function AllPosts({ getPosts, classes, posts, deletePosts }) {
 
 								<TableCell className={classes.tableCell}>
 									{Array.isArray(post.category)
-										? post.category.map((category) => (
-												<a key={category._id} href={category.category}>
-													{category.category}
-												</a>
+										? post.category.map((category, i) => (
+												<React.Fragment>
+													<a
+														style={{ textDecoration: "none" }}
+														key={category._id}
+														href={`category/${category.category}`}
+													>
+														{category.category}
+													</a>
+													{post.category.length > 1 &&
+													i !== post.category.length - 1
+														? ", "
+														: ""}
+												</React.Fragment>
 										  ))
 										: null}
 								</TableCell>
@@ -189,9 +195,6 @@ function AllPosts({ getPosts, classes, posts, deletePosts }) {
 
 								<TableCell className={classes.tableCell}>
 									{post.updatedAt.split(",")[0]}
-								</TableCell>
-								<TableCell className={classes.tableCell}>
-									<MoreVert />
 								</TableCell>
 							</TableRow>
 						))}
