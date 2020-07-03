@@ -12,7 +12,7 @@ function Notification({ varient, message, show, onClose, autoHide }) {
 			autoHideDuration={autoHide ? 6000 : null}
 			onClose={onClose}
 		>
-			<Alert onClose={onClose} severity={varient}>
+			<Alert variant="filled" onClose={onClose} severity={varient}>
 				{message}
 			</Alert>
 		</Snackbar>
