@@ -16,10 +16,18 @@ router
 	.post("/", fileUpload.array("image", 10), async (req, res) => {
 		try {
 			if (req.files.length > 1) {
-				const img = await Image.insertMany(req.files);
+				const files = req.files.map((file) => ({
+					...file,
+					title: file.originalname,
+				}));
+				const img = await Image.insertMany(files);
 				return res.json(img);
 			}
-			const img = await Image.create({ ...req.files[0], ...req.body });
+			const img = await Image.create({
+				...req.files[0],
+				...req.body,
+				title: req.files[0].originalname,
+			});
 			res.json(img);
 		} catch (e) {
 			console.log(e);

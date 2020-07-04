@@ -4,20 +4,7 @@ import Add from "@material-ui/icons/Add";
 import axios from "axios";
 import { connect } from "react-redux";
 import { updateEditorFeaturedImage } from "../../Actions/editorActions";
-
-function readFile(file) {
-	return new Promise((resolve, reject) => {
-		if (file) {
-			try {
-				const reader = new FileReader();
-				reader.addEventListener("load", () => resolve(reader.result));
-				reader.readAsDataURL(file);
-			} catch (e) {
-				reject(e);
-			}
-		}
-	});
-}
+import readFile from "../../utils/fileReader";
 
 function FeaturedImage(props) {
 	const AddIcon = (
@@ -27,7 +14,7 @@ function FeaturedImage(props) {
 				top: "35%",
 				bottom: "45%",
 				color: "gray",
-				left: "40%"
+				left: "40%",
 			}}
 			fontSize="large"
 		/>
@@ -47,7 +34,7 @@ function FeaturedImage(props) {
 			);
 			let formData = new FormData();
 			formData.append("image", file);
-			const res = await axios.post("/api/upload/image", formData);
+			const res = await axios.post("/api/upload/media", formData);
 			props.updateToEditor(`/uploads/${res.data.filename}`);
 		} catch (e) {
 			updateImage(AddIcon);
@@ -64,7 +51,7 @@ function FeaturedImage(props) {
 						height: "130px",
 						marginTop: "5px",
 						borderRadius: "2px",
-						position: "relative"
+						position: "relative",
 					}}
 				>
 					<input
@@ -83,10 +70,10 @@ function FeaturedImage(props) {
 }
 
 export default connect(
-	state => ({
-		featuredImage: state.editor.featuredImage
+	(state) => ({
+		featuredImage: state.editor.featuredImage,
 	}),
-	dispatch => ({
-		updateToEditor: url => dispatch(updateEditorFeaturedImage(url))
+	(dispatch) => ({
+		updateToEditor: (url) => dispatch(updateEditorFeaturedImage(url)),
 	})
 )(FeaturedImage);

@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
 	appBar: {
 		background: "#6200ee",
 		zIndex: 99,
+		[theme.breakpoints.down("sm")]: {
+			zIndex: 9999,
+		},
 	},
 	menuButton: {
 		marginRight: theme.spacing(2),
