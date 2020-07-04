@@ -19,7 +19,6 @@ import FeaturedImage from "./FeaturedImage";
 import Categories from "./categories";
 import Tags from "./tags";
 import { bindActionCreators } from "redux";
-import { ImageInserter } from "../ImageSelector";
 
 const capitalize = (s) => {
 	if (typeof s !== "string") return s;
@@ -52,11 +51,6 @@ function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
 	function handleSlugChange(e) {
 		if (!slugChanged) changed(true);
 		props.handleSlugChange(e);
-	}
-
-	function handleImageInsert(img) {
-		const image = `<img src=http://localhost:8080/${img.path} width=200 alt=${img.alt_text}>`;
-		editorRef.current.insertContent(image);
 	}
 
 	return (
@@ -112,11 +106,6 @@ function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
 					</Button>
 				</Grid>
 			</Grid>
-			<ImageInserter
-				show={showImageSelector}
-				onClose={() => toggleImageSelector(!showImageSelector)}
-				handleInsert={handleImageInsert}
-			/>
 		</React.Fragment>
 	);
 }

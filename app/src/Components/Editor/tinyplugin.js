@@ -1,7 +1,7 @@
 import tinymce from "tinymce/tinymce";
 import { useEffect } from "react";
 
-export default function Foo({ onClick }) {
+export default function ImageInserterPlugin() {
 	useEffect(() => {
 		tinymce.PluginManager.add("imageInserter", function(editor, url) {
 			editor.ui.registry.addIcon(
@@ -15,13 +15,14 @@ export default function Foo({ onClick }) {
 				</svg>`
 			);
 			editor.ui.registry.addButton("imageInserter", {
+				name: "img",
 				icon: "img",
 				onAction: function() {
-					onClick();
+					document.querySelector("#imgbtn").click();
 				},
 			});
 		});
-	}, [onClick]);
+	}, []);
 
 	return null;
 }
