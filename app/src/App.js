@@ -1,5 +1,5 @@
 import React from "react";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+//import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import manrope from "./fonts/manrope";
 import Header from "./Components/Header";
@@ -10,7 +10,7 @@ import "./App.css";
 import Notification from "./Components/Notification";
 
 function App() {
-	const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+	//const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
 	const theme = React.useMemo(
 		() =>
@@ -29,7 +29,7 @@ function App() {
 					},
 				},
 			}),
-		[prefersDarkMode]
+		[]
 	);
 
 	return (

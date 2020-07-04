@@ -1,72 +1,27 @@
 import tinymce from "tinymce/tinymce";
-import React, { useEffect, useState, useRef } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
-import Paper from "@material-ui/core/Paper";
+import { useEffect } from "react";
 
-const emails = ["username@gmail.com", "user02@gmail.com"];
-
-function SimpleDialog(props) {
-	const { onClose, selectedValue, open } = props;
-
-	const handleClose = () => {
-		onClose(selectedValue);
-	};
-
-	const handleListItemClick = (value) => {
-		onClose(value);
-	};
-
-	return (
-		<Dialog
-			onClose={handleClose}
-			aria-labelledby="simple-dialog-title"
-			open={open}
-		>
-			<DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
-			<Paper>Div</Paper>
-		</Dialog>
-	);
-}
-
-export default function Foo() {
-	const [open, toggleOpen] = useState(false);
-	const [selectedValue, setSelectedValue] = React.useState(emails[1]);
-	const _editor = useRef();
+export default function Foo({ onClick }) {
 	useEffect(() => {
-		tinymce.PluginManager.add("example", function(editor, url) {
-			// Add a button that opens a window
-			_editor.current = editor;
-			editor.ui.registry.addButton("example", {
-				text: "Email",
+		tinymce.PluginManager.add("imageInserter", function(editor, url) {
+			editor.ui.registry.addIcon(
+				"img",
+				`<svg width="24" height="24">
+					<path d="M5 15.7l3.3-3.2c.3-.3.7-.3 1 0L12 15l4.1-4c.3-.4.8-.4 1 0l2 
+						1.9V5H5v10.7zM5 18V19h3l2.8-2.9-2-2L5 17.9zm14-3l-2.5-2.4-6.4 6.5H19v-4zM4 3h16c.6
+						0 1 .4 1 1v16c0 .6-.4 1-1 1H4a1 1 0 01-1-1V4c0-.6.4-1 1-1zm6
+						8a2 2 0 100-4 2 2 0 000 4z" fill-rule="nonzero">
+					</path>
+				</svg>`
+			);
+			editor.ui.registry.addButton("imageInserter", {
+				icon: "img",
 				onAction: function() {
-					toggleOpen(!open);
+					onClick();
 				},
 			});
-
-			return {
-				getMetadata: function() {
-					return {
-						name: "Example plugin",
-						url: "http://exampleplugindocsurl.com",
-					};
-				},
-			};
 		});
-	}, []);
+	}, [onClick]);
 
-	const handleClose = (value) => {
-		toggleOpen(false);
-		setSelectedValue(value);
-		_editor.current.insertContent("Email: " + selectedValue);
-	};
-
-	return open ? (
-		<SimpleDialog
-			selectedValue={selectedValue}
-			open={open}
-			onClose={handleClose}
-		/>
-	) : null;
+	return null;
 }

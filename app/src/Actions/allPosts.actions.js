@@ -9,7 +9,7 @@ export const updateAllPosts = () => async (dispatch) => {
 
 export const deletePosts = (ids) => async (dispatch, getState) => {
 	try {
-		const a = await Axios.put(`/api/posts/trash/?ids=${ids.toString()}`);
+		await Axios.put(`/api/posts/trash/?ids=${ids.toString()}`);
 		const {
 			content: { posts },
 		} = await getState();

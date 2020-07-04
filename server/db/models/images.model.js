@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const moment = require("moment");
 
 const ImageSchema = new mongoose.Schema({
 	title: { type: String, required: true },
@@ -11,6 +12,7 @@ const ImageSchema = new mongoose.Schema({
 	size: String,
 	destination: String,
 	description: String,
+	date: { type: String, default: moment().format("L") },
 });
 
 mongoose.model("Image", ImageSchema);

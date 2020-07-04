@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
@@ -70,56 +69,96 @@ const useStyles = makeStyles((theme) => ({
 	uploadIcon: {
 		marginRight: theme.spacing(1),
 	},
+	headerTitle: {
+		display: "inline-block",
+		margin: 10,
+	},
+	inserterDialog: {
+		zIndex: 9999,
+		[theme.breakpoints.down("sm")]: {
+			zIndex: "99999999999999 !important",
+		},
+	},
 }));
 
-const DetailsSidebar = ({ image }) => {
+const DetailsSidebar = ({ image, button, action }) => {
+	const [title, updateTitle] = useState("");
+	const [altTxt, updateAltTxt] = useState("");
+	const [caption, updateCaption] = useState("");
+	const [description, updateDescription] = useState("");
+
+	useEffect(() => {
+		updateTitle(image.title);
+		updateAltTxt(image.alt_text);
+		updateCaption(image.caption);
+		updateDescription(image.description);
+	}, [image]);
 	const classes = useStyles();
 	return (
 		<React.Fragment>
-			<Typography color="textSecondary" style={{ fontSize: "small" }}>
-				File name: {image.filename}
-			</Typography>
-			<Typography color="textSecondary" style={{ fontSize: "small" }}>
-				File type: {image.mimetype}
-			</Typography>
-			<Typography color="textSecondary" style={{ fontSize: "small" }}>
-				Size: {Math.round(image.size / 1024)} KB
-			</Typography>
-			<Typography color="textSecondary" style={{ fontSize: "small" }}>
-				Path: {image.path}
-			</Typography>
-
+			<div style={{ marginBottom: "30px" }}>
+				<Typography color="textSecondary" style={{ fontSize: "small" }}>
+					File name: {image.filename}
+				</Typography>
+				<Typography color="textSecondary" style={{ fontSize: "small" }}>
+					File type: {image.mimetype}
+				</Typography>
+				<Typography color="textSecondary" style={{ fontSize: "small" }}>
+					Size: {Math.round(image.size / 1024)} KB
+				</Typography>
+				<Typography color="textSecondary" style={{ fontSize: "small" }}>
+					Path: {image.path}
+				</Typography>
+			</div>
 			<TextField
-				label="title"
+				label="Title"
 				fullWidth
 				className={classes.textField}
 				variant="outlined"
-				value={image.title}
+				value={title}
+				onChange={(e) => updateTitle(e.target.value)}
 			/>
 			<TextField
 				label="Alternative Text"
 				fullWidth
-				value={image.alt_text}
+				value={altTxt}
 				className={classes.textField}
 				variant="outlined"
+				onChange={(e) => updateAltTxt(e.target.value)}
 			/>
 			<br />
 			<TextField
 				label="Caption"
 				fullWidth
-				value={image.caption}
+				value={caption}
 				multiline
 				className={classes.textField}
 				variant="outlined"
+				onChange={(e) => updateCaption(e.target.value)}
 			/>
 			<TextField
 				label="Description"
 				fullWidth
 				multiline
-				value={image.description}
+				value={description}
 				className={classes.textField}
 				variant="outlined"
+				onChange={(e) => updateDescription(e.target.value)}
 			/>
+			<Button
+				variant="outlined"
+				onClick={() =>
+					action({
+						title,
+						alt_text: altTxt,
+						caption,
+						description,
+						...image,
+					})
+				}
+			>
+				{button}
+			</Button>
 		</React.Fragment>
 	);
 };
@@ -138,10 +177,7 @@ const AttachmentDetails = ({ handleDialogClose, open, image }) => {
 				<AppBar className={classes.header}>
 					<div>
 						<Typography
-							style={{
-								display: "inline-block",
-								margin: 10,
-							}}
+							className={classes.headerTitle}
 							variant="h6"
 							color="textSecondary"
 						>
@@ -164,15 +200,13 @@ const AttachmentDetails = ({ handleDialogClose, open, image }) => {
 						<img
 							className={classes.img}
 							src={`http://localhost:8080/${image.path}`}
+							alt=""
 						/>
 					</div>
 				</Grid>
 				<Grid item xs={12} sm={4}>
 					<div style={{ padding: "20px" }}>
-						<div style={{ marginBottom: "30px" }}>
-							<DetailsSidebar image={image} />
-							<Button variant="outlined">Save</Button>
-						</div>
+						<DetailsSidebar image={image} button="save" />
 					</div>
 				</Grid>
 			</Grid>
@@ -184,15 +218,25 @@ function ImageSelector({ images, loadImages, uploadImage }) {
 	const [selectedImage, updateSelectedImage] = useState({});
 	const [dialog, toggleDialog] = useState(false);
 	const [loading, toggleLoading] = useState(false);
-	const [imgIns, togImgIns] = useState(true);
 	const fileInput = useRef();
 
 	useEffect(() => {
 		loadImages();
+		const handleFileUpload = () => {
+			const formData = new FormData();
+			formData.append("image", fileInput.current.files[0]);
+			const f = (f) => {
+				updateSelectedImage(f);
+				toggleDialog(true);
+				toggleLoading(false);
+			};
+			toggleLoading(true);
+			uploadImage(formData, f);
+		};
 		document.querySelector("#fileInput").addEventListener("change", () => {
 			handleFileUpload();
 		});
-	}, []);
+	}, [loadImages, uploadImage]);
 
 	const classes = useStyles();
 
@@ -205,18 +249,6 @@ function ImageSelector({ images, loadImages, uploadImage }) {
 
 	const handleActionButton = () => {
 		fileInput.current.click();
-	};
-
-	const handleFileUpload = () => {
-		const formData = new FormData();
-		formData.append("image", fileInput.current.files[0]);
-		const f = (f) => {
-			updateSelectedImage(f);
-			toggleDialog(true);
-			toggleLoading(false);
-		};
-		toggleLoading(true);
-		uploadImage(formData, f);
 	};
 
 	return (
@@ -268,12 +300,6 @@ function ImageSelector({ images, loadImages, uploadImage }) {
 					)}
 				</Fab>
 			}
-			<ImageInserter
-				images={images}
-				show={imgIns}
-				onClose={() => togImgIns(!imgIns)}
-			/>
-			<button onClick={() => togImgIns(!imgIns)}>Open</button>
 		</div>
 	);
 }
@@ -282,13 +308,26 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const ImageInserter = ({ show, onClose, images }) => {
+const Imageinserter = ({ show, onClose, images, handleInsert, loadImages }) => {
 	const [selectedImage, updateSelectedImage] = useState({});
+
+	useEffect(() => {
+		if (images.length <= 0) {
+			loadImages();
+		}
+	}, [images, loadImages]);
 
 	const handleClose = () => {
 		onClose();
 		updateSelectedImage({});
 	};
+
+	const handleInsertAndClose = (...args) => {
+		handleClose();
+		handleInsert(...args);
+	};
+
+	const classes = useStyles();
 
 	return (
 		<Dialog
@@ -296,11 +335,21 @@ const ImageInserter = ({ show, onClose, images }) => {
 			onClose={handleClose}
 			fullScreen
 			TransitionComponent={Transition}
-			style={{ zIndex: 9999 }}
+			className={classes.inserterDialog}
 		>
-			<AppBar>
+			<AppBar style={{ background: "white" }}>
 				<div>
-					<IconButton onClick={handleClose}>
+					<Typography
+						className={classes.headerTitle}
+						color="textSecondary"
+						variant="h6"
+					>
+						Image Inserter
+					</Typography>
+					<IconButton
+						style={{ float: "right", right: "10px" }}
+						onClick={handleClose}
+					>
 						<Close />
 					</IconButton>
 				</div>
@@ -308,11 +357,11 @@ const ImageInserter = ({ show, onClose, images }) => {
 			<div style={{ padding: "30px" }}></div>
 			<Paper>
 				<Grid container>
-					<Grid item sm={9} xs={12}>
+					<Grid item sm={8} xs={12}>
 						<GridList cellHeight={160} cols={5}>
 							{images.map((image) => (
 								<GridListTile
-									//className={classes.container}
+									className={classes.container}
 									key={image._id}
 									cols={image.cols || 1}
 									onClick={() => updateSelectedImage(image)}
@@ -326,14 +375,32 @@ const ImageInserter = ({ show, onClose, images }) => {
 							))}
 						</GridList>
 					</Grid>
-					<Grid item sm={3}>
-						<DetailsSidebar image={selectedImage} />
+					<Grid item sm={4}>
+						<div style={{ padding: "0 20px", position: "sticky", top: "60px" }}>
+							<DetailsSidebar
+								image={selectedImage}
+								button="insert"
+								action={handleInsertAndClose}
+							/>
+						</div>
 					</Grid>
 				</Grid>
 			</Paper>
 		</Dialog>
 	);
 };
+
+export const ImageInserter = connect(
+	({ media }) => ({ images: media.images }),
+	(dispatch) => ({
+		loadImages() {
+			dispatch(loadImages());
+		},
+		uploadImage(img, cb) {
+			dispatch(uploadImage(img, cb));
+		},
+	})
+)(Imageinserter);
 
 export default connect(
 	({ media }) => ({ images: media.images }),

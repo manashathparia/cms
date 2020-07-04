@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import tinymce from "tinymce/tinymce";
+import React from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import "tinymce/icons/default";
 import "tinymce/themes/silver";
@@ -16,32 +15,23 @@ import Plugin from "./tinyplugin";
 
 import "./wysiwyg.css";
 const options =
-	"formatselect |  example bold italic | alignleft aligncenter alignright | numlist bullist | image table link  | undo redo | code  | searchreplace ";
+	"formatselect | bold italic | alignleft aligncenter alignright | numlist bullist | imageInserter table link  | undo redo | code  | searchreplace ";
 
-export default function Wysiwyg({ body, onChange }) {
-	useEffect(() => {
-		tinymce.init({
-			selector: "#tiny",
-			plugins: ["paste", "link"],
-		});
-	});
+export default function Wysiwyg({ body, onChange, toggleImageSelector, refs }) {
 	return (
 		<div>
-			<Plugin />
+			<Plugin onClick={toggleImageSelector} />
 			<Editor
 				value={body}
 				init={{
 					plugins:
-						"visualblocks example link image code lists searchreplace wordcount imagetools ",
+						"visualblocks imageInserter link image code lists searchreplace wordcount imagetools ",
 					toolbar: options,
 					menubar: false,
 					height: 500,
-					image_uploadtab: true,
-					images_upload_url: "/api/upload/image",
 					image_advtab: true,
-					mobile: {
-						menubar: true,
-					},
+					init_instance_callback: (e) => (refs.current = e),
+					branding: false,
 				}}
 				onEditorChange={onChange}
 			/>

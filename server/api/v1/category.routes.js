@@ -13,8 +13,9 @@ router
 			res.status(500).json({
 				success: false,
 				error: {
-					message: e.message || "Error while retriving categories from database"
-				}
+					message:
+						e.message || "Error while retriving categories from database",
+				},
 			});
 		}
 	})
@@ -34,8 +35,8 @@ router
 				success: true,
 				error: {
 					message: e,
-					stack: e.stack
-				}
+					stack: e.stack,
+				},
 			});
 		}
 	})
@@ -55,8 +56,8 @@ router
 				success: false,
 				error: {
 					message: e.message,
-					stack: e.stack
-				}
+					stack: e.stack,
+				},
 			});
 		}
 	});
@@ -64,7 +65,7 @@ router
 router.put("/:category_id", async (req, res) => {
 	const {
 		param: { category_id },
-		body: { updateWith }
+		body: { updateWith },
 	} = req;
 	try {
 		if (category_id && updateWith) {

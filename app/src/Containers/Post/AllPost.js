@@ -4,7 +4,6 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import MoreVert from "@material-ui/icons/MoreVert";
 import Paper from "@material-ui/core/Paper";
 import CheckBox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
@@ -76,7 +75,7 @@ function AllPosts({ getPosts, classes, posts, deletePosts }) {
 	useEffect(() => {
 		document.title = "All posts";
 		getPosts();
-	}, []);
+	}, [getPosts]);
 
 	const [selected, _handleSelect] = useState([]);
 	const [allSelected, _handleAllSelect] = useState(false);

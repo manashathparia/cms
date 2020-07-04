@@ -7,7 +7,9 @@ const Image = mongoose.model("Image");
 router
 	.get("/", async (req, res) => {
 		try {
-			const media = await Image.find();
+			const media = await Image.find()
+				.sort({ $natural: -1 })
+				.exec();
 			res.send(media);
 		} catch (e) {
 			res.send(e);
