@@ -4,18 +4,30 @@ const mongoose = require("mongoose");
 const Post = mongoose.model("Post");
 const router = express.Router();
 
+async function getCount() {
+	const published = await Post.count({ status: "published" });
+	const draft = await Post.count({ status: "draft" });
+	const trash = await Post.count({ status: "trash" });
+	return {
+		published,
+		draft,
+		trash,
+	};
+}
+
 router
 	.get("/", async (req, res) => {
 		const { sort = [], query, id } = req.query;
 		try {
+			const count = await getCount();
 			if (id) {
 				const _post = await Post.findById(id).exec();
-				res.json({ success: true, data: _post });
+				res.json(_post);
 			} else {
 				const _posts = await Post.find(query)
 					.sort([sort])
 					.exec();
-				res.json({ success: true, data: _posts });
+				res.json({ posts: _posts, count });
 			}
 		} catch (e) {
 			console.error(e);

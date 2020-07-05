@@ -164,7 +164,7 @@ function SideBar(props) {
 	);
 
 	return (
-		<div style={{ zIndex: 9 }}>
+		<div style={{ zIndex: !props.navigation.mobileDrawerOpen ? 9 : 0 }}>
 			<CssBaseline />
 			<nav aria-label="Mailbox folders">
 				{/* The implementation can be swapped with js to avoid SEO duplication of links. */}

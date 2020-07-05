@@ -7,12 +7,11 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import CheckBox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
 import { withStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
+import MLink from "@material-ui/core/Link";
 import { updateAllPosts, deletePosts } from "../../Actions/allPosts.actions";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 const styles = (theme) => ({
 	root: {
@@ -39,25 +38,52 @@ const styles = (theme) => ({
 		width: "100%",
 		padding: 10,
 	},
+	mdLink: {
+		fontSize: "15px",
+		padding: "5px",
+	},
 });
 
-const ActionBar = ({ className, selected, handleDelete, show, handleShow }) => {
+const ActionBar = ({
+	classes,
+	selected,
+	handleDelete,
+	show,
+	handleShow,
+	count,
+}) => {
 	return (
-		<div className={className}>
-			<Select
-				value={show}
-				onChange={handleShow}
-				displayEmpty
-				inputProps={{ "aria-label": "Without label" }}
-			>
-				<MenuItem value={'["published", "draft"]'}>
-					All (Published + Draft)
-				</MenuItem>
-				<MenuItem value={'["published"]'}>Published</MenuItem>
-				<MenuItem value={'["draft"]'}>Draft</MenuItem>
-				<MenuItem value={'["trash"]'}>Trash</MenuItem>
-			</Select>
-
+		<div className={classes.actionBar}>
+			<div>
+				<MLink
+					onClick={() => handleShow('["published", "draft"]')}
+					component="button"
+					className={classes.mdLink}
+				>
+					All ({count.published + count.draft})
+				</MLink>
+				<MLink
+					onClick={() => handleShow('["published"]')}
+					component="button"
+					className={classes.mdLink}
+				>
+					Published ({count.published})
+				</MLink>
+				<MLink
+					onClick={() => handleShow('["draft"]')}
+					component="button"
+					className={classes.mdLink}
+				>
+					Draft ({count.draft})
+				</MLink>
+				<MLink
+					onClick={() => handleShow('["trash"]')}
+					component="button"
+					className={classes.mdLink}
+				>
+					Trash ({count.trash})
+				</MLink>
+			</div>
 			<Button
 				color="secondary"
 				variant="contained"
@@ -71,7 +97,7 @@ const ActionBar = ({ className, selected, handleDelete, show, handleShow }) => {
 	);
 };
 
-function AllPosts({ getPosts, classes, posts, deletePosts }) {
+function AllPosts({ getPosts, classes, posts, deletePosts, postsCount }) {
 	useEffect(() => {
 		document.title = "All posts";
 		getPosts();
@@ -80,10 +106,6 @@ function AllPosts({ getPosts, classes, posts, deletePosts }) {
 	const [selected, _handleSelect] = useState([]);
 	const [allSelected, _handleAllSelect] = useState(false);
 	const [show, updateShow] = React.useState('["published", "draft"]');
-
-	const handleShow = (e) => {
-		updateShow(e.target.value);
-	};
 
 	const handleSelect = (id) => {
 		if (selected.includes(id)) {
@@ -130,9 +152,10 @@ function AllPosts({ getPosts, classes, posts, deletePosts }) {
 				<ActionBar
 					selected={selected}
 					handleDelete={handleDelete}
-					className={classes.actionBar}
+					classes={classes}
 					show={show}
-					handleShow={handleShow}
+					handleShow={updateShow}
+					count={postsCount}
 				/>
 				<Table>
 					<TableHead className={classes.tableCellHead}>
@@ -170,13 +193,13 @@ function AllPosts({ getPosts, classes, posts, deletePosts }) {
 									{Array.isArray(post.category)
 										? post.category.map((category, i) => (
 												<React.Fragment>
-													<a
+													<MLink
 														style={{ textDecoration: "none" }}
 														key={category._id}
 														href={`category/${category.category}`}
 													>
 														{category.category}
-													</a>
+													</MLink>
 													{post.category.length > 1 &&
 													i !== post.category.length - 1
 														? ", "
@@ -210,7 +233,8 @@ function AllPosts({ getPosts, classes, posts, deletePosts }) {
 }
 
 const mapStateToProps = ({ content: { posts } }) => ({
-	posts,
+	posts: posts.posts,
+	postsCount: posts.count,
 });
 
 const mapDispatchToProps = (dispatch) => ({

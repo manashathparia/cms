@@ -106,15 +106,15 @@ Required when initilizing the edit post page.
 */
 export const loadPostToEditor = (id) => async (dispatch, getState) => {
 	const state = getState();
-	const allPosts = state.content.posts;
+	const allPosts = state.content.posts.posts;
 	const post = allPosts.filter((_post) => _post._id === id);
 	console.log(post);
 	if (post.length === 0) {
 		const { data } = await axios.get(`/api/posts?id=${id}`);
-		console.log(data.data);
+		console.log(data);
 		return dispatch({
 			type: LOAD_POST_TO_EDITOR,
-			payload: data.data,
+			payload: data,
 		});
 	}
 	dispatch({
