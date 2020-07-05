@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 import Add from "@material-ui/icons/Add";
-import axios from "axios";
 import { connect } from "react-redux";
 import { updateEditorFeaturedImage } from "../../Actions/editorActions";
-import readFile from "../../utils/fileReader";
+import { ImageInserter } from "../ImageSelector";
 
 function FeaturedImage(props) {
 	const AddIcon = (
@@ -20,32 +19,28 @@ function FeaturedImage(props) {
 		/>
 	);
 	const [image, updateImage] = useState(props.featuredImage || AddIcon);
+	const [showImageInserter, toggleImageInserter] = useState(false);
 
-	async function handleUploadImage(e) {
-		const file = e.target.files[0];
-		try {
-			const image = await readFile(file);
-			updateImage(
-				<img
-					alt="featured"
-					style={{ width: "100%", height: "100%" }}
-					src={image}
-				/>
-			);
-			let formData = new FormData();
-			formData.append("image", file);
-			const res = await axios.post("/api/upload/media", formData);
-			props.updateToEditor(`/uploads/${res.data.filename}`);
-		} catch (e) {
-			updateImage(AddIcon);
-		}
-	}
+	const handleImageInsert = (img) => {
+		updateImage(
+			<img
+				width="100%"
+				height="100%"
+				alt={img.alt_text}
+				src={`http://localhost:8080/${img.path}`}
+			/>
+		);
+		props.updateToEditor(
+			`<img alt=${img.alt_text || ""} src="http://localhost:8080/${img.path}">`
+		);
+	};
 
 	return (
 		<div>
 			<InputLabel>Featured Image</InputLabel>
 			<label htmlFor="featuredImage">
 				<div
+					onClick={() => toggleImageInserter(!showImageInserter)}
 					style={{
 						border: "1px solid rgba(0, 0, 0, 0.23)",
 						height: "130px",
@@ -54,17 +49,14 @@ function FeaturedImage(props) {
 						position: "relative",
 					}}
 				>
-					<input
-						accept="image/*"
-						style={{ display: "none" }}
-						id="featuredImage"
-						type="file"
-						onChange={handleUploadImage}
-					/>
-
 					{image}
 				</div>
 			</label>
+			<ImageInserter
+				show={showImageInserter}
+				onClose={() => toggleImageInserter(!showImageInserter)}
+				handleInsert={handleImageInsert}
+			/>
 		</div>
 	);
 }

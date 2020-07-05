@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
@@ -10,8 +10,6 @@ import Close from "@material-ui/icons/Close";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import Fab from "@material-ui/core/Fab";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { connect } from "react-redux";
 import { loadImages, uploadImage } from "../Actions/media.actions";
@@ -79,6 +77,23 @@ const useStyles = makeStyles((theme) => ({
 			zIndex: "99999999999999 !important",
 		},
 	},
+	fileUploadOverlay: {
+		height: "100%",
+		position: "absolute",
+		width: "100%",
+		background: "#c4c4c4",
+		zIndex: 9,
+		opacity: 0.4,
+		textAlign: "center",
+	},
+	progressIcon: {
+		position: "absolute",
+		margin: "auto",
+		left: 0,
+		right: 0,
+		top: 0,
+		bottom: 0,
+	},
 }));
 
 const DetailsSidebar = ({ image, button, action }) => {
@@ -88,10 +103,10 @@ const DetailsSidebar = ({ image, button, action }) => {
 	const [description, updateDescription] = useState("");
 
 	useEffect(() => {
-		updateTitle(image.title);
-		updateAltTxt(image.alt_text);
-		updateCaption(image.caption);
-		updateDescription(image.description);
+		updateTitle(image.title || "");
+		updateAltTxt(image.alt_text || "");
+		updateCaption(image.caption || "");
+		updateDescription(image.description || "");
 	}, [image]);
 	const classes = useStyles();
 	return (
@@ -147,6 +162,7 @@ const DetailsSidebar = ({ image, button, action }) => {
 			/>
 			<Button
 				variant="outlined"
+				disabled={!image.path}
 				onClick={() =>
 					action({
 						title,
@@ -206,7 +222,7 @@ const AttachmentDetails = ({ handleDialogClose, open, image }) => {
 				</Grid>
 				<Grid item xs={12} sm={4}>
 					<div style={{ padding: "20px" }}>
-						<DetailsSidebar image={image} button="save" />
+						<DetailsSidebar action={(f) => f} image={image} button="save" />
 					</div>
 				</Grid>
 			</Grid>
@@ -217,28 +233,26 @@ const AttachmentDetails = ({ handleDialogClose, open, image }) => {
 function ImageSelector({ images, loadImages, uploadImage }) {
 	const [selectedImage, updateSelectedImage] = useState({});
 	const [dialog, toggleDialog] = useState(false);
-	const [loading, toggleLoading] = useState(false);
-	const fileInput = useRef();
+	const [uploading, toggleUpoading] = useState(false);
 
 	useEffect(() => {
 		loadImages();
-		const handleFileUpload = () => {
-			const formData = new FormData();
-			formData.append("image", fileInput.current.files[0]);
-			const f = (f) => {
-				updateSelectedImage(f);
-				toggleDialog(true);
-				toggleLoading(false);
-			};
-			toggleLoading(true);
-			uploadImage(formData, f);
-		};
-		document.querySelector("#fileInput").addEventListener("change", () => {
-			handleFileUpload();
-		});
-	}, [loadImages, uploadImage]);
+	}, [loadImages]);
 
 	const classes = useStyles();
+
+	const handleFileUpload = (e) => {
+		const formData = new FormData();
+		formData.append("image", e.target.files[0]);
+		const f = (f, error) => {
+			if (error) return toggleUpoading(false);
+			updateSelectedImage(f);
+			toggleDialog(true);
+			toggleUpoading(false);
+		};
+		toggleUpoading(true);
+		uploadImage(formData, f);
+	};
 
 	const loadImage = (image) => {
 		updateSelectedImage(image);
@@ -247,13 +261,33 @@ function ImageSelector({ images, loadImages, uploadImage }) {
 
 	const handleDialogClose = () => toggleDialog(!dialog);
 
-	const handleActionButton = () => {
-		fileInput.current.click();
-	};
-
 	return (
 		<div className={classes.root}>
+			<div
+				style={{
+					width: "100%",
+					borderBottom: "1px solid lightgray",
+					padding: 10,
+				}}
+			>
+				<Typography display="inline" variant="h6">
+					Image Gallery
+				</Typography>
+				<ImageUploadButton
+					uploadHandler={handleFileUpload}
+					style={{ marginLeft: 10 }}
+				/>
+			</div>
 			<GridList cellHeight={160} cols={5}>
+				{uploading ? (
+					<GridListTile>
+						<div style={{ padding: 10 }}>
+							<div className={classes.fileUploadOverlay}>
+								<CircularProgress className={classes.progressIcon} />
+							</div>
+						</div>
+					</GridListTile>
+				) : null}
 				{images.map((tile) => (
 					<GridListTile
 						className={classes.container}
@@ -274,42 +308,44 @@ function ImageSelector({ images, loadImages, uploadImage }) {
 				open={dialog}
 				image={selectedImage}
 			/>
-			{
-				<Fab
-					variant="extended"
-					color="secondary"
-					aria-label="add"
-					className={classes.fab}
-					size="medium"
-					onClick={handleActionButton}
-					disabled={loading}
-				>
-					<input
-						type="file"
-						accept="image"
-						ref={fileInput}
-						id="fileInput"
-						style={{ display: "none" }}
-					/>
-					{!loading ? (
-						<React.Fragment>
-							<CloudUploadIcon className={classes.uploadIcon} /> Upload
-						</React.Fragment>
-					) : (
-						<CircularProgress style={{ color: "white" }} size={20} />
-					)}
-				</Fab>
-			}
 		</div>
 	);
 }
+
+const ImageUploadButton = ({ uploadHandler, style }) => {
+	return (
+		<Button
+			//onClick={() => inputRef.current.click()}
+			style={style}
+			variant="outlined"
+		>
+			<label>
+				<input
+					onChange={uploadHandler}
+					type="file"
+					style={{ display: "none" }}
+					accept="image/*"
+				/>
+				Upload
+			</label>
+		</Button>
+	);
+};
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const Imageinserter = ({ show, onClose, images, handleInsert, loadImages }) => {
+const Imageinserter = ({
+	show,
+	onClose,
+	images,
+	handleInsert,
+	loadImages,
+	uploadImage,
+}) => {
 	const [selectedImage, updateSelectedImage] = useState({});
+	const [uploading, toggleUploading] = useState(false);
 
 	useEffect(() => {
 		if (images.length <= 0) {
@@ -325,6 +361,16 @@ const Imageinserter = ({ show, onClose, images, handleInsert, loadImages }) => {
 	const handleInsertAndClose = (...args) => {
 		handleClose();
 		handleInsert(...args);
+	};
+
+	const uploadHandler = (e) => {
+		const formData = new FormData();
+		formData.append("image", e.target.files[0]);
+		toggleUploading(true);
+		uploadImage(formData, (img) => {
+			toggleUploading(false);
+			updateSelectedImage(img);
+		});
 	};
 
 	const classes = useStyles();
@@ -346,6 +392,10 @@ const Imageinserter = ({ show, onClose, images, handleInsert, loadImages }) => {
 					>
 						Image Inserter
 					</Typography>
+					<ImageUploadButton
+						uploadHandler={uploadHandler}
+						style={{ bottom: 2 }}
+					/>
 					<IconButton
 						style={{ float: "right", right: "10px" }}
 						onClick={handleClose}
@@ -355,16 +405,30 @@ const Imageinserter = ({ show, onClose, images, handleInsert, loadImages }) => {
 				</div>
 			</AppBar>
 			<div style={{ padding: "30px" }}></div>
-			<Paper>
+			<Paper style={{ paddingLeft: 5 }}>
 				<Grid container>
 					<Grid item sm={8} xs={12}>
 						<GridList cellHeight={160} cols={5}>
+							{uploading ? (
+								<GridListTile>
+									<div style={{ padding: 10 }}>
+										<div className={classes.fileUploadOverlay}>
+											<CircularProgress className={classes.progressIcon} />
+										</div>
+									</div>
+								</GridListTile>
+							) : null}
 							{images.map((image) => (
 								<GridListTile
 									className={classes.container}
 									key={image._id}
 									cols={image.cols || 1}
 									onClick={() => updateSelectedImage(image)}
+									style={{
+										border:
+											image._id === selectedImage._id ? "1.5px solid" : "0",
+										borderRadius: "3px",
+									}}
 								>
 									<img
 										src={`http://localhost:8080/${image.path}`}

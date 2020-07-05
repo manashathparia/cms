@@ -18,10 +18,8 @@ router
 				res.json({ success: true, data: _posts });
 			}
 		} catch (e) {
-			res.status(500).json({
-				sucess: false,
-				error: e.message || "Failed to retrive Posts from Database",
-			});
+			console.error(e);
+			res.status(500).send("Failed to retrive Posts from Database");
 		}
 	})
 	.post("/", async (req, res) => {
@@ -45,21 +43,17 @@ router
 					});
 				}
 			} else {
-				res.status(400).json({ success: false, error: "Slug is required" });
+				res.status(400).send("slug cannot be empty");
 			}
 		} catch (e) {
-			res.status(500).json({
-				success: false,
-				error: {
-					message: e.message || "Error while saving the Post into Database",
-				},
-			});
+			console.error(e);
+			res.status(500).send("Error while saving the Post into Database");
 		}
 	})
 	.delete("/", async (req, res) => {
 		const { ids } = req.query;
 		if (!ids) {
-			res.status(400).json({ success: false, error: "Bad delete request" });
+			res.status(400).send("Atleast one ID must be present");
 		} else {
 			await Post.deleteMany({ _id: { $in: ids.split(",") } });
 			res
@@ -77,7 +71,8 @@ router
 			);
 			res.sendStatus(200);
 		} catch (e) {
-			res.status(500).send(e);
+			console.error(e);
+			res.status(500).send(e.message);
 		}
 	})
 	.put("/:id", async (req, res) => {
@@ -86,29 +81,19 @@ router
 			try {
 				const post = await Post.findById(doc_id);
 				if (post) {
-					console.log(req.body);
 					await Post.updateOne({ _id: doc_id }, req.body);
 					res.json({
-						sucess: true,
-						message: "Post updated sucessfully",
 						_id: doc_id,
 					});
 				} else {
-					res.status(404).json({
-						success: false,
-						error: `Post with id ${doc_id} not found`,
-					});
+					res.status(404).send(`Post with id ${doc_id} not found`);
 				}
 			} catch (e) {
-				res.status(500).json({
-					sucess: false,
-					error: e.message || "Error while updating the Post into Database",
-				});
+				console.error(e);
+				res.status(500).send("Error while updating the Post into Database");
 			}
 		} else {
-			res
-				.status(400)
-				.json({ success: false, error: `Invalid object ID: ${doc_id}` });
+			res.status(400).send(`Invalid object ID: ${doc_id}`);
 		}
 	});
 

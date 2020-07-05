@@ -12,10 +12,9 @@ import "tinymce/plugins/imagetools";
 import "tinymce/plugins/image";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/wordcount";
-import Plugin from "./tinyplugin";
-
-import "./wysiwyg.css";
+import Plugin from "./imageInserterPlugin";
 import { ImageInserter } from "../ImageSelector";
+
 const options =
 	"formatselect | bold italic | alignleft aligncenter alignright | numlist bullist | imageInserter table link  | undo redo | code  | searchreplace ";
 
@@ -24,7 +23,10 @@ export default function Wysiwyg({ body, onChange, refs }) {
 	const [showImageSelector, toggleImageSelector] = useState(false);
 
 	function handleImageInsert(img) {
-		const image = `<img src=http://localhost:8080/${img.path} width=200 alt=${img.alt_text}>`;
+		const image = `
+		<img src=http://localhost:8080/${img.path} width=200 alt=${img.alt_text ||
+			""}>`;
+
 		editorRef.current.insertContent(image);
 	}
 
