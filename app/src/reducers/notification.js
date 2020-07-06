@@ -1,6 +1,7 @@
 import {
 	NEW_NOTIFICATION,
 	CLEAR_NOTIFICATION,
+	TOGGLE_LOADER,
 } from "../Actions/notification.actions";
 
 const initial = {
@@ -8,6 +9,7 @@ const initial = {
 	show: false,
 	autoHide: true,
 	message: "",
+	loading: false,
 };
 
 export default function notificationReducer(
@@ -19,6 +21,8 @@ export default function notificationReducer(
 			return { ...initial, ...payload };
 		case CLEAR_NOTIFICATION:
 			return initial;
+		case TOGGLE_LOADER:
+			return { ...state, loading: !state.loading };
 		default:
 			return state;
 	}

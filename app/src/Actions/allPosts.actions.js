@@ -1,20 +1,24 @@
 import Axios from "axios";
 import { UPDATE_ALL_POSTS } from "../constants";
-import { newNotification } from "./notification.actions";
+import { newNotification, toggleLoader } from "./notification.actions";
 
 export const UPDATE_POSTS_COUNT = "UPDATE_POSTS_COUNT";
 
 export const updateAllPosts = () => async (dispatch) => {
+	dispatch(toggleLoader());
 	const res = await Axios.get("/api/posts");
 	dispatch({ type: UPDATE_ALL_POSTS, payload: res.data.posts });
 	dispatch({ type: UPDATE_POSTS_COUNT, payload: res.data.count });
+	dispatch(toggleLoader());
 };
 
-export const deletePosts = (ids) => async (dispatch, getState) => {
+export const trashPosts = (ids) => async (dispatch, getState) => {
 	try {
 		await Axios.put(`/api/posts/trash/?ids=${ids.toString()}`);
 		const {
-			content: { posts },
+			content: {
+				posts: { posts },
+			},
 		} = await getState();
 		dispatch(
 			newNotification({
@@ -30,6 +34,7 @@ export const deletePosts = (ids) => async (dispatch, getState) => {
 			}
 			return post;
 		});
+
 		dispatch({
 			type: UPDATE_ALL_POSTS,
 			payload: _posts,
@@ -39,6 +44,42 @@ export const deletePosts = (ids) => async (dispatch, getState) => {
 			newNotification({
 				varient: "error",
 				message: "Error moving to trash",
+				show: true,
+				autoHide: false,
+			})
+		);
+	}
+};
+export const deletePosts = (ids) => async (dispatch, getState) => {
+	try {
+		await Axios.delete(`/api/posts/?ids=${ids.toString()}`);
+		const {
+			content: {
+				posts: { posts, count },
+			},
+		} = await getState();
+		dispatch(
+			newNotification({
+				varient: "success",
+				message: "Posts successfully deleted",
+				show: true,
+			})
+		);
+		const _posts = posts.filter((post) => !ids.includes(post._id));
+		dispatch({
+			type: UPDATE_ALL_POSTS,
+			payload: _posts,
+		});
+		dispatch({
+			type: UPDATE_POSTS_COUNT,
+			payload: { trash: count.trash - ids.length },
+		});
+	} catch (e) {
+		console.log(e);
+		dispatch(
+			newNotification({
+				varient: "error",
+				message: e.response.data,
 				show: true,
 				autoHide: false,
 			})

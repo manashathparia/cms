@@ -15,27 +15,6 @@ import {
 } from "../constants";
 import { newNotification } from "./notification.actions";
 
-export function submitPost(url, method) {
-	return function submitPostThunk(dispatch, getState) {
-		const state = getState();
-		const { editor } = state;
-		axios({
-			url,
-			data: { ...editor },
-			method,
-		}).then(({ data }) => {
-			dispatch(
-				newNotification({
-					varient: "success",
-					message: "Successfully posted",
-					show: true,
-				})
-			);
-			dispatch(push(`/posts/edit/${data._id}`));
-		});
-	};
-}
-
 export const updateEditorBody = (body) => ({
 	type: UPDATE_EDITOR_BODY,
 	payload: body,
@@ -45,27 +24,6 @@ export const updateEditorTitle = (body) => ({
 	type: UPDATE_EDITOR_TITLE,
 	payload: body,
 });
-
-export const updateCategory = (category) => {
-	return function(dispatch, getState) {
-		const state = getState();
-		const categories = state.editor.category;
-		// Remove the category if it already exists i.e Delete request, else Add it i.e Post request
-		if (categories.includes(category)) {
-			const i = categories.indexOf(category);
-			categories.splice(i, 1);
-			dispatch({
-				type: UPDATE_EDITOR_CATEGORY,
-				payload: [...categories],
-			});
-		} else {
-			dispatch({
-				type: UPDATE_EDITOR_CATEGORY,
-				payload: [...categories, category],
-			});
-		}
-	};
-};
 
 export const updateEditorSlug = (body) => ({
 	type: UPDATE_EDITOR_SLUG,
@@ -100,22 +58,67 @@ export const clearEditor = () => ({
 	type: CLEAR_EDITOR,
 });
 
-/*  
-This function loads data from state-->contents-->posts[] into editor.
-Required when initilizing the edit post page.
-*/
+export function submitPost(url, method) {
+	return function submitPostThunk(dispatch, getState) {
+		const state = getState();
+		const { editor } = state;
+		axios({
+			url,
+			data: { ...editor },
+			method,
+		}).then(({ data }) => {
+			dispatch(
+				newNotification({
+					varient: "success",
+					message: "Successfully posted",
+					show: true,
+				})
+			);
+			dispatch(push(`/posts/edit/${data.post._id}`));
+		});
+	};
+}
+
+export const updateCategory = (category) => {
+	return function(dispatch, getState) {
+		const state = getState();
+		const categories = state.editor.category;
+		// Remove the category if it already exists i.e unchecked category
+		if (categories.includes(category)) {
+			const i = categories.indexOf(category);
+			categories.splice(i, 1);
+			dispatch({
+				type: UPDATE_EDITOR_CATEGORY,
+				payload: [...categories],
+			});
+		} else {
+			dispatch({
+				type: UPDATE_EDITOR_CATEGORY,
+				payload: [...categories, category],
+			});
+		}
+	};
+};
+
+//
+// This function loads data from state-->contents-->posts[] into editor.
+// Required when initilizing the edit post page.
+// */
 export const loadPostToEditor = (id) => async (dispatch, getState) => {
 	const state = getState();
 	const allPosts = state.content.posts.posts;
 	const post = allPosts.filter((_post) => _post._id === id);
-	console.log(post);
 	if (post.length === 0) {
-		const { data } = await axios.get(`/api/posts?id=${id}`);
-		console.log(data);
-		return dispatch({
-			type: LOAD_POST_TO_EDITOR,
-			payload: data,
-		});
+		try {
+			const { data } = await axios.get(`/api/posts?id=${id}`);
+			console.log(data);
+			return dispatch({
+				type: LOAD_POST_TO_EDITOR,
+				payload: data,
+			});
+		} catch (e) {
+			dispatch(push("/404"));
+		}
 	}
 	dispatch({
 		type: LOAD_POST_TO_EDITOR,

@@ -9,9 +9,14 @@ import CheckBox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 import MLink from "@material-ui/core/Link";
-import { updateAllPosts, deletePosts } from "../../Actions/allPosts.actions";
+import {
+	updateAllPosts,
+	deletePosts,
+	trashPosts,
+} from "../../Actions/allPosts.actions";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import shape from "@material-ui/core/styles/shape";
 
 const styles = (theme) => ({
 	root: {
@@ -51,6 +56,7 @@ const ActionBar = ({
 	show,
 	handleShow,
 	count,
+	remove,
 }) => {
 	return (
 		<div className={classes.actionBar}>
@@ -91,13 +97,21 @@ const ActionBar = ({
 				style={{ float: "right" }}
 				onClick={handleDelete}
 			>
-				Trash
+				{remove ? "Remove" : "Trash"}
 			</Button>
 		</div>
 	);
 };
 
-function AllPosts({ getPosts, classes, posts, deletePosts, postsCount }) {
+function AllPosts({
+	getPosts,
+	classes,
+	posts,
+	trashPosts,
+	postsCount,
+	deletePosts,
+	loading,
+}) {
 	useEffect(() => {
 		document.title = "All posts";
 		getPosts();
@@ -123,7 +137,7 @@ function AllPosts({ getPosts, classes, posts, deletePosts, postsCount }) {
 		if (!allSelected) {
 			const arr = [];
 			posts.forEach((post) => {
-				arr.push(post._id);
+				if (JSON.parse(show).includes(post.status)) arr.push(post._id);
 			});
 			_handleAllSelect(true);
 			_handleSelect(arr);
@@ -133,29 +147,36 @@ function AllPosts({ getPosts, classes, posts, deletePosts, postsCount }) {
 		_handleSelect([]);
 	};
 
-	const handleDelete = () => {
-		deletePosts(selected);
+	const handlePostsTrash = () => {
+		trashPosts(selected);
 		_handleSelect([]);
 		_handleAllSelect(false);
 	};
 
-	const tableOptions = ["Title", "Category", "State", "Author", "Updated"];
+	const handlePostsDelete = () => {
+		const overConfident = window.confirm("Are you sure you won't regret this?");
+		if (overConfident) deletePosts(selected);
+	};
+
+	const tableOptions = ["Title", "Category", "State", "Author", "Date"];
 
 	const filteredPosts = posts?.filter((post) => {
 		const a = JSON.parse(show);
 		return a.includes(post.status);
 	});
 
+	const isTrash = show === '["trash"]';
 	return (
 		<div>
 			<Paper className={classes.root}>
 				<ActionBar
 					selected={selected}
-					handleDelete={handleDelete}
+					handleDelete={isTrash ? handlePostsDelete : handlePostsTrash}
 					classes={classes}
 					show={show}
 					handleShow={updateShow}
 					count={postsCount}
+					remove={isTrash}
 				/>
 				<Table>
 					<TableHead className={classes.tableCellHead}>
@@ -216,15 +237,19 @@ function AllPosts({ getPosts, classes, posts, deletePosts, postsCount }) {
 								</TableCell>
 
 								<TableCell className={classes.tableCell}>
-									{post.updatedAt.split(",")[0]}
+									{post.date.split(",")[0]}
 								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
 				</Table>
-				{filteredPosts.length === 0 ? (
+				{filteredPosts.length === 0 && loading ? (
 					<div style={{ padding: "20px", textAlign: "center" }}>
-						<h1>No Posts</h1>
+						<p>LOADING...</p>
+					</div>
+				) : filteredPosts.length === 0 ? (
+					<div style={{ padding: "20px", textAlign: "center" }}>
+						<h1>NO POSTS</h1>
 					</div>
 				) : null}
 			</Paper>
@@ -232,14 +257,18 @@ function AllPosts({ getPosts, classes, posts, deletePosts, postsCount }) {
 	);
 }
 
-const mapStateToProps = ({ content: { posts } }) => ({
+const mapStateToProps = ({ content: { posts }, notification }) => ({
 	posts: posts.posts,
 	postsCount: posts.count,
+	loading: notification.loading,
 });
 
 const mapDispatchToProps = (dispatch) => ({
 	getPosts() {
 		dispatch(updateAllPosts());
+	},
+	trashPosts(ids) {
+		dispatch(trashPosts(ids));
 	},
 	deletePosts(ids) {
 		dispatch(deletePosts(ids));

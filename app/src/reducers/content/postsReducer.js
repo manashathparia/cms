@@ -11,7 +11,7 @@ export default function postReducer(state = initalState, { type, payload }) {
 		case UPDATE_ALL_POSTS:
 			return { ...state, posts: payload };
 		case UPDATE_POSTS_COUNT:
-			return { ...state, count: payload };
+			return { ...state, count: { ...state.count, ...payload } };
 
 		default:
 			return state;
