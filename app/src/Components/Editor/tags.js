@@ -5,33 +5,33 @@ import Input from "@material-ui/core/TextField";
 import Label from "@material-ui/core/FormLabel";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { addTag, deleteTag } from "../../Actions/editorActions";
+import { addTag, deleteTag } from "../../Actions/editor.actions";
 
 const styles = () => ({
 	parent: {
 		width: "100%",
 		marginTop: "10px",
 		border: "0.5px solid #ccc",
-		borderRadius: "2px"
+		borderRadius: "2px",
 	},
 	div: {
-		padding: "10px"
+		padding: "10px",
 	},
 	chip: {
 		marginBottom: "5px",
 		marginLeft: "auto",
-		marginRight: "auto"
-	}
+		marginRight: "auto",
+	},
 });
 
-const Tags = props => {
+const Tags = (props) => {
 	const [tagValue, tagChange] = useState("");
 
-	const handleTagChange = e => {
+	const handleTagChange = (e) => {
 		tagChange(e.target.value);
 	};
 
-	const handleKeyPress = e => {
+	const handleKeyPress = (e) => {
 		if (e.charCode === 13) {
 			e.preventDefault();
 			if (props.tags.includes(tagValue)) return;
@@ -50,7 +50,7 @@ const Tags = props => {
 			</div>
 			<div className={classes.chipsDiv}>
 				{Array.isArray(tags)
-					? tags.map(tag => (
+					? tags.map((tag) => (
 							<Chip key={tag} label={tag} onDelete={() => deleteTag(tag)} />
 					  ))
 					: null}
@@ -69,11 +69,11 @@ const Tags = props => {
 	);
 };
 
-const mapStateToProps = state => ({
-	tags: state.editor.tags
+const mapStateToProps = (state) => ({
+	tags: state.editor.tags,
 });
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
 	bindActionCreators({ addTag, deleteTag }, dispatch);
 
 export default connect(

@@ -17,11 +17,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Add from "@material-ui/icons/Add";
-import {
-	addCategory,
-	updateaAllCategories,
-} from "../../Actions/category,actions";
-import { updateCategory } from "../../Actions/editorActions";
+import { addCategory, getCategories } from "../../Actions/category.actions";
+import { updateCategory } from "../../Actions/editor.actions";
 
 const styles = makeStyles((theme) => ({
 	root: {
@@ -56,8 +53,58 @@ const styles = makeStyles((theme) => ({
 	},
 }));
 
+export const AddCategoryDialog = ({ open, onClose, onSubmit, full }) => {
+	const [category, handleCategoryChange] = useState("");
+	const [description, handleDescriptionChange] = useState("");
+
+	const submitAndClear = () => {
+		handleCategoryChange("");
+		handleDescriptionChange("");
+		onSubmit({ category, description });
+	};
+	return (
+		<Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
+			<DialogTitle id="form-dialog-title">Add Category</DialogTitle>
+			<DialogContent>
+				<TextField
+					margin="dense"
+					id="add_category"
+					label="Category"
+					type="text"
+					fullWidth
+					value={category}
+					onChange={(e) => handleCategoryChange(e.target.value)}
+					//eslint-disable-next-line
+					autoFocus={true}
+					error={false}
+				/>
+				{full && (
+					<TextField
+						margin="dense"
+						id="add_category_description"
+						label="Description"
+						type="text"
+						fullWidth
+						multiline
+						value={category}
+						onChange={(e) => handleDescriptionChange(e.target.value)}
+						error={false}
+					/>
+				)}
+			</DialogContent>
+			<DialogActions>
+				<Button onClick={onClose} color="primary">
+					Cancel
+				</Button>
+				<Button onClick={submitAndClear} color="primary">
+					Add
+				</Button>
+			</DialogActions>
+		</Dialog>
+	);
+};
+
 const Category = (props) => {
-	const [addCategoryValue, handleAddCategoryValue] = useState("");
 	const [promptState, tooglePrompt] = useState(false);
 	const [expanded, toogleExpanded] = useState(false);
 
@@ -68,21 +115,13 @@ const Category = (props) => {
 	const handleAddCategoryDialog = () => tooglePrompt(!promptState);
 	const toggleCategories = () => toogleExpanded(!expanded);
 
-	const handleKeyPress = (e) => {
-		if (e.key === "Enter") handleAddCategory();
-		return;
-	};
-
-	const handleAddCategory = async () => {
-		if (addCategoryValue === "") {
+	const handleAddCategory = async (category) => {
+		if (category.category === "") {
 			return;
 		}
-		const res = await Axios.post("/api/categories", {
-			category: addCategoryValue,
-		});
-		if (res.status === 200) {
-			props.addCategory(res.data.data);
-		}
+
+		props.addCategory(category);
+
 		handleAddCategoryDialog();
 	};
 
@@ -133,37 +172,11 @@ const Category = (props) => {
 					))}
 				</List>
 			</Collapse>
-
-			<Dialog
+			<AddCategoryDialog
 				open={promptState}
 				onClose={handleAddCategoryDialog}
-				aria-labelledby="form-dialog-title"
-			>
-				<DialogTitle id="form-dialog-title">Add Category</DialogTitle>
-				<DialogContent>
-					<TextField
-						margin="dense"
-						id="add_category"
-						label="Category"
-						type="text"
-						fullWidth
-						onKeyDown={handleKeyPress}
-						value={addCategoryValue}
-						onChange={(e) => handleAddCategoryValue(e.target.value)}
-						//eslint-disable-next-line
-						autoFocus={true}
-						error={false}
-					/>
-				</DialogContent>
-				<DialogActions>
-					<Button onClick={handleAddCategoryDialog} color="primary">
-						Cancel
-					</Button>
-					<Button onClick={handleAddCategory} color="primary">
-						Add
-					</Button>
-				</DialogActions>
-			</Dialog>
+				onSubmit={handleAddCategory}
+			/>
 		</div>
 	);
 };
@@ -174,7 +187,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => ({
 	addCategory: (category) => dispatch(addCategory(category)),
-	getCategories: () => dispatch(updateaAllCategories()),
+	getCategories: () => dispatch(getCategories()),
 	handleChange: (category) => dispatch(updateCategory(category)),
 });
 

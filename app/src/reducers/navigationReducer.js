@@ -1,9 +1,12 @@
-import { TOOGLE_NAVIGATION_DRAWER, CHANGE_NAVBAR_HEADING } from "../constants";
+import {
+	TOOGLE_NAVIGATION_DRAWER,
+	CHANGE_NAVBAR_HEADING,
+} from "../Actions/navigationActions";
 
 const initialState = {
 	mobileDrawerOpen: false,
 	desktopDrawerOpen: true,
-	heading: ""
+	heading: "",
 };
 export default function navigationReducer(
 	state = initialState,
@@ -14,7 +17,7 @@ export default function navigationReducer(
 			return {
 				...state,
 				mobileDrawerOpen: !state.mobileDrawerOpen,
-				desktopDrawerOpen: !state.desktopDrawerOpen
+				desktopDrawerOpen: !state.desktopDrawerOpen,
 			};
 		case CHANGE_NAVBAR_HEADING:
 			return { ...state, heading: payload };

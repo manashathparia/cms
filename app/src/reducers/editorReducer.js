@@ -9,7 +9,7 @@ import {
 	UPDATE_STATUS,
 	CLEAR_EDITOR,
 	LOAD_POST_TO_EDITOR,
-} from "../constants";
+} from "../Actions/editor.actions";
 
 const initialState = {
 	title: "",

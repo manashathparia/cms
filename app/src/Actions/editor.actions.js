@@ -1,19 +1,18 @@
 import axios from "axios";
 import { push } from "connected-react-router";
 
-import {
-	UPDATE_EDITOR_BODY,
-	UPDATE_EDITOR_TITLE,
-	UPDATE_EDITOR_SLUG,
-	UPDATE_EDITOR_CATEGORY,
-	UPDATE_EDITOR_FEATURED_IMAGE,
-	ADD_EDITOR_TAG,
-	REMOVE_EDITOR_TAG,
-	UPDATE_STATUS,
-	CLEAR_EDITOR,
-	LOAD_POST_TO_EDITOR,
-} from "../constants";
 import { newNotification } from "./notification.actions";
+
+export const UPDATE_EDITOR_TITLE = "UPDATE_EDITOR_TITLE";
+export const UPDATE_EDITOR_BODY = "UPDATE_EDITOR_BODY";
+export const UPDATE_EDITOR_SLUG = "UPDATE_EDITOR_SLUG";
+export const UPDATE_EDITOR_CATEGORY = "UPDATE_EDITOR_CATEGORY";
+export const ADD_EDITOR_TAG = "ADD_EDITOR_TAG";
+export const REMOVE_EDITOR_TAG = "REMOVE_EDITOR_TAG";
+export const UPDATE_EDITOR_FEATURED_IMAGE = "UPDATE_EDITOR_FEATURED_IMAGE";
+export const UPDATE_STATUS = "UPDATE_STATUS";
+export const CLEAR_EDITOR = "CLEAR_EDITOR";
+export const LOAD_POST_TO_EDITOR = "LOAD_POST_TO_EDITOR";
 
 export const updateEditorBody = (body) => ({
 	type: UPDATE_EDITOR_BODY,

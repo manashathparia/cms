@@ -5,12 +5,11 @@ const categorySchema = new mongoose.Schema({
 		type: String,
 		required: true,
 		unique: true,
-		minlength: 1
+		minlength: 1,
 	},
 	description: {
 		type: String,
-		minlength: 1
-	}
+	},
 });
 
 mongoose.model("Category", categorySchema);

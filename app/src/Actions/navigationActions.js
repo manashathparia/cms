@@ -1,10 +1,11 @@
-import { TOOGLE_NAVIGATION_DRAWER, CHANGE_NAVBAR_HEADING } from "../constants";
+export const TOOGLE_NAVIGATION_DRAWER = "TOOGLE_NAVIGATION_DRAWER";
+export const CHANGE_NAVBAR_HEADING = "CHANGE_NAVBAR_HEADING";
 
 export const toogleDrawer = () => ({
-	type: TOOGLE_NAVIGATION_DRAWER
+	type: TOOGLE_NAVIGATION_DRAWER,
 });
 
-export const changeHeaderHeading = heading => ({
+export const changeHeaderHeading = (heading) => ({
 	type: CHANGE_NAVBAR_HEADING,
-	payload: heading
+	payload: heading,
 });

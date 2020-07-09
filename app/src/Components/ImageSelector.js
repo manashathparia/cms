@@ -119,7 +119,7 @@ const DetailsSidebar = ({ image, button, action }) => {
 					File type: {image.mimetype}
 				</Typography>
 				<Typography color="textSecondary" style={{ fontSize: "small" }}>
-					Size: {Math.round(image.size / 1024)} KB
+					Size: {image.size && `${Math.round(image.size / 1024)} KB`}
 				</Typography>
 				<Typography color="textSecondary" style={{ fontSize: "small" }}>
 					Path: {image.path}

@@ -33,7 +33,7 @@ function App() {
 	);
 
 	return (
-		<div style={{ display: "flex" }}>
+		<div style={{ display: "flex", height: "100%" }}>
 			<MuiThemeProvider theme={theme}>
 				<Header />
 				<SideBar />

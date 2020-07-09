@@ -16,7 +16,6 @@ import {
 } from "../../Actions/allPosts.actions";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import shape from "@material-ui/core/styles/shape";
 
 const styles = (theme) => ({
 	root: {

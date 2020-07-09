@@ -14,7 +14,7 @@ import {
 	updateStatus,
 	clearEditor,
 	loadPostToEditor,
-} from "../../Actions/editorActions";
+} from "../../Actions/editor.actions";
 import FeaturedImage from "./FeaturedImage";
 import Categories from "./categories";
 import Tags from "./tags";

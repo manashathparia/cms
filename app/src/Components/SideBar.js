@@ -63,6 +63,10 @@ const menuItems = [
 				name: "All Posts",
 				to: "/posts/all",
 			},
+			{
+				name: "Categories",
+				to: "/posts/categories",
+			},
 		],
 	},
 	{

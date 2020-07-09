@@ -1,8 +1,8 @@
 import Axios from "axios";
-import { UPDATE_ALL_POSTS } from "../constants";
 import { newNotification, toggleLoader } from "./notification.actions";
 
 export const UPDATE_POSTS_COUNT = "UPDATE_POSTS_COUNT";
+export const UPDATE_ALL_POSTS = "UPDATE_ALL_POSTS";
 
 export const updateAllPosts = () => async (dispatch) => {
 	dispatch(toggleLoader());

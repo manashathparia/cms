@@ -4,7 +4,7 @@ import clsx from "clsx";
 import Paper from "@material-ui/core/Paper";
 import { useSelector } from "react-redux";
 
-const styles = makeStyles(theme => ({
+const styles = makeStyles((theme) => ({
 	toolbar: theme.mixins.toolbar,
 	content: {
 		[theme.breakpoints.up("sm")]: {
@@ -12,32 +12,37 @@ const styles = makeStyles(theme => ({
 			padding: theme.spacing(3),
 			transition: theme.transitions.create("margin", {
 				easing: theme.transitions.easing.sharp,
-				duration: theme.transitions.duration.leavingScreen
+				duration: theme.transitions.duration.leavingScreen,
 			}),
-			marginLeft: -240
-		}
+			marginLeft: -240,
+		},
 	},
 	contentShift: {
 		transition: theme.transitions.create("margin", {
 			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen
+			duration: theme.transitions.duration.enteringScreen,
 		}),
-		marginLeft: 0
-	}
+		marginLeft: 0,
+	},
+	paper: {
+		minHeight: "calc(100% - 64px)",
+	},
 }));
 
 export default function Content({ children }) {
-	const drawerOpen = useSelector(state => state.navigation.desktopDrawerOpen);
+	const drawerOpen = useSelector((state) => state.navigation.desktopDrawerOpen);
 	const classes = styles();
 	return (
 		<main
 			style={{ padding: 0 }}
 			className={clsx(classes.content, {
-				[classes.contentShift]: drawerOpen
+				[classes.contentShift]: drawerOpen,
 			})}
 		>
 			<div className={classes.toolbar} />
-			<Paper style={{ padding: "14px" }}>{children}</Paper>
+			<Paper className={classes.paper} style={{ padding: "14px" }}>
+				{children}
+			</Paper>
 		</main>
 	);
 }

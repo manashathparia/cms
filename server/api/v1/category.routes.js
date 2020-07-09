@@ -8,43 +8,57 @@ router
 	.get(async (req, res) => {
 		try {
 			const _categories = await Category.find();
-			res.json({ success: true, data: _categories });
+			res.json(_categories);
 		} catch (e) {
-			res.status(500).json({
-				success: false,
-				error: {
-					message:
-						e.message || "Error while retriving categories from database",
-				},
-			});
+			res
+				.status(500)
+				.json(e.message || "Error while retriving categories from database");
 		}
 	})
 	.post(async (req, res) => {
 		console.log(req.body);
 		if (!req.body.category) {
-			res
-				.status(400)
-				.json({ success: false, error: "Category cannot be empty" });
+			res.status(400).json("Category cannot be empty");
 			return;
 		}
 		try {
 			const categorySaved = await Category.create(req.body);
-			res.json({ success: true, data: categorySaved });
+			res.json(categorySaved);
+		} catch (e) {
+			res.status(400).json(e.message);
+		}
+	});
+
+router
+	.route("/:category_id")
+	.put(async (req, res) => {
+		const {
+			params: { category_id },
+			body,
+		} = req;
+		try {
+			if (category_id) {
+				await Category.findByIdAndUpdate(category_id, body);
+				res.json({ success: true });
+			} else {
+				res
+					.status(400)
+					.json({ success: false, error: "Invalid update request" });
+			}
 		} catch (e) {
 			res.status(400).json({
-				success: true,
-				error: {
-					message: e,
-					stack: e.stack,
-				},
+				success: false,
+				error: { message: e.message, stack: e.stack },
 			});
 		}
 	})
 	.delete(async (req, res) => {
-		const { ids } = req.body;
+		const {
+			params: { category_id },
+		} = req;
 		try {
-			if (ids && Array.isArray(ids) && ids.length > 0) {
-				await Category.deleteMany({ _id: { $in: ids } });
+			if (category_id) {
+				await Category.findByIdAndDelete(category_id);
 				res.json({ success: true });
 			} else {
 				res
@@ -61,24 +75,5 @@ router
 			});
 		}
 	});
-
-router.put("/:category_id", async (req, res) => {
-	const {
-		param: { category_id },
-		body: { updateWith },
-	} = req;
-	try {
-		if (category_id && updateWith) {
-			await Category.updateOne({ _id: category_id }, { category: updateWith });
-			res.json({ success: true });
-		} else {
-			res.status(400).json({ success: false, error: "Invalid update request" });
-		}
-	} catch (e) {
-		res
-			.status(400)
-			.json({ success: false, error: { message: e.message, stack: e.stack } });
-	}
-});
 
 module.exports = router;

@@ -1,5 +1,7 @@
-import { UPDATE_ALL_POSTS } from "../../constants";
-import { UPDATE_POSTS_COUNT } from "../../Actions/allPosts.actions";
+import {
+	UPDATE_POSTS_COUNT,
+	UPDATE_ALL_POSTS,
+} from "../../Actions/allPosts.actions";
 
 const initalState = {
 	posts: [],

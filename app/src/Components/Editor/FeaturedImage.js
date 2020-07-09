@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 import Add from "@material-ui/icons/Add";
 import { connect } from "react-redux";
-import { updateEditorFeaturedImage } from "../../Actions/editorActions";
+import { updateEditorFeaturedImage } from "../../Actions/editor.actions";
 import { ImageInserter } from "../ImageSelector";
 
 function FeaturedImage(props) {

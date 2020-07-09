@@ -1,8 +1,8 @@
 import {
 	UPDATE_ALL_CATEGORIES,
 	ADD_CATEGORY,
-	REMOVE_CATEGORY
-} from "../../constants";
+	REMOVE_CATEGORY,
+} from "../../Actions/category.actions";
 
 const initalState = [];
 
@@ -16,7 +16,7 @@ export default function categoriesReducer(
 		case ADD_CATEGORY:
 			return [...state, payload];
 		case REMOVE_CATEGORY:
-			return state.filter(val => val === payload);
+			return state.filter((val) => val === payload);
 		default:
 			return state;
 	}
