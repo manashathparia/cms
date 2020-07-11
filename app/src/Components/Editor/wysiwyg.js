@@ -54,7 +54,7 @@ export default function Wysiwyg({ body, onChange, refs }) {
 						"visualblocks imageInserter link image code lists searchreplace wordcount imagetools ",
 					toolbar: options,
 					menubar: false,
-					height: 500,
+					height: 498,
 					image_advtab: true,
 					init_instance_callback: (e) => (editorRef.current = e),
 					branding: false,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 import Add from "@material-ui/icons/Add";
 import { connect } from "react-redux";
@@ -18,8 +18,22 @@ function FeaturedImage(props) {
 			fontSize="large"
 		/>
 	);
-	const [image, updateImage] = useState(props.featuredImage || AddIcon);
+	const [image, updateImage] = useState(AddIcon);
 	const [showImageInserter, toggleImageInserter] = useState(false);
+
+	useEffect(() => {
+		if (props.featuredImage) {
+			const Img = (
+				<img
+					width="100%"
+					height="100%"
+					alt={props.featuredImage.altText}
+					src={props.featuredImage.url}
+				/>
+			);
+			updateImage(Img);
+		}
+	}, [props.featuredImage]);
 
 	const handleImageInsert = (img) => {
 		updateImage(
@@ -30,9 +44,10 @@ function FeaturedImage(props) {
 				src={`http://localhost:8080/${img.path}`}
 			/>
 		);
-		props.updateToEditor(
-			`<img alt=${img.alt_text || ""} src="http://localhost:8080/${img.path}">`
-		);
+		props.updateToEditor({
+			url: `http://localhost:8080/${img.path}`,
+			altText: img.alt_text,
+		});
 	};
 
 	return (

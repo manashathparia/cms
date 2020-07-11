@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const fileUpload = require("../../middlewares/fileUpload");
 const mongoose = require("mongoose");
-const path = require("path");
+const imageThumbnails = require("../../lib/imageThumbnails");
 
 const Image = mongoose.model("Image");
 
@@ -17,25 +17,32 @@ router
 		}
 	})
 	.post("/", fileUpload.array("image", 10), async (req, res) => {
-		const imageFileTypes = [".jpg", ".jpeg", ".png", ".webp"];
 		try {
+			if (req.fileValidationError)
+				throw Error(`Unsupported file type "${req.unsupportedFileType}"`);
 			if (req.files.length > 1) {
+				const promises = [];
 				const files = req.files.map((file) => {
-					if (!imageFileTypes.includes(path.extname(file.originalname)))
-						throw Error("Unsupported File type");
+					promises.push(imageThumbnails(file));
 					return {
 						...file,
 						title: file.originalname,
 					};
 				});
-				const img = await Image.insertMany(files);
+				const thumb = await Promise.all(promises);
+				const _files = files.map((file, i) => ({
+					...file,
+					thumbnails: thumb[i],
+				}));
+				const img = await Image.insertMany(_files);
 				return res.json(img);
 			}
-			if (!imageFileTypes.includes(path.extname(req.files[0].originalname)))
-				throw Error("Unsupported File type");
+
+			const thumbnails = await imageThumbnails(req.files[0]);
 			const img = await Image.create({
 				...req.files[0],
 				...req.body,
+				thumbnails,
 				title: req.files[0].originalname,
 			});
 			res.json(img);

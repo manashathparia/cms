@@ -17,15 +17,26 @@ const PostSchema = new mongoose.Schema({
 	author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 	updatedAt: { type: String, default: moment().format("L") },
 	body: String,
-	featuredImage: String,
+	featuredImage: {
+		type: {
+			url: String,
+			altText: String,
+		},
+	},
 	tags: [String],
-	category: [{ type: Object }],
+	category: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
 	comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comments" }],
 	status: {
 		type: String,
 		required: true,
 		enum: ["published", "draft", "trashed"],
 		default: "draft",
+	},
+	type: {
+		type: String,
+		enum: ["post", "page"],
+		default: "post",
+		required: true,
 	},
 });
 

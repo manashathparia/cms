@@ -129,7 +129,7 @@ const Category = (props) => {
 		const categories = props.editorCategory;
 		let checked = false;
 		for (let i = 0; i < categories?.length; i++) {
-			if (categories[i]._id === id) {
+			if (categories[i] === id) {
 				checked = true;
 			}
 		}

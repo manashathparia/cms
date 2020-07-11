@@ -73,7 +73,7 @@ export function submitPost(url, method) {
 					show: true,
 				})
 			);
-			dispatch(push(`/posts/edit/${data.post._id}`));
+			dispatch(push(`/posts/edit/${data._id}`));
 		});
 	};
 }

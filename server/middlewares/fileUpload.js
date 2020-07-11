@@ -11,6 +11,19 @@ const storage = multer.diskStorage({
 	},
 });
 
-const fileUpload = multer({ storage });
+const fileUpload = multer({
+	storage,
+	fileFilter: function(req, file, callback) {
+		const ext = path.extname(file.originalname);
+		const imageFileTypes = [".jpg", ".jpeg", ".png", ".webp"];
+
+		if (!imageFileTypes.includes(ext)) {
+			req.fileValidationError = true;
+			req.unsupportedFileType = ext;
+			return callback(null, false);
+		}
+		callback(null, true);
+	},
+});
 
 module.exports = fileUpload;
