@@ -1,13 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const isAuthenticated = require("../../middlewares/isAuthenticated");
 
 const Post = mongoose.model("Post");
 const router = express.Router();
 
 async function getCount() {
-	const published = await Post.count({ status: "published" });
-	const draft = await Post.count({ status: "draft" });
-	const trash = await Post.count({ status: "trash" });
+	const published = await Post.countDocuments({ status: "published" });
+	const draft = await Post.countDocuments({ status: "draft" });
+	const trash = await Post.countDocuments({ status: "trash" });
 	return {
 		published,
 		draft,
@@ -17,7 +18,7 @@ async function getCount() {
 
 router
 	.get("/", async (req, res) => {
-		const { sort = [], query, id } = req.query;
+		const { sort, query, id } = req.query;
 		try {
 			const count = await getCount();
 			if (id) {
@@ -25,7 +26,7 @@ router
 				res.json(_post);
 			} else {
 				const _posts = await Post.find(query)
-					.sort([sort])
+					.sort(sort || { $natural: -1 })
 					.exec();
 				res.json({ posts: _posts, count });
 			}
@@ -34,7 +35,7 @@ router
 			res.status(500).send("Failed to retrive Posts from Database");
 		}
 	})
-	.post("/", async (req, res) => {
+	.post("/", isAuthenticated, async (req, res) => {
 		try {
 			const { slug } = req.body;
 			if (slug) {
@@ -62,7 +63,7 @@ router
 			res.status(500).send("Error while saving the Post into Database");
 		}
 	})
-	.delete("/", async (req, res) => {
+	.delete("/", isAuthenticated, async (req, res) => {
 		const { ids } = req.query;
 		if (!ids) {
 			res.status(400).send("Atleast one ID must be present");
@@ -73,7 +74,7 @@ router
 				.json({ success: true, data: { deleted: ids.split(",") } });
 		}
 	})
-	.put("/trash", async (req, res) => {
+	.put("/trash", isAuthenticated, async (req, res) => {
 		try {
 			const { ids } = req.query;
 			await Post.updateMany(
@@ -87,7 +88,7 @@ router
 			res.status(500).send(e.message);
 		}
 	})
-	.put("/:id", async (req, res) => {
+	.put("/:id", isAuthenticated, async (req, res) => {
 		const doc_id = req.params.id;
 		if (mongoose.Types.ObjectId.isValid(doc_id)) {
 			try {

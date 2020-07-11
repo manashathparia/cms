@@ -3,6 +3,7 @@ import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import Avatar from "@material-ui/core/Avatar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -39,20 +40,20 @@ function Header(props) {
 					>
 						<MenuIcon />
 					</IconButton>
-					<Typography variant="h6" noWrap>
+					<Typography variant="h6" noWrap style={{ flexGrow: 1 }}>
 						Node CMS
 					</Typography>
+					<IconButton color="inherit">
+						<Avatar>M</Avatar>
+					</IconButton>
 				</Toolbar>
 			</AppBar>
 		</React.Fragment>
 	);
 }
 
-export default connect(
-	null,
-	(dispatch) => ({
-		toogleDrawer() {
-			dispatch(toogleDrawer());
-		},
-	})
-)(Header);
+export default connect(null, (dispatch) => ({
+	toogleDrawer() {
+		dispatch(toogleDrawer());
+	},
+}))(Header);

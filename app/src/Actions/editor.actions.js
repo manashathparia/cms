@@ -58,14 +58,11 @@ export const clearEditor = () => ({
 });
 
 export function submitPost(url, method) {
-	return function submitPostThunk(dispatch, getState) {
-		const state = getState();
-		const { editor } = state;
-		axios({
-			url,
-			data: { ...editor },
-			method,
-		}).then(({ data }) => {
+	return async function submitPostThunk(dispatch, getState) {
+		try {
+			const state = getState();
+			const { editor } = state;
+			const { data } = await axios({ url, data: { ...editor }, method });
 			dispatch(
 				newNotification({
 					varient: "success",
@@ -74,7 +71,15 @@ export function submitPost(url, method) {
 				})
 			);
 			dispatch(push(`/posts/edit/${data._id}`));
-		});
+		} catch (e) {
+			dispatch(
+				newNotification({
+					varient: "error",
+					message: e.response?.data || e.message,
+					show: true,
+				})
+			);
+		}
 	};
 }
 

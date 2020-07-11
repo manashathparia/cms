@@ -296,7 +296,7 @@ function ImageSelector({ images, loadImages, uploadImage }) {
 						onClick={() => loadImage(tile)}
 					>
 						<img
-							src={`http://localhost:8080/${tile.path}`}
+							src={`http://localhost:8080/${tile.thumbnails[0] || tile.path}`}
 							style={{ boxShadow: "0px 0px 20px -5px rgba(0,0,0,0.75)" }}
 							alt={tile.title}
 						/>
@@ -405,7 +405,7 @@ const Imageinserter = ({
 				</div>
 			</AppBar>
 			<div style={{ padding: "30px" }}></div>
-			<Paper style={{ paddingLeft: 5 }}>
+			<Paper style={{ paddingLeft: 5, height: "100%" }}>
 				<Grid container>
 					<Grid item sm={8} xs={12}>
 						<GridList cellHeight={160} cols={5}>
@@ -431,7 +431,8 @@ const Imageinserter = ({
 									}}
 								>
 									<img
-										src={`http://localhost:8080/${image.path}`}
+										src={`http://localhost:8080/${image.thumbnails[0] ||
+											image.path}`}
 										style={{ boxShadow: "0px 0px 20px -5px rgba(0,0,0,0.75)" }}
 										alt={image.title}
 									/>

@@ -10,9 +10,9 @@ const userSchema = mongoose.Schema({
 	role: {
 		type: String,
 		enum: ["subscriber", "editor", "author", "administrator"],
-		default: "subscriber"
+		default: "subscriber",
 	},
-	specialAccess: [String]
+	specialAccess: [String],
 });
 
-mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema);
