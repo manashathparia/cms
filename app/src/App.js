@@ -8,6 +8,7 @@ import Content from "./Components/Content";
 import Routes from "./Routes";
 import "./App.css";
 import Notification from "./Components/Notification";
+import AuthCheck from "./Components/AuthCheck";
 
 function App() {
 	//const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -35,6 +36,7 @@ function App() {
 	return (
 		<div style={{ display: "flex", height: "100%" }}>
 			<MuiThemeProvider theme={theme}>
+				<AuthCheck />
 				<Header />
 				<SideBar />
 				<Content>

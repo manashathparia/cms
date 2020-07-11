@@ -44,16 +44,13 @@ router
 
 				if (postsWithSlug.length === 0) {
 					const post = await Post.create(req.body);
-					res.status(200).json({ success: true, post });
+					res.status(200).json(post);
 				} else {
 					req.body.slug = `${slug}-${postsWithSlug.length + 1}`; // add 1 to the end of the slug
 					await Post.create(req.body);
 
 					// send the modified slug with the response to notify the edits in the frontend.
-					res.status(200).json({
-						success: true,
-						modified: { slug: req.body.slug },
-					});
+					res.status(200).json(req.body.slug);
 				}
 			} else {
 				res.status(400).send("slug cannot be empty");

@@ -1,4 +1,4 @@
-import Axios from "axios";
+import Axios from "../utils/axios";
 import { newNotification, toggleLoader } from "./notification.actions";
 
 export const UPDATE_POSTS_COUNT = "UPDATE_POSTS_COUNT";

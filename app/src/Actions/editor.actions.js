@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../utils/axios";
 import { push } from "connected-react-router";
 
 import { newNotification } from "./notification.actions";

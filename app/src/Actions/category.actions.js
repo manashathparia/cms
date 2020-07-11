@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../utils/axios";
 import { newNotification } from "./notification.actions";
 export const UPDATE_ALL_CATEGORIES = "UPDATE_ALL_CATEGORIES";
 export const ADD_CATEGORY = "ADD_CATEGORY";

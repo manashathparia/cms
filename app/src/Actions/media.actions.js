@@ -1,4 +1,4 @@
-import Axios from "axios";
+import Axios from "../utils/axios";
 import { newNotification } from "./notification.actions";
 
 export const LOAD_IMAGES = "LOAD_IMAGES";

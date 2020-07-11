@@ -7,6 +7,7 @@ import editorReducer from "./editorReducer";
 import contentReducers from "./content";
 import notificationReducer from "./notification";
 import mediaReducer from "./media.reducer";
+import userReducer from "./user.reducer";
 
 export default (history) =>
 	combineReducers({
@@ -16,4 +17,5 @@ export default (history) =>
 		content: contentReducers,
 		media: mediaReducer,
 		notification: notificationReducer,
+		profile: userReducer,
 	});

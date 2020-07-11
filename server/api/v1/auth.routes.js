@@ -22,10 +22,9 @@ router.post("/signup", (req, res) => {
 		});
 		user
 			.save()
-			.then((result) => {
+			.then(() => {
 				res.status(200).json({
 					success: true,
-					...result,
 				});
 			})
 			.catch((error) => {
@@ -38,9 +37,12 @@ router.post("/signup", (req, res) => {
 });
 
 router.post("/signin", (req, res) => {
+	const rememberTillDeath = req.body.remember;
+	console.log(rememberTillDeath);
 	User.findOne({ email: req.body.email })
 		.exec()
 		.then((user) => {
+			if (!user) throw Error("User not found");
 			bcrypt.compare(req.body.password, user.password, (err, result) => {
 				if (err) {
 					return res.status(401).json({
@@ -55,7 +57,7 @@ router.post("/signin", (req, res) => {
 						},
 						secret,
 						{
-							expiresIn: "1h",
+							expiresIn: rememberTillDeath ? "30d" : "1h", // Just assuming that you will be dead under 30 days
 						}
 					);
 					return res.status(200).json({
@@ -76,13 +78,13 @@ router.post("/signin", (req, res) => {
 		});
 });
 
-router.post("/verify", (req, res) => {
-	if (!req.body.token) {
-		res.status(400).send("token not provided");
+router.get("/verify/:token", (req, res) => {
+	if (!req.params.token) {
+		res.status(400).send("Token not provided");
 	}
-	jwt.verify(req.body.token, "secret", (err, decoded) => {
+	jwt.verify(req.params.token, secret, (err, decoded) => {
 		if (err) {
-			res.status(401).json({ success: false, err });
+			res.status(401).send("Invalid token");
 		}
 		if (decoded) {
 			res.send(decoded);
