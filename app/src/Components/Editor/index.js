@@ -110,7 +110,7 @@ function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
 	);
 }
 
-const mapStateToProps = ({ editor, router }) => ({
+const mapStateToProps = ({ editor, router, profile }) => ({
 	body: editor.body,
 	title: editor.title,
 	slug: editor.slug,
@@ -118,6 +118,7 @@ const mapStateToProps = ({ editor, router }) => ({
 	saveDraft: editor.saveDraft,
 	path: router.location.pathname,
 	status: editor.status,
+	author: profile.id,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -148,7 +149,4 @@ const mapDispatchToProps = (dispatch) => ({
 	},
 });
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Editor);
+export default connect(mapStateToProps, mapDispatchToProps)(Editor);

@@ -213,11 +213,7 @@ const AttachmentDetails = ({ handleDialogClose, open, image }) => {
 							textAlign: "center",
 						}}
 					>
-						<img
-							className={classes.img}
-							src={`http://localhost:8080/${image.path}`}
-							alt=""
-						/>
+						<img className={classes.img} src={`/${image.path}`} alt="" />
 					</div>
 				</Grid>
 				<Grid item xs={12} sm={4}>
@@ -296,7 +292,7 @@ function ImageSelector({ images, loadImages, uploadImage }) {
 						onClick={() => loadImage(tile)}
 					>
 						<img
-							src={`http://localhost:8080/${tile.thumbnails[0] || tile.path}`}
+							src={`/${tile.thumbnails[0] || tile.path}`}
 							style={{ boxShadow: "0px 0px 20px -5px rgba(0,0,0,0.75)" }}
 							alt={tile.title}
 						/>
@@ -431,8 +427,7 @@ const Imageinserter = ({
 									}}
 								>
 									<img
-										src={`http://localhost:8080/${image.thumbnails[0] ||
-											image.path}`}
+										src={`/${image.thumbnails[0] || image.path}`}
 										style={{ boxShadow: "0px 0px 20px -5px rgba(0,0,0,0.75)" }}
 										alt={image.title}
 									/>

@@ -3,12 +3,13 @@ import { push } from "connected-react-router";
 
 export const UPDATE_USER_DETAILS = "UPDATE_USER_DETAILS";
 
-export const updateUserDetails = ({ username, email, avatar }) => ({
+export const updateUserDetails = ({ username, email, avatar, id }) => ({
 	type: UPDATE_USER_DETAILS,
 	payload: {
 		username,
 		email,
 		avatar,
+		id,
 	},
 });
 

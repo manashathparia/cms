@@ -23,9 +23,9 @@ export default function Wysiwyg({ body, onChange, refs }) {
 	const [showImageSelector, toggleImageSelector] = useState(false);
 
 	function handleImageInsert(img) {
+		console.log(img.path);
 		const image = `
-		<img src=http://localhost:8080/${img.path} width=200 alt=${img.alt_text ||
-			""}>`;
+		<img src=/${img.path} width=200 alt=${img.alt_text || ""}>`;
 
 		editorRef.current.insertContent(image);
 	}

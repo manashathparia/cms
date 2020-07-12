@@ -4,7 +4,7 @@ const moment = require("moment");
 const userSchema = mongoose.Schema({
 	username: { type: String, required: true },
 	email: { type: String, required: true, unique: true },
-	dateCreated: { type: String, default: moment().format("L, h:mm:ss a") },
+	date: { type: String, default: moment().format("L, h:mm:ss a") },
 	password: { type: String, required: true },
 	isAdmin: { type: Boolean, default: false },
 	role: {
@@ -13,6 +13,7 @@ const userSchema = mongoose.Schema({
 		default: "subscriber",
 	},
 	specialAccess: [String],
+	bio: String,
 });
 
 module.exports = mongoose.model("User", userSchema);

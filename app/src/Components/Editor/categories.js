@@ -7,7 +7,6 @@ import CheckBox from "@material-ui/core/Checkbox";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 import Button from "@material-ui/core/Button";
-import Axios from "axios";
 import { connect } from "react-redux";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -86,7 +85,7 @@ export const AddCategoryDialog = ({ open, onClose, onSubmit, full }) => {
 						type="text"
 						fullWidth
 						multiline
-						value={category}
+						value={description}
 						onChange={(e) => handleDescriptionChange(e.target.value)}
 						error={false}
 					/>
@@ -129,7 +128,7 @@ const Category = (props) => {
 		const categories = props.editorCategory;
 		let checked = false;
 		for (let i = 0; i < categories?.length; i++) {
-			if (categories[i] === id) {
+			if (categories[i]._id === id) {
 				checked = true;
 			}
 		}
@@ -191,7 +190,4 @@ const mapDispatchToProps = (dispatch) => ({
 	handleChange: (category) => dispatch(updateCategory(category)),
 });
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Category);
+export default connect(mapStateToProps, mapDispatchToProps)(Category);

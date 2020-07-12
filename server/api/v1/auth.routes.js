@@ -54,6 +54,7 @@ router.post("/signin", (req, res) => {
 						{
 							username: user.username,
 							email: user.email,
+							id: user._id,
 						},
 						secret,
 						{

@@ -37,15 +37,10 @@ function FeaturedImage(props) {
 
 	const handleImageInsert = (img) => {
 		updateImage(
-			<img
-				width="100%"
-				height="100%"
-				alt={img.alt_text}
-				src={`http://localhost:8080/${img.path}`}
-			/>
+			<img width="100%" height="100%" alt={img.alt_text} src={`/${img.path}`} />
 		);
 		props.updateToEditor({
-			url: `http://localhost:8080/${img.path}`,
+			url: `/${img.path}`,
 			altText: img.alt_text,
 		});
 	};

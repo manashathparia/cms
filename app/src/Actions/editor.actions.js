@@ -61,8 +61,15 @@ export function submitPost(url, method) {
 	return async function submitPostThunk(dispatch, getState) {
 		try {
 			const state = getState();
-			const { editor } = state;
-			const { data } = await axios({ url, data: { ...editor }, method });
+			const {
+				editor,
+				profile: { id: authorID },
+			} = state;
+			const { data } = await axios({
+				url,
+				data: { ...editor, author: authorID },
+				method,
+			});
 			dispatch(
 				newNotification({
 					varient: "success",

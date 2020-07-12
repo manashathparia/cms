@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import IconButton from "@material-ui/core/IconButton";
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 		background: "#6200ee",
 		zIndex: 99,
 		[theme.breakpoints.down("sm")]: {
-			zIndex: 9999,
+			zIndex: 999,
 		},
 	},
 	menuButton: {

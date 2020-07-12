@@ -5,27 +5,36 @@ const isAuthenticated = require("../../middlewares/isAuthenticated");
 const Post = mongoose.model("Post");
 const router = express.Router();
 
-async function getCount() {
+async function getCount(req, res, next) {
+	const auth = isAuthenticated(req, res, next, false);
+	console.log(auth);
 	const published = await Post.countDocuments({ status: "published" });
 	const draft = await Post.countDocuments({ status: "draft" });
 	const trash = await Post.countDocuments({ status: "trash" });
-	return {
-		published,
-		draft,
-		trash,
-	};
+	return auth
+		? {
+				published,
+				draft,
+				trash,
+		  }
+		: void 0;
 }
 
 router
-	.get("/", async (req, res) => {
-		const { sort, query, id } = req.query;
+	.get("/", async (req, res, next) => {
+		const { sort, slug, id, embed } = req.query;
+		const fildsToPopulate = ["category"];
 		try {
-			const count = await getCount();
+			const count = await getCount(req, res, next);
 			if (id) {
-				const _post = await Post.findById(id).exec();
+				const _post = await Post.findById(id)
+					.populate("category")
+					.exec();
 				res.json(_post);
 			} else {
-				const _posts = await Post.find(query)
+				let _posts = await Post.find(slug && { slug })
+					.populate(embed ? fildsToPopulate : [])
+					.populate(embed ? "author" : "", "username")
 					.sort(sort || { $natural: -1 })
 					.exec();
 				res.json({ posts: _posts, count });

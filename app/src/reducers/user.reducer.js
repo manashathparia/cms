@@ -4,6 +4,7 @@ const initial = {
 	username: "",
 	email: "",
 	avatar: "",
+	id: 0,
 };
 
 export default function userReducer(state = initial, { type, payload }) {

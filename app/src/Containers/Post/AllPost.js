@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
 
 const styles = (theme) => ({
 	root: {
-		marginTop: theme.spacing.unit * 3,
+		marginTop: theme.spacing(3),
 		overflowX: "hide",
 	},
 	table: {
@@ -204,7 +204,11 @@ function AllPosts({
 									/>
 								</TableCell>
 								<TableCell className={classes.tableCell}>
-									<Link className={classes.link} to={"/posts/edit/" + post._id}>
+									<Link
+										title={`Edit ${post.title}`}
+										className={classes.link}
+										to={"/posts/edit/" + post._id}
+									>
 										{post.title}
 									</Link>
 								</TableCell>
@@ -212,7 +216,7 @@ function AllPosts({
 								<TableCell className={classes.tableCell}>
 									{Array.isArray(post.category)
 										? post.category.map((category, i) => (
-												<React.Fragment>
+												<React.Fragment key={category._id || i}>
 													<MLink
 														style={{ textDecoration: "none" }}
 														key={category._id}
@@ -232,7 +236,7 @@ function AllPosts({
 									{post.status}
 								</TableCell>
 								<TableCell className={classes.tableCell}>
-									{post.author}
+									{post.author?.username}
 								</TableCell>
 
 								<TableCell className={classes.tableCell}>

@@ -1,9 +1,15 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import SignIn from "./Containers/Login";
 import LoadingScreen from "./Components/LoadingScreen";
 
 const LazyApp = React.lazy(() => import("./App"));
+const LazySignIn = React.lazy(() => import("./Containers/Login"));
+
+const Lazy = () => (
+	<React.Suspense fallback={<LoadingScreen />}>
+		<LazySignIn />
+	</React.Suspense>
+);
 
 export default function Auth() {
 	return localStorage.getItem("token") ? (
@@ -12,7 +18,7 @@ export default function Auth() {
 		</React.Suspense>
 	) : (
 		<Switch>
-			<Route component={SignIn} />
+			<Route component={Lazy} />
 		</Switch>
 	);
 }

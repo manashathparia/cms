@@ -6,7 +6,7 @@ export const UPDATE_ALL_POSTS = "UPDATE_ALL_POSTS";
 
 export const updateAllPosts = () => async (dispatch) => {
 	dispatch(toggleLoader());
-	const res = await Axios.get("/api/posts");
+	const res = await Axios.get("/api/posts/?embed=true");
 	dispatch({ type: UPDATE_ALL_POSTS, payload: res.data.posts });
 	dispatch({ type: UPDATE_POSTS_COUNT, payload: res.data.count });
 	dispatch(toggleLoader());

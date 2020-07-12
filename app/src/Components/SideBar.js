@@ -186,6 +186,7 @@ function SideBar(props) {
 						ModalProps={{
 							keepMounted: true, // Better open performance on mobile.
 						}}
+						style={{ zIndex: 99 }}
 					>
 						{items}
 					</Drawer>
