@@ -5,6 +5,7 @@ const config = require("./db.config");
 require("./models/post.model");
 require("./models/category.model");
 require("./models/images.model");
+require("./models/comments.model");
 
 module.exports.connect = () => {
 	mongoose

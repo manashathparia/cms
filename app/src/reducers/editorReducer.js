@@ -17,7 +17,7 @@ const initialState = {
 	body: "<p></p>",
 	category: [],
 	tags: [],
-	featuredImage: "",
+	featuredImage: {},
 	status: "draft",
 };
 
@@ -54,7 +54,7 @@ export default function editorReducer(state = initialState, { type, payload }) {
 			return initialState;
 
 		case LOAD_POST_TO_EDITOR:
-			return { ...payload };
+			return { ...state, ...payload };
 
 		default:
 			return state;

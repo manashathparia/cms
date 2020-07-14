@@ -22,7 +22,7 @@ function FeaturedImage(props) {
 	const [showImageInserter, toggleImageInserter] = useState(false);
 
 	useEffect(() => {
-		if (props.featuredImage) {
+		if (props.featuredImage.url) {
 			const Img = (
 				<img
 					width="100%"
@@ -57,6 +57,7 @@ function FeaturedImage(props) {
 						marginTop: "5px",
 						borderRadius: "2px",
 						position: "relative",
+						cursor: "pointer",
 					}}
 				>
 					{image}

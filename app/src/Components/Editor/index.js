@@ -52,7 +52,7 @@ function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
 		if (!slugChanged) changed(true);
 		props.handleSlugChange(e);
 	}
-
+	const submitDisabled = !props.title || !props.slug;
 	return (
 		<React.Fragment>
 			<Grid container>
@@ -100,6 +100,7 @@ function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
 					<br />
 					<Button
 						variant="outlined"
+						disabled={submitDisabled}
 						onClick={() => props.handleSubmit(...submitUrl)}
 					>
 						Save

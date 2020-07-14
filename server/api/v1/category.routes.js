@@ -7,7 +7,7 @@ router
 	.route("/")
 	.get(async (req, res) => {
 		try {
-			const _categories = await Category.find();
+			const _categories = await Category.find().sort({ $natural: -1 });
 			res.json(_categories);
 		} catch (e) {
 			res

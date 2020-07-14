@@ -6,6 +6,7 @@ import AllPost from "../Containers/Post/AllPost";
 import EditPost from "../Containers/Post/EditPost";
 import MediaPage from "../Containers/MediaPage";
 import Categories from "../Containers/Post/Categories";
+import Comments from "../Containers/Comments";
 
 export default function(props) {
 	return (
@@ -15,6 +16,7 @@ export default function(props) {
 			<Route exact path="/posts/edit/:id" component={EditPost} />
 			<Route exact path="/media/images" component={MediaPage} />
 			<Route exact path="/posts/categories" component={Categories} />
+			<Route exact path="/comments" component={Comments} />
 			<Route component={Error404} />
 		</Switch>
 	);

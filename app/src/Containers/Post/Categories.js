@@ -120,6 +120,7 @@ function Categories({
 								<TableCell>
 									<IconButton
 										title="Edit"
+										disabled={category.category === "Uncategorised"}
 										onClick={() =>
 											handleEdit(
 												category._id,
@@ -131,6 +132,7 @@ function Categories({
 										{edit === category._id ? <Save /> : <Edit />}
 									</IconButton>
 									<IconButton
+										disabled={category.category === "Uncategorised"}
 										onClick={() => removeCategory(category._id)}
 										title="Remove"
 									>

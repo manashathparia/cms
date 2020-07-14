@@ -7,7 +7,6 @@ const router = express.Router();
 
 async function getCount(req, res, next) {
 	const auth = isAuthenticated(req, res, next, false);
-	console.log(auth);
 	const published = await Post.countDocuments({ status: "published" });
 	const draft = await Post.countDocuments({ status: "draft" });
 	const trash = await Post.countDocuments({ status: "trash" });
@@ -22,18 +21,23 @@ async function getCount(req, res, next) {
 
 router
 	.get("/", async (req, res, next) => {
-		const { sort, slug, id, embed } = req.query;
-		const fildsToPopulate = ["category"];
+		const { sort, slug, id, embed, filter = "" } = req.query;
+		const _filter = filter.split(",").join(" ");
 		try {
 			const count = await getCount(req, res, next);
 			if (id) {
 				const _post = await Post.findById(id)
-					.populate("category")
+					.select(_filter)
+					.populate(embed ? ["category"] : [])
+					.populate("comments")
+					.populate(embed ? "author" : "", "username")
 					.exec();
 				res.json(_post);
 			} else {
 				let _posts = await Post.find(slug && { slug })
-					.populate(embed ? fildsToPopulate : [])
+					.select(_filter)
+					.populate(embed ? ["category"] : [])
+					.populate("comments")
 					.populate(embed ? "author" : "", "username")
 					.sort(sort || { $natural: -1 })
 					.exec();
