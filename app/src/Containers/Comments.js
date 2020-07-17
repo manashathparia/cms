@@ -25,6 +25,7 @@ const styles = makeStyles((theme) => ({
 const Comments = ({ comments, getComments, updateComment }) => {
 	useEffect(() => {
 		getComments();
+		document.title = "Comments";
 	}, [getComments]);
 
 	const [edit, _toggleEdit] = useState("");
@@ -139,7 +140,7 @@ const Comments = ({ comments, getComments, updateComment }) => {
 	);
 };
 
-const mapStateToProps = ({ comments }) => ({ comments });
+const mapStateToProps = ({ comments: { comments } }) => ({ comments });
 
 const mapDispatchToProps = (dispatch) => ({
 	getComments: () => {

@@ -6,9 +6,9 @@ import Header from "./Components/Header";
 import SideBar from "./Components/SideBar";
 import Content from "./Components/Content";
 import Routes from "./Routes";
-import "./App.css";
 import Notification from "./Components/Notification";
 import AuthCheck from "./Components/AuthCheck";
+import "./App.css";
 
 function App() {
 	//const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");

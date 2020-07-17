@@ -4,14 +4,24 @@ const router = require("express").Router();
 const Comments = mongoose.model("Comments");
 const Post = mongoose.model("Post");
 
+const getCount = async () => {
+	const approved = await Comments.countDocuments({ status: "approved" });
+	const waiting = await Comments.countDocuments({ status: "waiting" });
+	const trash = await Comments.countDocuments({ status: "trash" });
+	return { approved, waiting, trash };
+};
+
 router
 	.route("/")
 	.get(async (req, res) => {
 		try {
+			const docCount = await getCount();
+			if (req.query.count) return res.json(docCount);
 			const comments = await Comments.find()
 				.populate("responseTo", "title slug")
 				.sort({ $natural: -1 });
-			res.send(comments);
+
+			res.send([comments, docCount]);
 		} catch (e) {
 			console.error(e);
 			res.status(500).send(e.message);
@@ -54,7 +64,8 @@ router
 			const updatedComment = await Comments.findByIdAndUpdate(id, body, {
 				new: true,
 			});
-			res.send(updatedComment);
+			const docCount = await getCount();
+			res.send([updatedComment, docCount]);
 		} catch (e) {
 			console.error(e);
 			res.status(500).send(e.message);

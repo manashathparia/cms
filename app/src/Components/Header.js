@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import IconButton from "@material-ui/core/IconButton";
@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { toogleDrawer } from "../Actions/navigationActions";
 import { Link } from "react-router-dom";
+import getInitialData from "../Actions/getInitialData";
 
 const useStyles = makeStyles((theme) => ({
 	appBar: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function Header(props) {
+function Header({ getInitialData, toogleDrawer, profile }) {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const menuOpen = Boolean(anchorEl);
 	const classes = useStyles();
@@ -37,6 +38,10 @@ function Header(props) {
 		window.location.reload();
 	};
 
+	useEffect(() => {
+		getInitialData();
+	}, [getInitialData]);
+
 	return (
 		<React.Fragment>
 			<CssBaseline />
@@ -46,7 +51,7 @@ function Header(props) {
 						color="inherit"
 						aria-label="Open drawer"
 						edge="start"
-						onClick={props.toogleDrawer}
+						onClick={toogleDrawer}
 						className={classes.menuButton}
 					>
 						<MenuIcon />
@@ -57,12 +62,11 @@ function Header(props) {
 					<div>
 						<IconButton
 							onClick={(e) => setAnchorEl(e.currentTarget)}
-							title={props.profile?.username}
+							title={profile?.username}
 							color="inherit"
 						>
 							<Avatar>
-								{props.profile.avatar ||
-									props.profile?.username[0]?.toUpperCase()}
+								{profile.avatar || profile?.username[0]?.toUpperCase()}
 							</Avatar>
 						</IconButton>
 
@@ -86,6 +90,9 @@ export default connect(
 	(dispatch) => ({
 		toogleDrawer() {
 			dispatch(toogleDrawer());
+		},
+		getInitialData() {
+			dispatch(getInitialData());
 		},
 	})
 )(Header);

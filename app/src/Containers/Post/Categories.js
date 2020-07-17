@@ -36,6 +36,7 @@ function Categories({
 
 	useEffect(() => {
 		getCategories();
+		document.title = "Categories";
 	}, [getCategories]);
 
 	const handleEdit = (id, _name, _description) => {

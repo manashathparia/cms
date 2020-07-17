@@ -116,23 +116,15 @@ export const updateCategory = (category) => {
 // Required when initilizing the edit post page.
 // */
 export const loadPostToEditor = (id) => async (dispatch, getState) => {
-	const state = getState();
-	const allPosts = state.content.posts.posts;
-	const post = allPosts.filter((_post) => _post._id === id);
-	if (post.length === 0) {
-		try {
-			const { data } = await axios.get(`/api/posts?id=${id}`);
-			console.log(data);
-			return dispatch({
-				type: LOAD_POST_TO_EDITOR,
-				payload: data,
-			});
-		} catch (e) {
-			dispatch(push("/404"));
-		}
+	if (typeof id === "undefined") return;
+	try {
+		const { data } = await axios.get(`/api/posts?id=${id}`);
+		console.log(data);
+		return dispatch({
+			type: LOAD_POST_TO_EDITOR,
+			payload: data,
+		});
+	} catch (e) {
+		dispatch(push("/404"));
 	}
-	dispatch({
-		type: LOAD_POST_TO_EDITOR,
-		payload: post[0],
-	});
 };

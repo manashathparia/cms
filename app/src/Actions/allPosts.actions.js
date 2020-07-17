@@ -2,17 +2,25 @@ import Axios from "../utils/axios";
 import { newNotification, toggleLoader } from "./notification.actions";
 
 export const UPDATE_POSTS_COUNT = "UPDATE_POSTS_COUNT";
-export const UPDATE_ALL_POSTS = "UPDATE_ALL_POSTS";
+export const UPDATE_PUBLISHED_POSTS = "UPDATE_PUBLISHED_POSTS";
+export const UPDATE_DRAFT_POSTS = "UPDATE_DRAFT_POSTS";
+export const UPDATE_TRASHED_POSTS = "UPDATE_TRASH_POSTS";
+export const UPDATE_PUBLISHED_AND_DRAFT_POSTS = "UPDATE_PUBLISHED,DRAFT_POSTS";
 
-export const updateAllPosts = () => async (dispatch) => {
+export const updateAllPosts = (status = "published,draft") => async (
+	dispatch
+) => {
 	dispatch(toggleLoader());
-	const res = await Axios.get("/api/posts/?embed=true");
-	dispatch({ type: UPDATE_ALL_POSTS, payload: res.data.posts });
+	const res = await Axios.get(`/api/posts/?embed=true&status=${status}`);
+	dispatch({
+		type: `UPDATE_${status.toUpperCase()}_POSTS`,
+		payload: res.data.posts,
+	});
 	dispatch({ type: UPDATE_POSTS_COUNT, payload: res.data.count });
 	dispatch(toggleLoader());
 };
 
-export const trashPosts = (ids) => async (dispatch, getState) => {
+export const trashPosts = (ids, status) => async (dispatch, getState) => {
 	try {
 		await Axios.put(`/api/posts/trash/?ids=${ids.toString()}`);
 		const {
@@ -27,16 +35,10 @@ export const trashPosts = (ids) => async (dispatch, getState) => {
 				show: true,
 			})
 		);
-		const _posts = posts.map((post) => {
-			if (ids.includes(post._id)) {
-				post.status = "trash";
-				return post;
-			}
-			return post;
-		});
+		const _posts = posts[status].filter((post) => !ids.includes(post._id));
 
 		dispatch({
-			type: UPDATE_ALL_POSTS,
+			type: `UPDATE_${status.toUpperCase()}_POSTS`,
 			payload: _posts,
 		});
 	} catch (e) {
@@ -65,9 +67,9 @@ export const deletePosts = (ids) => async (dispatch, getState) => {
 				show: true,
 			})
 		);
-		const _posts = posts.filter((post) => !ids.includes(post._id));
+		const _posts = posts.trash.filter((post) => !ids.includes(post._id));
 		dispatch({
-			type: UPDATE_ALL_POSTS,
+			type: UPDATE_TRASHED_POSTS,
 			payload: _posts,
 		});
 		dispatch({
@@ -79,7 +81,7 @@ export const deletePosts = (ids) => async (dispatch, getState) => {
 		dispatch(
 			newNotification({
 				varient: "error",
-				message: e.response.data,
+				message: e.response?.data,
 				show: true,
 				autoHide: false,
 			})

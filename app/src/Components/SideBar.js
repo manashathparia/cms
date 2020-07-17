@@ -12,6 +12,7 @@ import Image from "@material-ui/icons/Image";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Collapse from "@material-ui/core/Collapse";
+import Badge from "@material-ui/core/Badge";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
@@ -73,6 +74,7 @@ const menuItems = [
 		name: "Comments",
 		icon: Comment,
 		to: "/comments",
+		count: "comments",
 	},
 	{
 		name: "Media",
@@ -155,8 +157,15 @@ function SideBar(props) {
 								<br />
 								<ListItem className={classes.item} button>
 									<ListItemIcon>
-										<Icon size={23} />
+										<Badge
+											invisible={!item.count || !props[item.count]}
+											badgeContent={props[item.count]}
+											color="secondary"
+										>
+											<Icon size={23} />
+										</Badge>
 									</ListItemIcon>
+
 									<ListItemText disableTypography={true} primary={item.name} />
 								</ListItem>
 							</Link>
@@ -209,8 +218,9 @@ function SideBar(props) {
 }
 
 export default connect(
-	({ navigation }) => ({
+	({ navigation, comments: { count } }) => ({
 		navigation,
+		comments: count.waiting,
 	}),
 	(dispatch) => ({
 		toogleDrawer() {

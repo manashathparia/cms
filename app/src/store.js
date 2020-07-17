@@ -10,6 +10,8 @@ export default createStore(
 	Reducers(history),
 	compose(
 		applyMiddleware(thunk, routerMiddleware(history)),
-		window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+		window.__REDUX_DEVTOOLS_EXTENSION__
+			? window.__REDUX_DEVTOOLS_EXTENSION__()
+			: (f) => f
 	)
 );

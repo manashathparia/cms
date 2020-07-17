@@ -7,6 +7,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import CheckBox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
+import Comment from "@material-ui/icons/CommentTwoTone";
 import { withStyles } from "@material-ui/core/styles";
 import MLink from "@material-ui/core/Link";
 import {
@@ -61,28 +62,28 @@ const ActionBar = ({
 		<div className={classes.actionBar}>
 			<div>
 				<MLink
-					onClick={() => handleShow('["published", "draft"]')}
+					onClick={() => handleShow("published,draft")}
 					component="button"
 					className={classes.mdLink}
 				>
 					All ({count.published + count.draft})
 				</MLink>
 				<MLink
-					onClick={() => handleShow('["published"]')}
+					onClick={() => handleShow("published")}
 					component="button"
 					className={classes.mdLink}
 				>
 					Published ({count.published})
 				</MLink>
 				<MLink
-					onClick={() => handleShow('["draft"]')}
+					onClick={() => handleShow("draft")}
 					component="button"
 					className={classes.mdLink}
 				>
 					Draft ({count.draft})
 				</MLink>
 				<MLink
-					onClick={() => handleShow('["trash"]')}
+					onClick={() => handleShow("trash")}
 					component="button"
 					className={classes.mdLink}
 				>
@@ -111,14 +112,14 @@ function AllPosts({
 	deletePosts,
 	loading,
 }) {
-	useEffect(() => {
-		document.title = "All posts";
-		getPosts();
-	}, [getPosts]);
-
 	const [selected, _handleSelect] = useState([]);
 	const [allSelected, _handleAllSelect] = useState(false);
-	const [show, updateShow] = React.useState('["published", "draft"]');
+	const [show, updateShow] = React.useState("published,draft");
+
+	useEffect(() => {
+		document.title = "All posts";
+		getPosts(show);
+	}, [getPosts, show]);
 
 	const handleSelect = (id) => {
 		if (selected.includes(id)) {
@@ -126,7 +127,7 @@ function AllPosts({
 			_handleAllSelect(false);
 			return _handleSelect(a);
 		}
-		posts?.length === selected.length + 1
+		posts[show].length === selected.length + 1
 			? _handleAllSelect(true)
 			: _handleAllSelect(false);
 		_handleSelect([...selected, id]);
@@ -135,8 +136,8 @@ function AllPosts({
 	const handleAllSelect = () => {
 		if (!allSelected) {
 			const arr = [];
-			posts.forEach((post) => {
-				if (JSON.parse(show).includes(post.status)) arr.push(post._id);
+			posts[show].forEach((post) => {
+				if (show.split(",").includes(post.status)) arr.push(post._id);
 			});
 			_handleAllSelect(true);
 			_handleSelect(arr);
@@ -147,7 +148,7 @@ function AllPosts({
 	};
 
 	const handlePostsTrash = () => {
-		trashPosts(selected);
+		trashPosts(selected, show);
 		_handleSelect([]);
 		_handleAllSelect(false);
 	};
@@ -157,14 +158,18 @@ function AllPosts({
 		if (overConfident) deletePosts(selected);
 	};
 
-	const tableOptions = ["Title", "Category", "State", "Author", "Date"];
+	const tableOptions = [
+		"Title",
+		"Category",
+		"State",
+		"Author",
+		<Comment style={{ color: "rgba(0, 0, 0, 0.87)" }} />,
+		"Date",
+	];
 
-	const filteredPosts = posts?.filter((post) => {
-		const a = JSON.parse(show);
-		return a.includes(post.status);
-	});
+	const filteredPosts = posts[show];
 
-	const isTrash = show === '["trash"]';
+	const isTrash = show === "trash";
 	return (
 		<div>
 			<Paper className={classes.root}>
@@ -238,6 +243,9 @@ function AllPosts({
 								<TableCell className={classes.tableCell}>
 									{post.author?.username}
 								</TableCell>
+								<TableCell className={classes.tableCell}>
+									{post.comments?.length}
+								</TableCell>
 
 								<TableCell className={classes.tableCell}>
 									{post.date.split(",")[0]}
@@ -267,11 +275,11 @@ const mapStateToProps = ({ content: { posts }, notification }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	getPosts() {
-		dispatch(updateAllPosts());
+	getPosts(status) {
+		dispatch(updateAllPosts(status));
 	},
-	trashPosts(ids) {
-		dispatch(trashPosts(ids));
+	trashPosts(ids, status) {
+		dispatch(trashPosts(ids, status));
 	},
 	deletePosts(ids) {
 		dispatch(deletePosts(ids));
