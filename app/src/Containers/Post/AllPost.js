@@ -4,6 +4,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import TablePagination from "@material-ui/core/TablePagination";
 import Paper from "@material-ui/core/Paper";
 import CheckBox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
@@ -83,11 +84,11 @@ const ActionBar = ({
 					Draft ({count.draft})
 				</MLink>
 				<MLink
-					onClick={() => handleShow("trash")}
+					onClick={() => handleShow("trashed")}
 					component="button"
 					className={classes.mdLink}
 				>
-					Trash ({count.trash})
+					Trash ({count.trashed})
 				</MLink>
 			</div>
 			<Button
@@ -115,11 +116,13 @@ function AllPosts({
 	const [selected, _handleSelect] = useState([]);
 	const [allSelected, _handleAllSelect] = useState(false);
 	const [show, updateShow] = React.useState("published,draft");
+	const [perPage, setPerPage] = useState(10);
+	const [page, changePage] = useState(0);
 
 	useEffect(() => {
 		document.title = "All posts";
-		getPosts(show);
-	}, [getPosts, show]);
+		getPosts(show, page, perPage);
+	}, [getPosts, page, perPage, show]);
 
 	const handleSelect = (id) => {
 		if (selected.includes(id)) {
@@ -157,6 +160,10 @@ function AllPosts({
 		const overConfident = window.confirm("Are you sure you won't regret this?");
 		if (overConfident) deletePosts(selected);
 	};
+	const handleChangeRowsPerPage = (event) => {
+		setPerPage(parseInt(event.target.value, 10));
+		changePage(0);
+	};
 
 	const tableOptions = [
 		"Title",
@@ -167,9 +174,13 @@ function AllPosts({
 		"Date",
 	];
 
-	const filteredPosts = posts[show];
+	const _posts = posts[show];
+	const count =
+		show === "published,draft"
+			? postsCount.published + postsCount.draft
+			: postsCount[show];
 
-	const isTrash = show === "trash";
+	const isTrash = show === "trashed";
 	return (
 		<div>
 			<Paper className={classes.root}>
@@ -200,7 +211,7 @@ function AllPosts({
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{filteredPosts.map((post, i) => (
+						{_posts.map((post, i) => (
 							<TableRow key={post.slug + i}>
 								<TableCell padding="checkbox">
 									<CheckBox
@@ -248,17 +259,29 @@ function AllPosts({
 								</TableCell>
 
 								<TableCell className={classes.tableCell}>
-									{post.date.split(",")[0]}
+									{post.date?.split(",")[0]}
 								</TableCell>
 							</TableRow>
 						))}
+						<TableRow>
+							{_posts.length > 0 && (
+								<TablePagination
+									rowsPerPageOptions={[10, 20, 30]}
+									page={page}
+									rowsPerPage={perPage}
+									onChangePage={(e, p) => changePage(p)}
+									onChangeRowsPerPage={handleChangeRowsPerPage}
+									count={count}
+								/>
+							)}
+						</TableRow>
 					</TableBody>
 				</Table>
-				{filteredPosts.length === 0 && loading ? (
+				{_posts.length === 0 && loading ? (
 					<div style={{ padding: "20px", textAlign: "center" }}>
 						<p>LOADING...</p>
 					</div>
-				) : filteredPosts.length === 0 ? (
+				) : _posts.length === 0 ? (
 					<div style={{ padding: "20px", textAlign: "center" }}>
 						<h1>NO POSTS</h1>
 					</div>
@@ -275,8 +298,8 @@ const mapStateToProps = ({ content: { posts }, notification }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	getPosts(status) {
-		dispatch(updateAllPosts(status));
+	getPosts(status, page, perPage) {
+		dispatch(updateAllPosts(status, page, perPage));
 	},
 	trashPosts(ids, status) {
 		dispatch(trashPosts(ids, status));

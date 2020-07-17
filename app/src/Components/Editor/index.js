@@ -94,7 +94,7 @@ function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
 						>
 							<MenuItem value={"draft"}>Draft</MenuItem>
 							<MenuItem value={"published"}>Publish</MenuItem>
-							<MenuItem value={"trash"}>Trash</MenuItem>
+							<MenuItem value={"trashed"}>Trash</MenuItem>
 						</Select>
 					</div>
 					<br />

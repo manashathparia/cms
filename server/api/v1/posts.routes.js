@@ -9,11 +9,11 @@ async function getCount(authenticated) {
 	if (!authenticated) return undefined;
 	const published = await Post.countDocuments({ status: "published" });
 	const draft = await Post.countDocuments({ status: "draft" });
-	const trash = await Post.countDocuments({ status: "trash" });
+	const trashed = await Post.countDocuments({ status: "trashed" });
 	return {
 		published,
 		draft,
-		trash,
+		trashed,
 	};
 }
 
@@ -25,7 +25,7 @@ router
 			id,
 			embed,
 			per_page = 10,
-			page = 1,
+			page = 0,
 			filter = "",
 			status = "published",
 		} = req.query;
@@ -38,7 +38,7 @@ router
 			const query = JSON.parse(JSON.stringify({ status: _status, slug })); //get rid of undefied fields
 			if (id) {
 				const _post = await Post.findById(id)
-					.skip((Number(page) - 1) * Number(per_page))
+					.skip(Number(page) * Number(per_page))
 					.limit(Number(per_page))
 					.select(_filter)
 					.populate(embed ? ["category"] : [])
@@ -48,7 +48,7 @@ router
 				res.json(_post);
 			} else {
 				let _posts = await Post.find(query)
-					.skip((Number(page) - 1) * Number(per_page))
+					.skip(Number(page) * Number(per_page))
 					.limit(Number(per_page))
 					.select(_filter)
 					.populate(embed ? ["category"] : [])

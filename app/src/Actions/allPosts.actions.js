@@ -4,14 +4,18 @@ import { newNotification, toggleLoader } from "./notification.actions";
 export const UPDATE_POSTS_COUNT = "UPDATE_POSTS_COUNT";
 export const UPDATE_PUBLISHED_POSTS = "UPDATE_PUBLISHED_POSTS";
 export const UPDATE_DRAFT_POSTS = "UPDATE_DRAFT_POSTS";
-export const UPDATE_TRASHED_POSTS = "UPDATE_TRASH_POSTS";
+export const UPDATE_TRASHED_POSTS = "UPDATE_TRASHED_POSTS";
 export const UPDATE_PUBLISHED_AND_DRAFT_POSTS = "UPDATE_PUBLISHED,DRAFT_POSTS";
 
-export const updateAllPosts = (status = "published,draft") => async (
-	dispatch
-) => {
+export const updateAllPosts = (
+	status = "published,draft",
+	page,
+	perPage
+) => async (dispatch) => {
 	dispatch(toggleLoader());
-	const res = await Axios.get(`/api/posts/?embed=true&status=${status}`);
+	const res = await Axios.get(
+		`/api/posts/?embed=true&status=${status}&page=${page}&per_page=${perPage}`
+	);
 	dispatch({
 		type: `UPDATE_${status.toUpperCase()}_POSTS`,
 		payload: res.data.posts,

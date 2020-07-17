@@ -47,4 +47,28 @@ PostSchema.pre("findOneAndUpdate", function(next) {
 	next();
 });
 
+// PostSchema.pre("save", function(next) {
+// 	console.log(this);
+// 	if (this.category.length <= 0) {
+// 		mongoose
+// 			.model("Category")
+// 			.find({ category: "Uncategorised" })
+// 			.then((res) => {
+// 				if (res.length === 0) {
+// 					mongoose
+// 						.model("Category")
+// 						.create({ category: "Uncategorised" })
+// 						.then((cat) => {
+// 							console.log(cat);
+// 							this.category = [cat._id];
+// 							next();
+// 						});
+// 				} else {
+// 					this.category = [res[0]._id];
+// 					next();
+// 				}
+// 			});
+// 	} else next();
+// });
+
 mongoose.model("Post", PostSchema);

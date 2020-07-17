@@ -10,7 +10,7 @@ const initalState = {
 	posts: {
 		published: [],
 		draft: [],
-		trash: [],
+		trashed: [],
 		"published,draft": [],
 	},
 	count: {},
@@ -25,7 +25,7 @@ export default function postReducer(state = initalState, { type, payload }) {
 			return { ...state, posts: { ...state.posts, draft: payload } };
 
 		case UPDATE_TRASHED_POSTS:
-			return { ...state, posts: { ...state.posts, trash: payload } };
+			return { ...state, posts: { ...state.posts, trashed: payload } };
 
 		case UPDATE_PUBLISHED_AND_DRAFT_POSTS:
 			return {
