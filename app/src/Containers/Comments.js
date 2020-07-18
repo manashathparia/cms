@@ -7,9 +7,15 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import MDLink from "@material-ui/core/Link";
+import Button from "@material-ui/core/Button";
+import MLink from "@material-ui/core/Link";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { connect } from "react-redux";
-import { getComments, updateComment } from "../Actions/comments.acctions";
+import {
+	getComments,
+	updateComment,
+	trashComments,
+} from "../Actions/comments.acctions";
 import { Link } from "react-router-dom";
 
 const styles = makeStyles((theme) => ({
@@ -22,15 +28,78 @@ const styles = makeStyles((theme) => ({
 	},
 }));
 
-const Comments = ({ comments, getComments, updateComment }) => {
-	useEffect(() => {
-		getComments();
-		document.title = "Comments";
-	}, [getComments]);
+const ActionBar = ({
+	classes,
+	selected,
+	handleDelete,
+	show,
+	handleShow,
+	count,
+	remove,
+}) => {
+	return (
+		<div className={classes.actionBar}>
+			<div>
+				<MLink
+					onClick={() => handleShow("approvedAndWaiting")}
+					component="button"
+					className={classes.mdLink}
+				>
+					All ({count["approvedAndWaiting"]})
+				</MLink>
+				<MLink
+					onClick={() => handleShow("approved")}
+					component="button"
+					className={classes.mdLink}
+				>
+					Published ({count.approved})
+				</MLink>
+				<MLink
+					onClick={() => handleShow("waiting")}
+					component="button"
+					className={classes.mdLink}
+				>
+					Draft ({count.waiting})
+				</MLink>
+				<MLink
+					onClick={() => handleShow("trashed")}
+					component="button"
+					className={classes.mdLink}
+				>
+					Trash ({count.trashed})
+				</MLink>
+			</div>
+			<Button
+				color="secondary"
+				variant="contained"
+				//disabled={!selected.length > 0}
+				style={{ float: "right" }}
+				onClick={handleDelete}
+			>
+				{remove ? "Remove" : "Trash"}
+			</Button>
+		</div>
+	);
+};
 
+const Comments = ({
+	comments,
+	getComments,
+	updateComment,
+	trashComment,
+	count,
+}) => {
 	const [edit, _toggleEdit] = useState("");
 	const [author, handleAuthor] = useState("");
 	const [content, handleContent] = useState("");
+	const [showPage, updateShowPage] = useState("approvedAndWaiting");
+	const [page, setPage] = useState(0);
+	const [rowsPerPage, setRowsPerPage] = useState(10);
+
+	useEffect(() => {
+		getComments(showPage, page, rowsPerPage);
+		document.title = "Comments";
+	}, [getComments, page, rowsPerPage, showPage]);
 
 	const toggleEdit = (id, _author, _content) => {
 		if (edit === id) {
@@ -52,10 +121,11 @@ const Comments = ({ comments, getComments, updateComment }) => {
 	};
 
 	const tableHead = ["Author", "Comment", "In Respose To", "Status", "Date"];
-
+	const _comments = comments[showPage][page];
 	const classes = styles();
 	return (
 		<Paper>
+			<ActionBar handleShow={updateShowPage} count={count} classes={classes} />
 			<Table>
 				<TableHead>
 					<TableRow>
@@ -65,7 +135,7 @@ const Comments = ({ comments, getComments, updateComment }) => {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{comments.map((comment) => (
+					{_comments.map((comment) => (
 						<React.Fragment key={comment._id}>
 							<TableRow
 								style={{
@@ -120,6 +190,13 @@ const Comments = ({ comments, getComments, updateComment }) => {
 											href="#"
 											className={classes.link}
 										>
+											Reply
+										</MDLink>
+										<MDLink
+											onClick={() => trashComment(comment._id)}
+											href="#"
+											className={classes.link}
+										>
 											Trash
 										</MDLink>
 									</div>
@@ -140,14 +217,20 @@ const Comments = ({ comments, getComments, updateComment }) => {
 	);
 };
 
-const mapStateToProps = ({ comments: { comments } }) => ({ comments });
+const mapStateToProps = ({ comments: { comments, count } }) => ({
+	comments,
+	count,
+});
 
 const mapDispatchToProps = (dispatch) => ({
-	getComments: () => {
-		dispatch(getComments());
+	getComments: (...args) => {
+		dispatch(getComments(...args));
 	},
 	updateComment(id, comment) {
 		dispatch(updateComment(id, comment));
+	},
+	trashComment(ids) {
+		dispatch(trashComments(ids));
 	},
 });
 

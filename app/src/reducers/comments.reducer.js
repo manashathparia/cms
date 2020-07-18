@@ -1,12 +1,20 @@
 import {
 	ADD_NEW_COMMENT,
 	REMOVE_COMMENT,
-	SET_COMMENTS,
 	UPDATE_COUNT,
+	SET_APPROVED_COMMENTS,
+	SET_APPROVED_AND_WAITING_COMMENTS,
+	SET_WAITING_COMMENTS,
+	SET_TRASHED_COMMENTS,
 } from "../Actions/comments.acctions";
 
 const initial = {
-	comments: [],
+	comments: {
+		approved: { 0: [] },
+		waiting: { 0: [] },
+		trashed: { 0: [] },
+		approvedAndWaiting: { 0: [] },
+	},
 	count: {
 		approved: 0,
 		waiting: 0,
@@ -17,7 +25,15 @@ const initial = {
 export default function commentsReducer(state = initial, { type, payload }) {
 	switch (type) {
 		case ADD_NEW_COMMENT:
-			return { ...state, comments: [payload, ...state.comments] };
+			return {
+				...state,
+				comments: {
+					...state.comments,
+					[payload.status]: {
+						0: [...state.comments[payload.status], payload.comment],
+					},
+				},
+			};
 
 		case REMOVE_COMMENT:
 			const comments = state.comments.filter(
@@ -25,8 +41,53 @@ export default function commentsReducer(state = initial, { type, payload }) {
 			);
 			return { ...state, comments };
 
-		case SET_COMMENTS:
-			return { ...state, comments: payload };
+		case SET_APPROVED_COMMENTS:
+			return {
+				...state,
+				comments: {
+					...state.comments,
+					approved: {
+						...state.comments.approved,
+						[payload.page]: payload.comments,
+					},
+				},
+			};
+
+		case SET_APPROVED_AND_WAITING_COMMENTS:
+			return {
+				...state,
+				comments: {
+					...state.comments,
+					approvedAndWaiting: {
+						...state.comments.approvedAndWaiting,
+						[payload.page]: payload.comments,
+					},
+				},
+			};
+
+		case SET_WAITING_COMMENTS:
+			return {
+				...state,
+				comments: {
+					...state.comments,
+					waiting: {
+						...state.comments.waiting,
+						[payload.page]: payload.comments,
+					},
+				},
+			};
+
+		case SET_TRASHED_COMMENTS:
+			return {
+				...state,
+				comments: {
+					...state.comments,
+					trashed: {
+						...state.comments.trashed,
+						[payload.page]: payload.comments,
+					},
+				},
+			};
 
 		case UPDATE_COUNT:
 			return { ...state, count: payload };

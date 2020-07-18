@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import Grid from "@material-ui/core/Grid";
@@ -43,13 +44,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 	img: {
 		maxHeight: "580px",
-		maxWidth: "700px",
+		maxWidth: "100%",
 		[theme.breakpoints.down("xs")]: {
-			maxWidth: "300px",
 			maxHeight: "100px",
 		},
 		[theme.breakpoints.down("sm")]: {
-			maxWidth: "400px",
 			maxHeight: "300px",
 		},
 	},
@@ -121,7 +120,10 @@ const DetailsSidebar = ({ image, button, action }) => {
 				<Typography color="textSecondary" style={{ fontSize: "small" }}>
 					Size: {image.size && `${Math.round(image.size / 1024)} KB`}
 				</Typography>
-				<Typography color="textSecondary" style={{ fontSize: "small" }}>
+				<Typography
+					color="textSecondary"
+					style={{ fontSize: "small", overflowY: "hidden" }}
+				>
 					Path: {image.path}
 				</Typography>
 			</div>
@@ -256,6 +258,8 @@ function ImageSelector({ images, loadImages, uploadImage }) {
 	};
 
 	const handleDialogClose = () => toggleDialog(!dialog);
+	const isMobile = useMediaQuery("(max-width:600px)");
+	const col = isMobile ? 2.5 : 1;
 
 	return (
 		<div className={classes.root}>
@@ -288,7 +292,7 @@ function ImageSelector({ images, loadImages, uploadImage }) {
 					<GridListTile
 						className={classes.container}
 						key={tile._id}
-						cols={tile.cols || 1}
+						cols={col}
 						onClick={() => loadImage(tile)}
 					>
 						<img

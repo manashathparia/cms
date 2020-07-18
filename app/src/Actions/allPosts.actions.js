@@ -18,9 +18,18 @@ export const updateAllPosts = (
 	);
 	dispatch({
 		type: `UPDATE_${status.toUpperCase()}_POSTS`,
-		payload: res.data.posts,
+		payload: {
+			page,
+			posts: res.data.posts,
+		},
 	});
-	dispatch({ type: UPDATE_POSTS_COUNT, payload: res.data.count });
+	dispatch({
+		type: UPDATE_POSTS_COUNT,
+		payload: {
+			...res.data.count,
+			"published,draft": res.data.count.published + res.data.count.draft,
+		},
+	});
 	dispatch(toggleLoader());
 };
 

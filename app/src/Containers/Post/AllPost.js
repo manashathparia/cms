@@ -6,6 +6,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TablePagination from "@material-ui/core/TablePagination";
 import Paper from "@material-ui/core/Paper";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import CheckBox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Comment from "@material-ui/icons/CommentTwoTone";
@@ -67,7 +68,7 @@ const ActionBar = ({
 					component="button"
 					className={classes.mdLink}
 				>
-					All ({count.published + count.draft})
+					All ({count["published,draft"]})
 				</MLink>
 				<MLink
 					onClick={() => handleShow("published")}
@@ -121,8 +122,14 @@ function AllPosts({
 
 	useEffect(() => {
 		document.title = "All posts";
-		getPosts(show, page, perPage);
-	}, [getPosts, page, perPage, show]);
+	}, []);
+
+	useEffect(() => {
+		(!posts[show][page] ||
+			!posts[show][page].length > 0 ||
+			(posts[show][page].length < perPage && postsCount[show] > perPage)) &&
+			getPosts(show, page, perPage);
+	}, [getPosts, page, perPage, posts, postsCount, show]);
 
 	const handleSelect = (id) => {
 		if (selected.includes(id)) {
@@ -174,7 +181,7 @@ function AllPosts({
 		"Date",
 	];
 
-	const _posts = posts[show];
+	const _posts = posts[show][page];
 	const count =
 		show === "published,draft"
 			? postsCount.published + postsCount.draft
@@ -211,7 +218,7 @@ function AllPosts({
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{_posts.map((post, i) => (
+						{_posts?.map((post, i) => (
 							<TableRow key={post.slug + i}>
 								<TableCell padding="checkbox">
 									<CheckBox
@@ -264,7 +271,7 @@ function AllPosts({
 							</TableRow>
 						))}
 						<TableRow>
-							{_posts.length > 0 && (
+							{_posts?.length > 0 && (
 								<TablePagination
 									rowsPerPageOptions={[10, 20, 30]}
 									page={page}
@@ -277,11 +284,11 @@ function AllPosts({
 						</TableRow>
 					</TableBody>
 				</Table>
-				{_posts.length === 0 && loading ? (
+				{loading ? (
 					<div style={{ padding: "20px", textAlign: "center" }}>
-						<p>LOADING...</p>
+						<CircularProgress />
 					</div>
-				) : _posts.length === 0 ? (
+				) : _posts?.length === 0 ? (
 					<div style={{ padding: "20px", textAlign: "center" }}>
 						<h1>NO POSTS</h1>
 					</div>
