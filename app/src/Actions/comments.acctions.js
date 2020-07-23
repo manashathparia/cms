@@ -27,7 +27,10 @@ export const updateComments = (status, comments, page) => ({
 });
 export const updateCounts = (counts) => ({
 	type: UPDATE_COUNT,
-	payload: counts,
+	payload: {
+		...counts,
+		approvedAndWaiting: counts.approved + counts.waiting,
+	},
 });
 
 export const getComments = (status, page, perPage) => async (dispatch) => {
@@ -44,15 +47,18 @@ export const getComments = (status, page, perPage) => async (dispatch) => {
 	dispatch(updateCounts(counts));
 };
 
-export const updateComment = (id, updated) => async (dispatch, state) => {
+export const updateComment = (id, updated, status, page) => async (
+	dispatch,
+	state
+) => {
 	const { data } = await axios.put(`/api/comments/${id}`, updated);
 	const {
 		comments: { comments: _comments },
 	} = await state();
-	const comments = _comments.map((comment) =>
+	const comments = _comments[status][page].map((comment) =>
 		comment._id === id ? { ...comment, ...updated } : comment
 	);
-	dispatch(updateComments(comments));
+	dispatch(updateComments(status, comments, page));
 	dispatch(updateCounts(data[1]));
 };
 

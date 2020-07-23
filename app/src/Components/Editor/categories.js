@@ -103,14 +103,29 @@ export const AddCategoryDialog = ({ open, onClose, onSubmit, full }) => {
 	);
 };
 
-const Category = (props) => {
+const Category = ({
+	getCategories,
+	editorCategories,
+	categories,
+	handleChange,
+	addCategory,
+}) => {
 	const [promptState, tooglePrompt] = useState(false);
 	const [expanded, toogleExpanded] = useState(false);
 
 	useEffect(() => {
-		props.getCategories();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+		getCategories();
+	}, [getCategories]);
+	useEffect(() => {
+		if (editorCategories.length <= 0) {
+			categories.forEach((cat) => {
+				if (cat.category === "Uncategorised") {
+					console.log(cat);
+					handleChange(cat._id);
+				}
+			});
+		}
+	}, [categories, editorCategories.length, handleChange]);
 	const handleAddCategoryDialog = () => tooglePrompt(!promptState);
 	const toggleCategories = () => toogleExpanded(!expanded);
 
@@ -119,16 +134,15 @@ const Category = (props) => {
 			return;
 		}
 
-		props.addCategory(category);
+		addCategory(category);
 
 		handleAddCategoryDialog();
 	};
 
 	const checkedCategories = (id) => {
-		const categories = props.editorCategory;
 		let checked = false;
-		for (let i = 0; i < categories?.length; i++) {
-			if (categories[i]._id === id) {
+		for (let i = 0; i < editorCategories?.length; i++) {
+			if (editorCategories[i] === id) {
 				checked = true;
 			}
 		}
@@ -157,14 +171,14 @@ const Category = (props) => {
 						<ListItemText disableTypography primary="Add category" />
 						<Add />
 					</ListItem>
-					{props.categories.map((category) => (
+					{categories.map((category) => (
 						<ListItem style={{ height: "40px" }} key={category._id}>
 							<FormControlLabel
 								control={<CheckBox />}
 								value={category._id}
 								label={category.category}
 								style={{ padding: 0 }}
-								onChange={() => props.handleChange(category)}
+								onChange={() => handleChange(category._id)}
 								checked={checkedCategories(category._id)}
 							/>
 						</ListItem>
@@ -182,7 +196,7 @@ const Category = (props) => {
 
 const mapStateToProps = (state) => ({
 	categories: state.content.categories,
-	editorCategory: state.editor.category,
+	editorCategories: state.editor.category,
 });
 const mapDispatchToProps = (dispatch) => ({
 	addCategory: (category) => dispatch(addCategory(category)),

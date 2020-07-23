@@ -44,6 +44,13 @@ const useStyles = makeStyles((theme) => ({
 		color: "black",
 		textDecoration: "none",
 	},
+	version: {
+		position: "absolute",
+		height: 40,
+		bottom: 0,
+		width: "100%",
+		padding: 5,
+	},
 }));
 
 const menuItems = [
@@ -198,6 +205,7 @@ function SideBar(props) {
 						style={{ zIndex: 99 }}
 					>
 						{items}
+						<div className={classes.version}>Node CMS version: Alpha 1.0</div>
 					</Drawer>
 				</Hidden>
 				<Hidden xsDown implementation="css">
@@ -210,6 +218,7 @@ function SideBar(props) {
 						open={props.navigation.desktopDrawerOpen}
 					>
 						{items}
+						<div className={classes.version}>Node CMS version: Alpha 1.0</div>
 					</Drawer>
 				</Hidden>
 			</nav>

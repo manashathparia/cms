@@ -18,7 +18,8 @@ const initial = {
 	count: {
 		approved: 0,
 		waiting: 0,
-		trash: 0,
+		trashed: 0,
+		approvedAndWaiting: 0,
 	},
 };
 

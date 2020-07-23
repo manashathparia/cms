@@ -116,7 +116,7 @@ function AllPosts({
 }) {
 	const [selected, _handleSelect] = useState([]);
 	const [allSelected, _handleAllSelect] = useState(false);
-	const [show, updateShow] = React.useState("published,draft");
+	const [show, _updateShow] = React.useState("published,draft");
 	const [perPage, setPerPage] = useState(10);
 	const [page, changePage] = useState(0);
 
@@ -125,11 +125,8 @@ function AllPosts({
 	}, []);
 
 	useEffect(() => {
-		(!posts[show][page] ||
-			!posts[show][page].length > 0 ||
-			(posts[show][page].length < perPage && postsCount[show] > perPage)) &&
-			getPosts(show, page, perPage);
-	}, [getPosts, page, perPage, posts, postsCount, show]);
+		getPosts(show, page, perPage);
+	}, [getPosts, page, perPage, show]);
 
 	const handleSelect = (id) => {
 		if (selected.includes(id)) {
@@ -137,7 +134,7 @@ function AllPosts({
 			_handleAllSelect(false);
 			return _handleSelect(a);
 		}
-		posts[show].length === selected.length + 1
+		posts[show][page].length === selected.length + 1
 			? _handleAllSelect(true)
 			: _handleAllSelect(false);
 		_handleSelect([...selected, id]);
@@ -146,7 +143,7 @@ function AllPosts({
 	const handleAllSelect = () => {
 		if (!allSelected) {
 			const arr = [];
-			posts[show].forEach((post) => {
+			posts[show][page].forEach((post) => {
 				if (show.split(",").includes(post.status)) arr.push(post._id);
 			});
 			_handleAllSelect(true);
@@ -155,6 +152,12 @@ function AllPosts({
 		}
 		_handleAllSelect(false);
 		_handleSelect([]);
+	};
+
+	const updateShow = (t) => {
+		setPerPage(10);
+		changePage(0);
+		_updateShow(t);
 	};
 
 	const handlePostsTrash = () => {

@@ -7,8 +7,8 @@ const Post = mongoose.model("Post");
 const getCount = async () => {
 	const approved = await Comments.countDocuments({ status: "approved" });
 	const waiting = await Comments.countDocuments({ status: "waiting" });
-	const trash = await Comments.countDocuments({ status: "trashed" });
-	return { approved, waiting, trash };
+	const trashed = await Comments.countDocuments({ status: "trashed" });
+	return { approved, waiting, trashed };
 };
 
 router

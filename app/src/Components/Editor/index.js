@@ -59,7 +59,7 @@ function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
 				<Grid item xs={12} sm={10}>
 					<TextField
 						value={props.title}
-						onChange={(e) => props.handleTitleUpdate(e, slugChanged)}
+						onChange={(e) => props.handleTitleUpdate(e, slugChanged, edit)}
 						fullWidth
 						variant="outlined"
 						label="Title"
@@ -134,9 +134,9 @@ const mapDispatchToProps = (dispatch) => ({
 		dispatch
 	),
 
-	handleTitleUpdate(e, slugChanged) {
+	handleTitleUpdate(e, slugChanged, edit) {
 		const title = capitalize(e.target.value);
-		if (!slugChanged) {
+		if (!slugChanged && !edit) {
 			dispatch(updateEditorTitle(title));
 			this.handleSlugChange(e);
 		} else {
