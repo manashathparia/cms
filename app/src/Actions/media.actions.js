@@ -4,12 +4,14 @@ import { newNotification } from "./notification.actions";
 export const LOAD_IMAGES = "LOAD_IMAGES";
 export const SUBMIT_IMAGE = "SUBMIT_IMAGE";
 
+const loadImagesAction = (images) => ({
+	type: LOAD_IMAGES,
+	payload: images,
+});
+
 export const loadImages = () => async (dispatch) => {
 	const { data } = await Axios.get("/api/media");
-	dispatch({
-		type: LOAD_IMAGES,
-		payload: data,
-	});
+	dispatch(loadImagesAction(data));
 };
 
 export const uploadImage = (image, cb) => async (dispatch, getState) => {
@@ -33,5 +35,20 @@ export const uploadImage = (image, cb) => async (dispatch, getState) => {
 				show: true,
 			})
 		);
+	}
+};
+
+export const updateImage = (update) => async (dispatch, getState) => {
+	try {
+		const { data } = await Axios.put(`/api/media/${update._id}`, update);
+		const {
+			media: { images },
+		} = await getState();
+		const updatedImages = images.map((image) =>
+			image._id === update._id ? data : image
+		);
+		dispatch(loadImagesAction(updatedImages));
+	} catch (e) {
+		console.log(e);
 	}
 };

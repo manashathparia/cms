@@ -13,7 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { connect } from "react-redux";
-import { loadImages, uploadImage } from "../Actions/media.actions";
+import { loadImages, uploadImage, updateImage } from "../Actions/media.actions";
 import Paper from "@material-ui/core/Paper";
 import Slide from "@material-ui/core/Slide";
 
@@ -96,16 +96,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DetailsSidebar = ({ image, button, action }) => {
-	const [title, updateTitle] = useState("");
-	const [altTxt, updateAltTxt] = useState("");
-	const [caption, updateCaption] = useState("");
-	const [description, updateDescription] = useState("");
+	const [data, updateData] = useState({
+		title: "",
+		alt_text: "",
+		caption: "",
+		description: "",
+	});
 
 	useEffect(() => {
-		updateTitle(image.title || "");
-		updateAltTxt(image.alt_text || "");
-		updateCaption(image.caption || "");
-		updateDescription(image.description || "");
+		updateData({
+			title: "",
+			alt_text: "",
+			caption: "",
+			description: "",
+			...image,
+		});
 	}, [image]);
 	const classes = useStyles();
 	return (
@@ -132,48 +137,46 @@ const DetailsSidebar = ({ image, button, action }) => {
 				fullWidth
 				className={classes.textField}
 				variant="outlined"
-				value={title}
-				onChange={(e) => updateTitle(e.target.value)}
+				value={data.title}
+				onChange={(e) => updateData({ ...data, title: e.target.value })}
 			/>
 			<TextField
 				label="Alternative Text"
 				fullWidth
-				value={altTxt}
+				value={data.alt_text}
 				className={classes.textField}
 				variant="outlined"
-				onChange={(e) => updateAltTxt(e.target.value)}
+				onChange={(e) => updateData({ ...data, alt_text: e.target.value })}
 			/>
 			<br />
 			<TextField
 				label="Caption"
 				fullWidth
-				value={caption}
+				value={data.caption}
 				multiline
 				className={classes.textField}
 				variant="outlined"
-				onChange={(e) => updateCaption(e.target.value)}
+				onChange={(e) => updateData({ ...data, caption: e.target.value })}
 			/>
 			<TextField
 				label="Description"
 				fullWidth
 				multiline
-				value={description}
+				value={data.description}
 				className={classes.textField}
 				variant="outlined"
-				onChange={(e) => updateDescription(e.target.value)}
+				onChange={(e) => updateData({ ...data, description: e.target.value })}
 			/>
 			<Button
 				variant="outlined"
 				disabled={!image.path}
-				onClick={() =>
+				onClick={() => {
+					console.log(data);
 					action({
-						title,
-						alt_text: altTxt,
-						caption,
-						description,
 						...image,
-					})
-				}
+						...data,
+					});
+				}}
 			>
 				{button}
 			</Button>
@@ -181,7 +184,12 @@ const DetailsSidebar = ({ image, button, action }) => {
 	);
 };
 
-const AttachmentDetails = ({ handleDialogClose, open, image }) => {
+const AttachmentDetails = ({
+	handleDialogClose,
+	open,
+	image,
+	handleDetailsUpdate,
+}) => {
 	const classes = useStyles();
 
 	return (
@@ -220,7 +228,11 @@ const AttachmentDetails = ({ handleDialogClose, open, image }) => {
 				</Grid>
 				<Grid item xs={12} sm={4}>
 					<div style={{ padding: "20px" }}>
-						<DetailsSidebar action={(f) => f} image={image} button="save" />
+						<DetailsSidebar
+							action={handleDetailsUpdate}
+							image={image}
+							button="save"
+						/>
 					</div>
 				</Grid>
 			</Grid>
@@ -228,7 +240,7 @@ const AttachmentDetails = ({ handleDialogClose, open, image }) => {
 	);
 };
 
-function ImageSelector({ images, loadImages, uploadImage }) {
+function ImageSelector({ images, loadImages, uploadImage, updateImageData }) {
 	const [selectedImage, updateSelectedImage] = useState({});
 	const [dialog, toggleDialog] = useState(false);
 	const [uploading, toggleUpoading] = useState(false);
@@ -307,6 +319,7 @@ function ImageSelector({ images, loadImages, uploadImage }) {
 				handleDialogClose={handleDialogClose}
 				open={dialog}
 				image={selectedImage}
+				handleDetailsUpdate={updateImageData}
 			/>
 		</div>
 	);
@@ -467,13 +480,16 @@ export const ImageInserter = connect(
 )(Imageinserter);
 
 export default connect(
-	({ media }) => ({ images: media.images }),
+	({ media: { images } }) => ({ images }),
 	(dispatch) => ({
 		loadImages() {
 			dispatch(loadImages());
 		},
 		uploadImage(img, cb) {
 			dispatch(uploadImage(img, cb));
+		},
+		updateImageData(update) {
+			dispatch(updateImage(update));
 		},
 	})
 )(ImageSelector);

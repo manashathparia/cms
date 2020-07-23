@@ -120,7 +120,6 @@ const Category = ({
 		if (editorCategories.length <= 0) {
 			categories.forEach((cat) => {
 				if (cat.category === "Uncategorised") {
-					console.log(cat);
 					handleChange(cat._id);
 				}
 			});

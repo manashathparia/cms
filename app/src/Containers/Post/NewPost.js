@@ -1,12 +1,16 @@
 import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { changeHeaderHeading } from "../../Actions/navigationActions";
+
 //import Editor from "../../Components/Editor";
 
 const LazyEditor = React.lazy(() => import("../../Components/Editor"));
 
-export default function EditPost() {
+function EditPost({ updateHeading }) {
 	useEffect(() => {
 		document.title = "New Post";
-	}, []);
+		updateHeading("New Post");
+	}, [updateHeading]);
 
 	return (
 		<div>
@@ -16,3 +20,9 @@ export default function EditPost() {
 		</div>
 	);
 }
+
+export default connect(null, (dispatch) => ({
+	updateHeading(heading) {
+		dispatch(changeHeaderHeading(heading));
+	},
+}))(EditPost);

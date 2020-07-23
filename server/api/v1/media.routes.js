@@ -72,4 +72,16 @@ router
 		}
 	});
 
+router.put("/:id", async (req, res) => {
+	try {
+		const ImageID = req.params.id;
+		const updated = await Image.findByIdAndUpdate(ImageID, req.body, {
+			new: true,
+		});
+		res.status(201).json(updated);
+	} catch (error) {
+		res.status(500).send(error.message);
+	}
+});
+
 module.exports = router;

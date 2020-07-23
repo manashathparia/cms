@@ -7,10 +7,12 @@ import EditPost from "../Containers/Post/EditPost";
 import MediaPage from "../Containers/MediaPage";
 import Categories from "../Containers/Post/Categories";
 import Comments from "../Containers/Comments";
+import Dashboard from "../Containers/Dashboard";
 
 export default function(props) {
 	return (
 		<Switch>
+			<Route exact path="/" component={Dashboard} />
 			<Route exact path="/posts/new" component={NewPost} />
 			<Route exact path="/posts/all" component={AllPost} />
 			<Route exact path="/posts/edit/:id" component={EditPost} />

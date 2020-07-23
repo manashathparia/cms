@@ -8,6 +8,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Avatar from "@material-ui/core/Avatar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
+import ChevronRight from "@material-ui/icons/ChevronRight";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { toogleDrawer } from "../Actions/navigationActions";
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function Header({ getInitialData, toogleDrawer, profile }) {
+function Header({ getInitialData, toogleDrawer, profile, heading }) {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const menuOpen = Boolean(anchorEl);
 	const classes = useStyles();
@@ -57,7 +58,13 @@ function Header({ getInitialData, toogleDrawer, profile }) {
 						<MenuIcon />
 					</IconButton>
 					<Typography variant="h6" noWrap style={{ flexGrow: 1 }}>
-						Node CMS
+						Node CMS{" "}
+						{heading && (
+							<ChevronRight
+								style={{ width: 30, height: 30, verticalAlign: "bottom" }}
+							/>
+						)}
+						{heading}
 					</Typography>
 					<div>
 						<IconButton
@@ -86,7 +93,7 @@ function Header({ getInitialData, toogleDrawer, profile }) {
 }
 
 export default connect(
-	({ profile }) => ({ profile }),
+	({ profile, navigation }) => ({ profile, heading: navigation.heading }),
 	(dispatch) => ({
 		toogleDrawer() {
 			dispatch(toogleDrawer());

@@ -12,7 +12,7 @@ export const updateAllPosts = (
 	page,
 	perPage
 ) => async (dispatch) => {
-	dispatch(toggleLoader());
+	dispatch(toggleLoader(true));
 	const res = await Axios.get(
 		`/api/posts/?embed=true&status=${status}&page=${page}&per_page=${perPage}`
 	);
@@ -30,7 +30,7 @@ export const updateAllPosts = (
 			"published,draft": res.data.count.published + res.data.count.draft,
 		},
 	});
-	dispatch(toggleLoader());
+	dispatch(toggleLoader(false));
 };
 
 export const trashPosts = (ids, status) => async (dispatch, getState) => {

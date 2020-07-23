@@ -18,6 +18,7 @@ export const clearNotification = () => ({
 	type: CLEAR_NOTIFICATION,
 });
 
-export const toggleLoader = () => ({
+export const toggleLoader = (state) => ({
 	type: TOGGLE_LOADER,
+	payload: state,
 });

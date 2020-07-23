@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
 		width: "90%",
 		borderRadius: "4px",
 		height: "40px",
+		"&:before": {
+			content: "''",
+		},
 	},
 	link: {
 		color: "black",

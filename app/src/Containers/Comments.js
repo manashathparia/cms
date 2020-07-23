@@ -18,7 +18,8 @@ import {
 	trashComments,
 } from "../Actions/comments.acctions";
 import { Link } from "react-router-dom";
-import categories from "../Components/Editor/categories";
+import { changeHeaderHeading } from "../Actions/navigationActions";
+// import categories from "../Components/Editor/categories";
 
 const styles = makeStyles((theme) => ({
 	menuRoot: {
@@ -99,6 +100,7 @@ const Comments = ({
 	updateComment,
 	trashComment,
 	count,
+	updateHeading,
 }) => {
 	const [edit, _toggleEdit] = useState("");
 	const [author, handleAuthor] = useState("");
@@ -112,7 +114,8 @@ const Comments = ({
 	useEffect(() => {
 		getComments(showPage, page, rowsPerPage);
 		document.title = "Comments";
-	}, [getComments, page, rowsPerPage, showPage]);
+		updateHeading("Comments");
+	}, [getComments, page, rowsPerPage, showPage, updateHeading]);
 
 	const toggleEdit = (id, _author, _content) => {
 		if (edit === id) {
@@ -297,6 +300,9 @@ const mapDispatchToProps = (dispatch) => ({
 	},
 	trashComment(ids) {
 		dispatch(trashComments(ids));
+	},
+	updateHeading(heading) {
+		dispatch(changeHeaderHeading(heading));
 	},
 });
 

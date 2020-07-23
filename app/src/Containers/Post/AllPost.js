@@ -19,6 +19,7 @@ import {
 } from "../../Actions/allPosts.actions";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { changeHeaderHeading } from "../../Actions/navigationActions";
 
 const styles = (theme) => ({
 	root: {
@@ -113,6 +114,7 @@ function AllPosts({
 	postsCount,
 	deletePosts,
 	loading,
+	updateHeading,
 }) {
 	const [selected, _handleSelect] = useState([]);
 	const [allSelected, _handleAllSelect] = useState(false);
@@ -122,7 +124,8 @@ function AllPosts({
 
 	useEffect(() => {
 		document.title = "All posts";
-	}, []);
+		updateHeading("All Posts");
+	}, [updateHeading]);
 
 	useEffect(() => {
 		getPosts(show, page, perPage);
@@ -316,6 +319,9 @@ const mapDispatchToProps = (dispatch) => ({
 	},
 	deletePosts(ids) {
 		dispatch(deletePosts(ids));
+	},
+	updateHeading(heading) {
+		dispatch(changeHeaderHeading(heading));
 	},
 });
 

@@ -22,7 +22,7 @@ export default function notificationReducer(
 		case CLEAR_NOTIFICATION:
 			return initial;
 		case TOGGLE_LOADER:
-			return { ...state, loading: !state.loading };
+			return { ...state, loading: payload };
 		default:
 			return state;
 	}

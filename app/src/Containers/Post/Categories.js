@@ -21,6 +21,7 @@ import Save from "@material-ui/icons/Save";
 import Remove from "@material-ui/icons/Delete";
 import { updateCategory as updateCategoryAction } from "../../Actions/category.actions";
 import { AddCategoryDialog } from "../../Components/Editor/categories";
+import { changeHeaderHeading } from "../../Actions/navigationActions";
 
 function Categories({
 	categories,
@@ -28,6 +29,7 @@ function Categories({
 	updateCategory,
 	deleteCategory,
 	addCategory,
+	updateHeading,
 }) {
 	const [edit, _handleEdit] = useState("");
 	const [show, handleShow] = useState(false);
@@ -37,7 +39,8 @@ function Categories({
 	useEffect(() => {
 		getCategories();
 		document.title = "Categories";
-	}, [getCategories]);
+		updateHeading("Categories");
+	}, [getCategories, updateHeading]);
 
 	const handleEdit = (id, _name, _description) => {
 		if (edit === id) {
@@ -169,6 +172,9 @@ export default connect(
 		},
 		addCategory(category) {
 			dispatch(addCategory(category));
+		},
+		updateHeading(heading) {
+			dispatch(changeHeaderHeading(heading));
 		},
 	})
 )(Categories);
