@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const moment = require("moment");
+const getExcerpt = require("../../lib/getExcerpt");
 
 const PostSchema = new mongoose.Schema({
 	title: { type: String, default: "Untitled", minlength: 1 },
@@ -17,6 +18,7 @@ const PostSchema = new mongoose.Schema({
 	author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 	updatedAt: { type: String, default: moment().format("L") },
 	body: String,
+	excerpt: String,
 	featuredImage: {
 		type: {
 			url: String,
@@ -40,14 +42,17 @@ const PostSchema = new mongoose.Schema({
 	},
 });
 
-PostSchema.pre("findOneAndUpdate", function(next) {
+PostSchema.pre("updateOne", function(next) {
 	// update the updatedAt date to the current date whenever an update to the document occurs
 	// eslint-disable-next-line
 	this._update.updatedAt = moment().format("L");
+	this._update.excerpt = getExcerpt(this._update.body);
+
 	next();
 });
 
 PostSchema.pre("save", function(next) {
+	this.excerpt = getExcerpt(this.body);
 	if (this.category.length <= 0) {
 		mongoose
 			.model("Category")

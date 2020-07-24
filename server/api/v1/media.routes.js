@@ -78,7 +78,7 @@ router.put("/:id", async (req, res) => {
 		const updated = await Image.findByIdAndUpdate(ImageID, req.body, {
 			new: true,
 		});
-		res.status(201).json(updated);
+		res.status(200).json(updated);
 	} catch (error) {
 		res.status(500).send(error.message);
 	}

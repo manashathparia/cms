@@ -3,6 +3,7 @@
 const express = require("express");
 const db = require("./db");
 const morgan = require("morgan");
+const sanitize = require("./middlewares/sanitize");
 
 const app = express();
 
@@ -12,6 +13,7 @@ db.connect();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+app.use(sanitize);
 
 app.use("/api", require("./api/v1"));
 app.get("/", (req, res) => res.send("ok"));
