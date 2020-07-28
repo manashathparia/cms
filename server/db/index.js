@@ -15,7 +15,6 @@ module.exports.connect = () => {
 		})
 		.then(() => console.log("Database connected"))
 		.catch((e) => {
-			// eslint-disable-next-line no-console
 			console.error(e);
 			process.exit(1);
 		});

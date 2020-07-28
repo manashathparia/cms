@@ -243,22 +243,26 @@ function AllPosts({
 								</TableCell>
 
 								<TableCell className={classes.tableCell}>
+									{console.log(post)}
 									{Array.isArray(post.category)
-										? post.category.map((category, i) => (
-												<React.Fragment key={category._id || i}>
-													<MLink
-														style={{ textDecoration: "none" }}
-														key={category._id}
-														href={`category/${category.category}`}
-													>
-														{category.category}
-													</MLink>
-													{post.category.length > 1 &&
-													i !== post.category.length - 1
-														? ", "
-														: ""}
-												</React.Fragment>
-										  ))
+										? post.category.map(
+												(category, i) =>
+													category && (
+														<React.Fragment key={category?._id || i}>
+															<MLink
+																style={{ textDecoration: "none" }}
+																key={category._id}
+																href={`category/${category.category}`}
+															>
+																{category.category}
+															</MLink>
+															{post.category.length > 1 &&
+															i !== post.category.length - 1
+																? ", "
+																: ""}
+														</React.Fragment>
+													)
+										  )
 										: null}
 								</TableCell>
 								<TableCell className={classes.tableCell}>

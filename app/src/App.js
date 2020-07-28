@@ -1,7 +1,7 @@
 import React from "react";
-//import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import manrope from "./fonts/manrope";
+// import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { MuiThemeProvider } from "@material-ui/core/styles";
+// import manrope from "./fonts/manrope";
 import Header from "./Components/Header";
 import SideBar from "./Components/SideBar";
 import Content from "./Components/Content";
@@ -11,31 +11,33 @@ import AuthCheck from "./Components/AuthCheck";
 import "./App.css";
 
 function App() {
-	//const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+	// const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-	const theme = React.useMemo(
-		() =>
-			createMuiTheme({
-				palette: {
-					type: /*prefersDarkMode ? "dark" : */ "light",
-				},
-				//typography: {
-				//	fontFamily: "Manrope, Arial",
-				//},
-				overrides: {
-					MuiCssBaseline: {
-						"@global": {
-							"@font-face": [manrope],
-						},
-					},
-				},
-			}),
-		[]
-	);
+	// const theme = React.useMemo(
+	// 	() =>
+	// 		createMuiTheme({
+	// 			palette: {
+	// 				type: prefersDarkMode ? "light" : "light",
+	// 			},
+	// 			typography: {
+	// 				fontFamily: "Manrope, Arial",
+	// 			},
+	// 			overrides: {
+	// 				MuiCssBaseline: {
+	// 					"@global": {
+	// 						"@font-face": [manrope],
+	// 					},
+	// 				},
+	// 			},
+	// 		}),
+	// 	[prefersDarkMode]
+	// );
 
 	return (
 		<div style={{ display: "flex", height: "100%" }}>
-			<MuiThemeProvider theme={theme}>
+			<MuiThemeProvider
+			// theme={theme}
+			>
 				<AuthCheck />
 				<Header />
 				<SideBar />

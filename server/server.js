@@ -17,6 +17,7 @@ app.use(sanitize);
 
 app.use("/api", require("./api/v1"));
 app.get("/", (req, res) => res.send("ok"));
+
 app.get("/admin*", (req, res) => {
 	res.sendFile("/public/index.html", { root: "." });
 });

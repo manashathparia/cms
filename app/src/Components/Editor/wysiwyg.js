@@ -39,7 +39,7 @@ export default function Wysiwyg({ body, onChange, refs }) {
 			/>
 			{/*
 				when toggleImageSelector is passed to Plugin and called it causes memory leak warning,
-				i am not able to find the source of the error so i created a span with onClick 
+				i am not able to find the cause of the error so i created a span with onClick 
 				and click the span from plugin using document.que..().click()
 			*/}
 			<span

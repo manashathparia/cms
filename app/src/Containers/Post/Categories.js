@@ -9,16 +9,15 @@ import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import Edit from "@material-ui/icons/Edit";
+import Save from "@material-ui/icons/Save";
+import Remove from "@material-ui/icons/Delete";
 import { connect } from "react-redux";
 import {
 	getCategories,
 	deleteCategory,
 	addCategory,
 } from "../../Actions/category.actions";
-
-import Edit from "@material-ui/icons/Edit";
-import Save from "@material-ui/icons/Save";
-import Remove from "@material-ui/icons/Delete";
 import { updateCategory as updateCategoryAction } from "../../Actions/category.actions";
 import { AddCategoryDialog } from "../../Components/Editor/categories";
 import { changeHeaderHeading } from "../../Actions/navigationActions";

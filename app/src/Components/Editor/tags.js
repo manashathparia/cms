@@ -57,7 +57,6 @@ const Tags = (props) => {
 			</div>
 			<div className={classes.inputDiv}>
 				<Input
-					//autoComplete={['hello']}
 					onKeyPress={handleKeyPress}
 					value={tagValue}
 					onChange={handleTagChange}

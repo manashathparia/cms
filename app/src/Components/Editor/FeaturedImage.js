@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { updateEditorFeaturedImage } from "../../Actions/editor.actions";
 import { ImageInserter } from "../ImageSelector";
 
-function FeaturedImage({ featuredImage, updateToEditor }) {
+function FeaturedImage(props) {
 	const AddIcon = (
 		<Add
 			style={{
@@ -22,26 +22,24 @@ function FeaturedImage({ featuredImage, updateToEditor }) {
 	const [showImageInserter, toggleImageInserter] = useState(false);
 
 	useEffect(() => {
-		if (featuredImage.url) {
+		if (props.featuredImage.url) {
 			const Img = (
 				<img
 					width="100%"
 					height="100%"
-					alt={featuredImage.altText}
-					src={featuredImage.url}
+					alt={props.featuredImage.altText}
+					src={props.featuredImage.url}
 				/>
 			);
 			updateImage(Img);
-		} else {
-			updateImage(AddIcon);
 		}
-	}, [AddIcon, featuredImage]);
+	}, [props.featuredImage]);
 
 	const handleImageInsert = (img) => {
 		updateImage(
 			<img width="100%" height="100%" alt={img.alt_text} src={`/${img.path}`} />
 		);
-		updateToEditor({
+		props.updateToEditor({
 			url: `/${img.path}`,
 			altText: img.alt_text,
 		});

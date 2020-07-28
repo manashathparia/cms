@@ -67,7 +67,7 @@ router
 		try {
 			const { slug } = req.body;
 			if (slug) {
-				// Search is there is existing post with the given slug. if exists then modify the slug, else save it.
+				// Search if there is existing post with the given slug. if exists then modify the slug, else save it.
 				const postsWithSlug = await Post.find({ slug });
 
 				if (postsWithSlug.length === 0) {

@@ -39,9 +39,7 @@ export default function editorReducer(state = initialState, { type, payload }) {
 			return { ...state, tags: [...state.tags, payload] };
 
 		case REMOVE_EDITOR_TAG:
-			const indexOfTag = state.tags.indexOf(payload);
-			const newTags = [...state.tags];
-			newTags.splice(indexOfTag, 1);
+			const newTags = state.tags.filter((tag) => tag !== payload);
 			return { ...state, tags: newTags };
 
 		case UPDATE_EDITOR_FEATURED_IMAGE:
