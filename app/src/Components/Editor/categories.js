@@ -184,6 +184,15 @@ const Category = ({
 					))}
 				</List>
 			</Collapse>
+			<Collapse className={classes.width} in={!expanded}>
+				<List>
+					{categories.map((category) =>
+						checkedCategories(category._id) ? (
+							<ListItem>{category.category}</ListItem>
+						) : null
+					)}
+				</List>
+			</Collapse>
 			<AddCategoryDialog
 				open={promptState}
 				onClose={handleAddCategoryDialog}
