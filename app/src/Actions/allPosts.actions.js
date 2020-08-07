@@ -67,7 +67,7 @@ export const deletePosts = (ids) => async (dispatch, getState) => {
 	try {
 		await Axios.delete(`/api/posts/?ids=${ids.toString()}`);
 		const {
-			posts: { daat: posts, count },
+			posts: { data: posts, count },
 		} = await getState();
 		dispatch(
 			newNotification({
