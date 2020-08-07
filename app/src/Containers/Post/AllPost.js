@@ -35,7 +35,7 @@ const styles = (theme) => ({
 	},
 	link: {
 		paddingRight: "10px",
-		color: "black",
+		color: "#3f51b5",
 		textDecoration: "none",
 		fontSize: "15px",
 	},
@@ -249,13 +249,16 @@ function AllPosts({
 												(category, i) =>
 													category && (
 														<React.Fragment key={category?._id || i}>
-															<MLink
-																style={{ textDecoration: "none" }}
+															{/* <Link
+																style={{
+																	textDecoration: "none",
+																	color: "#3f51b5",
+																}}
 																key={category._id}
-																href={`category/${category.category}`}
-															>
-																{category.category}
-															</MLink>
+																to={`category/${category.category}`}
+															> */}
+															{category.category}
+															{/* </Link> */}
 															{post.category.length > 1 &&
 															i !== post.category.length - 1
 																? ", "
