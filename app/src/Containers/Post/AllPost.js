@@ -308,8 +308,8 @@ function AllPosts({
 	);
 }
 
-const mapStateToProps = ({ content: { posts }, notification }) => ({
-	posts: posts.posts,
+const mapStateToProps = ({ posts, notification }) => ({
+	posts: posts.data,
 	postsCount: posts.count,
 	loading: notification.loading,
 });

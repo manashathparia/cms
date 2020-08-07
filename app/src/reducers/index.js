@@ -4,7 +4,8 @@ import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
 import navigationReducer from "./navigationReducer";
 import editorReducer from "./editorReducer";
-import contentReducers from "./content";
+import postsReducers from "./postsReducer";
+import categoriesReducers from "./categoriesReducer";
 import notificationReducer from "./notification";
 import mediaReducer from "./media.reducer";
 import userReducer from "./user.reducer";
@@ -15,7 +16,8 @@ export default (history) =>
 		router: connectRouter(history),
 		navigation: navigationReducer,
 		editor: editorReducer,
-		content: contentReducers,
+		posts: postsReducers,
+		categories: categoriesReducers,
 		comments: commentReducer,
 		media: mediaReducer,
 		notification: notificationReducer,

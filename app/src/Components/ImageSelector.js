@@ -8,6 +8,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import Close from "@material-ui/icons/Close";
+import Delete from "@material-ui/icons/Delete";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -73,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
 	inserterDialog: {
 		zIndex: 9999,
 		[theme.breakpoints.down("sm")]: {
-			zIndex: "99999999999999 !important",
+			zIndex: "9999999 !important",
 		},
 	},
 	fileUploadOverlay: {
@@ -180,6 +181,9 @@ const DetailsSidebar = ({ image, button, action }) => {
 			>
 				{button}
 			</Button>
+			<IconButton disabled={!image.path} style={{ float: "right" }}>
+				<Delete />
+			</IconButton>
 		</React.Fragment>
 	);
 };
@@ -290,7 +294,7 @@ function ImageSelector({ images, loadImages, uploadImage, updateImageData }) {
 					style={{ marginLeft: 10 }}
 				/>
 			</div>
-			<GridList cellHeight={160} cols={5}>
+			<GridList cellHeight={160} cols={images.length < 5 ? images.length : 5}>
 				{uploading ? (
 					<GridListTile>
 						<div style={{ padding: 10 }}>

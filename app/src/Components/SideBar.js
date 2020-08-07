@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 		bottom: 0,
 		width: "100%",
 		padding: 5,
+		display: "none",
 	},
 }));
 

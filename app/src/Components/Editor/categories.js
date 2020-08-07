@@ -194,7 +194,7 @@ const Category = ({
 };
 
 const mapStateToProps = (state) => ({
-	categories: state.content.categories,
+	categories: state.categories.data,
 	editorCategories: state.editor.category,
 });
 const mapDispatchToProps = (dispatch) => ({

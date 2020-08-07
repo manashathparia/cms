@@ -7,6 +7,7 @@ import { clearNotification } from "../Actions/notification.actions";
 function Notification({ varient, message, show, onClose, autoHide }) {
 	return (
 		<Snackbar
+			style={{ zIndex: 9999999999 }}
 			anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
 			open={show}
 			autoHideDuration={autoHide ? 6000 : null}

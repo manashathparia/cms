@@ -4,10 +4,10 @@ import {
 	UPDATE_DRAFT_POSTS,
 	UPDATE_TRASHED_POSTS,
 	UPDATE_PUBLISHED_AND_DRAFT_POSTS,
-} from "../../Actions/allPosts.actions";
+} from "../Actions/allPosts.actions";
 
 const initalState = {
-	posts: {
+	data: {
 		published: {
 			0: [],
 		},
@@ -25,10 +25,10 @@ export default function postReducer(state = initalState, { type, payload }) {
 		case UPDATE_PUBLISHED_POSTS:
 			return {
 				...state,
-				posts: {
-					...state.posts,
+				data: {
+					...state.data,
 					published: {
-						...state.posts.published,
+						...state.data.published,
 						[payload.page]: payload.posts,
 					},
 				},
@@ -37,10 +37,10 @@ export default function postReducer(state = initalState, { type, payload }) {
 		case UPDATE_DRAFT_POSTS:
 			return {
 				...state,
-				posts: {
-					...state.posts,
+				data: {
+					...state.data,
 					draft: {
-						...state.posts.draft,
+						...state.data.draft,
 						[payload.page]: payload.posts,
 					},
 				},
@@ -49,10 +49,10 @@ export default function postReducer(state = initalState, { type, payload }) {
 		case UPDATE_TRASHED_POSTS:
 			return {
 				...state,
-				posts: {
-					...state.posts,
+				data: {
+					...state.data,
 					trashed: {
-						...state.posts.trashed,
+						...state.data.trashed,
 						[payload.page]: payload.posts,
 					},
 				},
@@ -61,10 +61,10 @@ export default function postReducer(state = initalState, { type, payload }) {
 		case UPDATE_PUBLISHED_AND_DRAFT_POSTS:
 			return {
 				...state,
-				posts: {
-					...state.posts,
+				data: {
+					...state.data,
 					"published,draft": {
-						...state.posts["published,draft"],
+						...state.data["published,draft"],
 						[payload.page]: payload.posts,
 					},
 				},

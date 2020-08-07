@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import InputLabel from "@material-ui/core/InputLabel";
-import Add from "@material-ui/icons/Add";
+import Add from "@material-ui/icons/AddPhotoAlternate";
 import { connect } from "react-redux";
 import { updateEditorFeaturedImage } from "../../Actions/editor.actions";
 import { ImageInserter } from "../ImageSelector";

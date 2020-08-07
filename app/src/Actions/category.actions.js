@@ -46,7 +46,7 @@ export const updateCategory = (id, category) => async (dispatch, state) => {
 		await axios.put(`/api/categories/${id}`, category);
 
 		let {
-			content: { categories },
+			categories: { data: categories },
 		} = await state();
 		const modifiedCategories = categories.map((_category) => {
 			if (_category._id === id) {
@@ -83,13 +83,12 @@ export const deleteCategory = (id) => async (dispatch, state) => {
 		await axios.delete(`/api/categories/${id}`);
 
 		let {
-			content: { categories },
+			categories: { data: categories },
 		} = await state();
 
 		const modifiedCategories = categories.filter(
 			(category) => !(category._id === id)
 		);
-		console.log(modifiedCategories);
 		dispatch({
 			type: UPDATE_ALL_CATEGORIES,
 			payload: modifiedCategories,

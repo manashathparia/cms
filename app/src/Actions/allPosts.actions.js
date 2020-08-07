@@ -37,9 +37,7 @@ export const trashPosts = (ids, status) => async (dispatch, getState) => {
 	try {
 		await Axios.put(`/api/posts/trash/?ids=${ids.toString()}`);
 		const {
-			content: {
-				posts: { posts },
-			},
+			posts: { data: posts },
 		} = await getState();
 		dispatch(
 			newNotification({
@@ -69,9 +67,7 @@ export const deletePosts = (ids) => async (dispatch, getState) => {
 	try {
 		await Axios.delete(`/api/posts/?ids=${ids.toString()}`);
 		const {
-			content: {
-				posts: { posts, count },
-			},
+			posts: { daat: posts, count },
 		} = await getState();
 		dispatch(
 			newNotification({

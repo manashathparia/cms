@@ -158,7 +158,7 @@ function Categories({
 }
 
 export default connect(
-	({ content: { categories } }) => ({ categories }),
+	({ categories: { data: categories } }) => ({ categories }),
 	(dispatch) => ({
 		getCategories() {
 			dispatch(getCategories());

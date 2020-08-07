@@ -48,6 +48,14 @@ export const updateImage = (update) => async (dispatch, getState) => {
 			image._id === update._id ? data : image
 		);
 		dispatch(loadImagesAction(updatedImages));
+		dispatch(
+			newNotification({
+				varient: "Success",
+				autoCloseDuration: 5000,
+				show: true,
+				message: "Image updated sucessfully",
+			})
+		);
 	} catch (e) {
 		console.log(e);
 	}
