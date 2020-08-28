@@ -23,7 +23,6 @@ const styles = makeStyles((theme) => ({
 	root: {
 		display: "flex",
 		flexWrap: "wrap",
-
 		borderRadius: "3px",
 		width: "100%",
 		marginTop: "10px",

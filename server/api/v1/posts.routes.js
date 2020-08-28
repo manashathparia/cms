@@ -104,7 +104,7 @@ router
 			const { ids } = req.query;
 			await Post.updateMany(
 				{ _id: { $in: ids.split(",") } },
-				{ $set: { status: "trash" } },
+				{ $set: { status: "trashed" } },
 				{ multi: true }
 			);
 			res.sendStatus(200);

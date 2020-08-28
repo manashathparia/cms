@@ -7,9 +7,12 @@ import TableRow from "@material-ui/core/TableRow";
 import TablePagination from "@material-ui/core/TablePagination";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Fab from "@material-ui/core/Fab";
 import CheckBox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Comment from "@material-ui/icons/CommentTwoTone";
+import Delete from "@material-ui/icons/Delete";
+import DeleteForever from "@material-ui/icons/DeleteForever";
 import { withStyles } from "@material-ui/core/styles";
 import MLink from "@material-ui/core/Link";
 import {
@@ -49,6 +52,12 @@ const styles = (theme) => ({
 	mdLink: {
 		fontSize: "15px",
 		padding: "5px",
+	},
+	tableContainer: {
+		[theme.breakpoints.down("sm")]: {
+			overflowX: "auto",
+			maxWidth: "100vw",
+		},
 	},
 });
 
@@ -93,15 +102,23 @@ const ActionBar = ({
 					Trash ({count.trashed})
 				</MLink>
 			</div>
-			<Button
-				color="secondary"
-				variant="contained"
-				disabled={!selected.length > 0}
-				style={{ float: "right" }}
-				onClick={handleDelete}
-			>
-				{remove ? "Remove" : "Trash"}
-			</Button>
+			{selected.length > 0 ? (
+				<Fab
+					color="secondary"
+					variant="round"
+					style={{
+						position: "fixed",
+						right: "20px",
+						bottom: "20px",
+						zIndex: 9999,
+						width: "48px",
+						height: "48px",
+					}}
+					onClick={handleDelete}
+				>
+					{remove ? <DeleteForever /> : <Delete />}
+				</Fab>
+			) : null}
 		</div>
 	);
 };
@@ -164,7 +181,7 @@ function AllPosts({
 	};
 
 	const handlePostsTrash = () => {
-		trashPosts(selected, show);
+		trashPosts(selected, page, show);
 		_handleSelect([]);
 		_handleAllSelect(false);
 	};
@@ -206,50 +223,50 @@ function AllPosts({
 					count={postsCount}
 					remove={isTrash}
 				/>
-				<Table>
-					<TableHead className={classes.tableCellHead}>
-						<TableRow>
-							<TableCell padding="checkbox">
-								<CheckBox checked={allSelected} onChange={handleAllSelect} />
-							</TableCell>
-							{tableOptions.map((option) => (
-								<TableCell
-									key={option}
-									style={{ fontSize: "0.875rem" }}
-									className={classes.tableCell}
-								>
-									{option}
-								</TableCell>
-							))}
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{_posts?.map((post, i) => (
-							<TableRow key={post.slug + i}>
+				<div className={classes.tableContainer}>
+					<Table>
+						<TableHead className={classes.tableCellHead}>
+							<TableRow>
 								<TableCell padding="checkbox">
-									<CheckBox
-										checked={selected.includes(post._id)}
-										onChange={() => handleSelect(post._id)}
-									/>
+									<CheckBox checked={allSelected} onChange={handleAllSelect} />
 								</TableCell>
-								<TableCell className={classes.tableCell}>
-									<Link
-										title={`Edit ${post.title}`}
-										className={classes.link}
-										to={"/posts/edit/" + post._id}
+								{tableOptions.map((option) => (
+									<TableCell
+										key={option}
+										style={{ fontSize: "0.875rem" }}
+										className={classes.tableCell}
 									>
-										{post.title}
-									</Link>
-								</TableCell>
+										{option}
+									</TableCell>
+								))}
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{_posts?.map((post, i) => (
+								<TableRow key={post.slug + i}>
+									<TableCell padding="checkbox">
+										<CheckBox
+											checked={selected.includes(post._id)}
+											onChange={() => handleSelect(post._id)}
+										/>
+									</TableCell>
+									<TableCell className={classes.tableCell}>
+										<Link
+											title={`Edit: ${post.title}`}
+											className={classes.link}
+											to={"/posts/edit/" + post._id}
+										>
+											{post.title}
+										</Link>
+									</TableCell>
 
-								<TableCell className={classes.tableCell}>
-									{console.log(post)}
-									{Array.isArray(post.category)
-										? post.category.map(
-												(category, i) =>
-													category && (
-														<React.Fragment key={category?._id || i}>
-															{/* <Link
+									<TableCell className={classes.tableCell}>
+										{Array.isArray(post.category)
+											? post.category.map(
+													(category, i) =>
+														category && (
+															<React.Fragment key={category?._id || i}>
+																{/* <Link
 																style={{
 																	textDecoration: "none",
 																	color: "#3f51b5",
@@ -257,46 +274,50 @@ function AllPosts({
 																key={category._id}
 																to={`category/${category.category}`}
 															> */}
-															{category.category}
-															{/* </Link> */}
-															{post.category.length > 1 &&
-															i !== post.category.length - 1
-																? ", "
-																: ""}
-														</React.Fragment>
-													)
-										  )
-										: null}
-								</TableCell>
-								<TableCell className={classes.tableCell}>
-									{post.status}
-								</TableCell>
-								<TableCell className={classes.tableCell}>
-									{post.author?.username}
-								</TableCell>
-								<TableCell className={classes.tableCell}>
-									{post.comments?.length}
-								</TableCell>
+																{category.category}
+																{/* </Link> */}
+																{post.category.length > 1 &&
+																i !== post.category.length - 1
+																	? ", "
+																	: ""}
+															</React.Fragment>
+														)
+											  )
+											: null}
+									</TableCell>
+									<TableCell className={classes.tableCell}>
+										{post.status}
+									</TableCell>
+									<TableCell className={classes.tableCell}>
+										{post.author?.username}
+									</TableCell>
+									<TableCell className={classes.tableCell}>
+										{post.comments?.length}
+									</TableCell>
 
-								<TableCell className={classes.tableCell}>
-									{post.date?.split(",")[0]}
-								</TableCell>
+									<TableCell className={classes.tableCell}>
+										{post.date?.split(",")[0]}
+									</TableCell>
+								</TableRow>
+							))}
+							<TableRow>
+								{_posts?.length > 0 && (
+									<TablePagination
+										rowsPerPageOptions={[10, 20, 30]}
+										page={page}
+										rowsPerPage={perPage}
+										onChangePage={(e, p) => {
+											_handleSelect([]);
+											changePage(p);
+										}}
+										onChangeRowsPerPage={handleChangeRowsPerPage}
+										count={count}
+									/>
+								)}
 							</TableRow>
-						))}
-						<TableRow>
-							{_posts?.length > 0 && (
-								<TablePagination
-									rowsPerPageOptions={[10, 20, 30]}
-									page={page}
-									rowsPerPage={perPage}
-									onChangePage={(e, p) => changePage(p)}
-									onChangeRowsPerPage={handleChangeRowsPerPage}
-									count={count}
-								/>
-							)}
-						</TableRow>
-					</TableBody>
-				</Table>
+						</TableBody>
+					</Table>
+				</div>
 				{loading ? (
 					<div style={{ padding: "20px", textAlign: "center" }}>
 						<CircularProgress />
@@ -321,8 +342,8 @@ const mapDispatchToProps = (dispatch) => ({
 	getPosts(status, page, perPage) {
 		dispatch(updateAllPosts(status, page, perPage));
 	},
-	trashPosts(ids, status) {
-		dispatch(trashPosts(ids, status));
+	trashPosts(ids, page, status) {
+		dispatch(trashPosts(ids, page, status));
 	},
 	deletePosts(ids) {
 		dispatch(deletePosts(ids));

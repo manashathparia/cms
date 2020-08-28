@@ -33,7 +33,7 @@ export const updateAllPosts = (
 	dispatch(toggleLoader(false));
 };
 
-export const trashPosts = (ids, status) => async (dispatch, getState) => {
+export const trashPosts = (ids, page, status) => async (dispatch, getState) => {
 	try {
 		await Axios.put(`/api/posts/trash/?ids=${ids.toString()}`);
 		const {
@@ -46,13 +46,17 @@ export const trashPosts = (ids, status) => async (dispatch, getState) => {
 				show: true,
 			})
 		);
-		const _posts = posts[status].filter((post) => !ids.includes(post._id));
+		console.log(posts[status]);
+		const _posts = posts[status][page].filter(
+			(post) => !ids.includes(post._id)
+		);
 
 		dispatch({
 			type: `UPDATE_${status.toUpperCase()}_POSTS`,
 			payload: _posts,
 		});
 	} catch (e) {
+		console.error(e);
 		dispatch(
 			newNotification({
 				varient: "error",
