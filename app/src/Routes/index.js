@@ -8,6 +8,7 @@ import MediaPage from "../Containers/MediaPage";
 import Categories from "../Containers/Post/Categories";
 import Comments from "../Containers/Comments";
 import Dashboard from "../Containers/Dashboard";
+import Profile from "../Containers/Profile";
 
 export default function(props) {
 	return (
@@ -19,6 +20,7 @@ export default function(props) {
 			<Route exact path="/media/images" component={MediaPage} />
 			<Route exact path="/posts/categories" component={Categories} />
 			<Route exact path="/comments" component={Comments} />
+			<Route exact path="/profile" component={Profile} />
 			<Route component={Error404} />
 		</Switch>
 	);

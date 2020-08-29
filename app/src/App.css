@@ -4,3 +4,9 @@
 .tags .MuiFormLabel-root {
 	margin-left: 5px;
 }
+
+@media only screen and (max-width: 768px) {
+	.editorContainer {
+		max-width: calc(100vw - 14px) /* 14px padding */;
+	}
+}

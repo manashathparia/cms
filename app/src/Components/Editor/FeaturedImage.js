@@ -9,11 +9,8 @@ function FeaturedImage(props) {
 	const AddIcon = (
 		<Add
 			style={{
-				position: "absolute",
-				top: "35%",
-				bottom: "45%",
 				color: "gray",
-				left: "40%",
+				margin: "auto",
 			}}
 			fontSize="large"
 		/>
@@ -58,6 +55,8 @@ function FeaturedImage(props) {
 						borderRadius: "2px",
 						position: "relative",
 						cursor: "pointer",
+						display: "flex",
+						alignItems: "center",
 					}}
 				>
 					{image}

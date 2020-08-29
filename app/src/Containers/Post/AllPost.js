@@ -56,7 +56,7 @@ const styles = (theme) => ({
 	tableContainer: {
 		[theme.breakpoints.down("sm")]: {
 			overflowX: "auto",
-			maxWidth: "100vw",
+			maxWidth: "calc(100vw - 14px)", // 14px is padding of Paper
 		},
 	},
 });
@@ -115,6 +115,7 @@ const ActionBar = ({
 						height: "48px",
 					}}
 					onClick={handleDelete}
+					title={remove ? "Delete Forever" : "Move to trash"}
 				>
 					{remove ? <DeleteForever /> : <Delete />}
 				</Fab>

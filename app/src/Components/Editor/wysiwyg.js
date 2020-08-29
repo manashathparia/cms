@@ -47,20 +47,22 @@ export default function Wysiwyg({ body, onChange, refs }) {
 				onClick={() => toggleImageSelector(!showImageSelector)}
 			/>
 			<Plugin />
-			<Editor
-				value={body}
-				init={{
-					plugins:
-						"visualblocks imageInserter link image code lists searchreplace wordcount imagetools ",
-					toolbar: options,
-					menubar: false,
-					height: 498,
-					image_advtab: true,
-					init_instance_callback: (e) => (editorRef.current = e),
-					branding: false,
-				}}
-				onEditorChange={onChange}
-			/>
+			<div className="editorContainer">
+				<Editor
+					value={body}
+					init={{
+						plugins:
+							"visualblocks imageInserter link image code lists searchreplace wordcount imagetools ",
+						toolbar: options,
+						menubar: false,
+						height: 498,
+						image_advtab: true,
+						init_instance_callback: (e) => (editorRef.current = e),
+						branding: false,
+					}}
+					onEditorChange={onChange}
+				/>
+			</div>
 		</div>
 	);
 }
