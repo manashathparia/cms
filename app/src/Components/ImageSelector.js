@@ -363,10 +363,13 @@ const Imageinserter = ({
 }) => {
 	const [selectedImage, updateSelectedImage] = useState({});
 	const [uploading, toggleUploading] = useState(false);
+	const [initalLoaded, updateInitalLoad] = useState(false);
 
 	useEffect(() => {
-		if (images.length <= 0) {
+		console.log(images);
+		if (images.length === 0 && !initalLoaded) {
 			loadImages();
+			updateInitalLoad(true);
 		}
 	}, [images, loadImages]);
 
