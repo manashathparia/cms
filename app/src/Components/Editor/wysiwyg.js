@@ -14,6 +14,10 @@ import "tinymce/plugins/lists";
 import "tinymce/plugins/wordcount";
 import Plugin from "./imageInserterPlugin";
 import { ImageInserter } from "../ImageSelector";
+// import "tinymce/skins/content/default/content.css";
+// import "tinymce/skins/ui/oxide/content.min.css";
+// import "tinymce/skins/ui/oxide/skin.min.css";
+// Create a symlink in public/static/js to /app/node_modules/tinymce/skins or use the above imports
 
 const options =
 	"formatselect | bold italic | alignleft aligncenter alignright | numlist bullist | imageInserter table link  | undo redo | code  | searchreplace ";

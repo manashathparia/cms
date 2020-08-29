@@ -8,6 +8,7 @@ const router = express.Router();
 const secret = "this_is_a_secret!_now_get_lost";
 
 router.post("/signup", (req, res) => {
+	console.log(req.body.password);
 	bcrypt.hash(req.body.password, 10, (err, hash) => {
 		if (err) {
 			console.error(err);
@@ -38,7 +39,6 @@ router.post("/signup", (req, res) => {
 
 router.post("/signin", (req, res) => {
 	const rememberTillDeath = req.body.remember;
-	console.log(rememberTillDeath);
 	User.findOne({ email: req.body.email })
 		.exec()
 		.then((user) => {
