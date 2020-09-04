@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const moment = require("moment");
 
 const userSchema = mongoose.Schema({
-	username: { type: String, required: true },
+	username: { type: String, required: true, immutable: true },
 	fullName: { type: String, required: true },
 	email: { type: String, required: true, unique: true },
 	date: { type: String, default: moment().format("L, h:mm:ss a") },

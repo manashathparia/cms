@@ -371,7 +371,7 @@ const Imageinserter = ({
 			loadImages();
 			updateInitalLoad(true);
 		}
-	}, [images, loadImages]);
+	}, [images, initalLoaded, loadImages]);
 
 	const handleClose = () => {
 		onClose();

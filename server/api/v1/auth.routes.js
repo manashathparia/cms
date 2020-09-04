@@ -2,13 +2,51 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../db/models/user.model");
+const isAuthenticated = require("../../middlewares/isAuthenticated");
 
 const router = express.Router();
 
 const secret = "this_is_a_secret!_now_get_lost";
 
+router
+	.route("/user/:id")
+	.get(isAuthenticated, async (req, res) => {
+		try {
+			const user = await (await User.findById(req.params.id)).toObject();
+			delete user.password;
+			res.json(user);
+		} catch (error) {
+			console.err(error);
+			res.status(500).send("Error occured");
+		}
+	})
+	.put(isAuthenticated, async (req, res) => {
+		try {
+			console.log(req.query);
+			if (req.query.reset) {
+				const user = await (await User.findById(req.params.id)).toObject();
+				console.log(req.body);
+				const matched = await bcrypt.compare(
+					req.body.currentPassword,
+					user.password
+				);
+				if (!matched) {
+					res.status(401).send("Incorrect current password");
+				}
+				const newHash = await bcrypt.hash(req.body.newPassword, 10);
+				req.body = { password: newHash };
+			}
+
+			await User.findByIdAndUpdate(req.params.id, req.body);
+			res.send(200);
+		} catch (error) {
+			console.error(error);
+			res.status(500).send("Error occured");
+		}
+	});
+
 router.post("/signup", (req, res) => {
-	console.log(req.body.password);
+	console.log(req.body);
 	bcrypt.hash(req.body.password, 10, (err, hash) => {
 		if (err) {
 			console.error(err);
@@ -17,8 +55,7 @@ router.post("/signup", (req, res) => {
 			});
 		}
 		const user = new User({
-			username: req.body.username,
-			email: req.body.email,
+			...req.body,
 			password: hash,
 		});
 		user
