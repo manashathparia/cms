@@ -4,11 +4,16 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Loading from "@material-ui/core/CircularProgress";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Paper, Button } from "@material-ui/core";
 import axios from "../utils/axios";
 import { connect } from "react-redux";
 import { newNotification } from "../Actions/notification.actions";
+import jwt from "jsonwebtoken";
 
 const useStyles = makeStyles(() => ({
 	TextField: {
@@ -16,6 +21,11 @@ const useStyles = makeStyles(() => ({
 		display: "block",
 		marginBottom: "20px",
 		margin: "auto",
+	},
+	editPassFields: {
+		display: "block",
+		margin: "10px",
+		width: "200px",
 	},
 }));
 
@@ -29,10 +39,21 @@ function Profile({ id, notify }) {
 		password: "",
 	});
 	const [loading, toggleLoading] = useState(false);
+	const [username, updateUsername] = useState(null);
+	const [editPassOpen, toggleEditPass] = useState(false);
+	const [password, updatePassword] = useState({
+		currentPassword: "",
+		newPassword: "",
+		_newPassword: "",
+		error: false,
+	});
 
 	useEffect(() => {
+		const token = localStorage.getItem("token");
+		const decoded = jwt.decode(token);
+		updateUsername(decoded.username);
 		axios
-			.get(`/api/auth/user/${"5f09b842e57d4d0d9dd5036b"}`)
+			.get(`/api/auth/user/${decoded.username}`)
 			.then(({ data }) => updateUserDetails({ ...userDetails, ...data }));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -40,7 +61,7 @@ function Profile({ id, notify }) {
 	const updateUser = () => {
 		toggleLoading(true);
 		axios
-			.put(`/api/auth/user/${"5f09b842e57d4d0d9dd5036b"}`, userDetails)
+			.put(`/api/auth/user/${username}`, userDetails)
 			.then(() => {
 				toggleLoading(false);
 				notify({
@@ -57,6 +78,27 @@ function Profile({ id, notify }) {
 					show: true,
 				});
 			});
+	};
+
+	const updatPassword = async () => {
+		if (password.newPassword !== password._newPassword) {
+			updatePassword({ ...password, error: true });
+			return;
+		}
+		try {
+			await axios.put(`/api/auth/user/${username}/?reset=true`, password);
+			notify({
+				varient: "success",
+				message: "Password updated successfully",
+				show: true,
+			});
+		} catch (error) {
+			notify({
+				varient: "error",
+				message: "Failed to update password",
+				show: true,
+			});
+		}
 	};
 
 	const styles = useStyles();
@@ -76,7 +118,11 @@ function Profile({ id, notify }) {
 						M
 					</Avatar>
 					<Typography variant="subtitle1">Administator</Typography>
-					<Button style={{ marginBottom: "20px" }} variant="outlined">
+					<Button
+						onClick={() => toggleEditPass(!editPassOpen)}
+						style={{ marginBottom: "20px" }}
+						variant="outlined"
+					>
 						Edit Password
 					</Button>
 				</Grid>
@@ -143,6 +189,49 @@ function Profile({ id, notify }) {
 					</Paper>
 				</Grid>
 			</Grid>
+			<Dialog open={editPassOpen} onClose={() => toggleEditPass(!editPassOpen)}>
+				<DialogTitle>Edit Password</DialogTitle>
+				<DialogContent>
+					{password.error ? (
+						<div style={{ textAlign: "center" }}> Password did not matched</div>
+					) : null}
+					<TextField
+						className={styles.editPassFields}
+						label="Current Password"
+						fullWidth
+						type="password"
+						value={password.currentPassword}
+						onChange={(e) =>
+							updatePassword({ ...password, currentPassword: e.target.value })
+						}
+					/>
+					<TextField
+						className={styles.editPassFields}
+						label="New Password"
+						fullWidth
+						type="password"
+						error={password.error}
+						value={password.newPassword}
+						onChange={(e) =>
+							updatePassword({ ...password, newPassword: e.target.value })
+						}
+					/>
+					<TextField
+						className={styles.editPassFields}
+						label="Confirm New Password"
+						fullWidth
+						type="password"
+						error={password.error}
+						value={password._newPassword}
+						onChange={(e) =>
+							updatePassword({ ...password, _newPassword: e.target.value })
+						}
+					/>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={updatPassword}>Update</Button>
+				</DialogActions>
+			</Dialog>
 		</div>
 	);
 }

@@ -9,14 +9,16 @@ const router = express.Router();
 const secret = "this_is_a_secret!_now_get_lost";
 
 router
-	.route("/user/:id")
+	.route("/user/:username")
 	.get(isAuthenticated, async (req, res) => {
 		try {
-			const user = await (await User.findById(req.params.id)).toObject();
+			console.log(req.params);
+			const user = await User.findOne({ username: req.params.username });
+			console.log(user);
 			delete user.password;
 			res.json(user);
 		} catch (error) {
-			console.err(error);
+			console.error(error);
 			res.status(500).send("Error occured");
 		}
 	})
@@ -24,7 +26,9 @@ router
 		try {
 			console.log(req.query);
 			if (req.query.reset) {
-				const user = await (await User.findById(req.params.id)).toObject();
+				const user = await (
+					await User.findOne({ username: req.params.username })
+				).toObject();
 				console.log(req.body);
 				const matched = await bcrypt.compare(
 					req.body.currentPassword,
@@ -32,12 +36,12 @@ router
 				);
 				if (!matched) {
 					res.status(401).send("Incorrect current password");
+					return;
 				}
 				const newHash = await bcrypt.hash(req.body.newPassword, 10);
 				req.body = { password: newHash };
 			}
-
-			await User.findByIdAndUpdate(req.params.id, req.body);
+			await User.findOneAndUpdate({ username: req.params.username }, req.body);
 			res.send(200);
 		} catch (error) {
 			console.error(error);
