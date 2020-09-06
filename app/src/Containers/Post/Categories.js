@@ -9,6 +9,7 @@ import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Edit from "@material-ui/icons/Edit";
 import Save from "@material-ui/icons/Save";
 import Remove from "@material-ui/icons/Delete";
@@ -29,6 +30,7 @@ function Categories({
 	deleteCategory,
 	addCategory,
 	updateHeading,
+	loading,
 }) {
 	const [edit, _handleEdit] = useState("");
 	const [show, handleShow] = useState(false);
@@ -153,12 +155,21 @@ function Categories({
 				onSubmit={handleAddCategory}
 				full={true}
 			/>
+			{loading ? (
+				<div style={{ padding: "20px", textAlign: "center" }}>
+					<CircularProgress />
+				</div>
+			) : categories?.length === 0 ? (
+				<div style={{ padding: "20px", textAlign: "center" }}>
+					<h1>NO CATEGORIES</h1>
+				</div>
+			) : null}
 		</Paper>
 	);
 }
 
 export default connect(
-	({ categories: { data: categories } }) => ({ categories }),
+	({ categories: { data: categories, loading } }) => ({ categories, loading }),
 	(dispatch) => ({
 		getCategories() {
 			dispatch(getCategories());

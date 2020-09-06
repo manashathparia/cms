@@ -1,4 +1,5 @@
 import axios from "../utils/axios";
+import { toggleLoader, newNotification } from "./notification.actions";
 
 export const ADD_NEW_COMMENT = "ADD_NEW_COMMENT";
 export const REMOVE_COMMENT = "REMOVE_COMMENT";
@@ -34,17 +35,26 @@ export const updateCounts = (counts) => ({
 });
 
 export const getComments = (status, page, perPage) => async (dispatch) => {
-	const _status = status
-		.split("And")
-		.join(",")
-		.toLowerCase(); // for approvedAndWaiting
-	const {
-		data: [comments, counts],
-	} = await axios.get(
-		`/api/comments/?status=${_status}&per_page=${perPage}&page=${page}`
-	);
-	dispatch(updateComments(status, comments, page));
-	dispatch(updateCounts(counts));
+	try {
+		const _status = status
+			.split("And")
+			.join(",")
+			.toLowerCase(); // for approvedAndWaiting
+		dispatch(toggleLoader(true));
+		const {
+			data: [comments, counts],
+		} = await axios.get(
+			`/api/comments/?status=${_status}&per_page=${perPage}&page=${page}`
+		);
+		dispatch(toggleLoader(false));
+		dispatch(updateComments(status, comments, page));
+		dispatch(updateCounts(counts));
+	} catch (error) {
+		dispatch(toggleLoader(false));
+		dispatch(
+			newNotification({ varient: "error", message: error.message, show: true })
+		);
+	}
 };
 
 export const updateComment = (id, updated, status, page) => async (

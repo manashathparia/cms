@@ -12,9 +12,7 @@ router
 	.route("/user/:username")
 	.get(isAuthenticated, async (req, res) => {
 		try {
-			console.log(req.params);
 			const user = await User.findOne({ username: req.params.username });
-			console.log(user);
 			delete user.password;
 			res.json(user);
 		} catch (error) {
@@ -24,12 +22,10 @@ router
 	})
 	.put(isAuthenticated, async (req, res) => {
 		try {
-			console.log(req.query);
 			if (req.query.reset) {
 				const user = await (
 					await User.findOne({ username: req.params.username })
 				).toObject();
-				console.log(req.body);
 				const matched = await bcrypt.compare(
 					req.body.currentPassword,
 					user.password
@@ -50,7 +46,6 @@ router
 	});
 
 router.post("/signup", (req, res) => {
-	console.log(req.body);
 	bcrypt.hash(req.body.password, 10, (err, hash) => {
 		if (err) {
 			console.error(err);

@@ -7,6 +7,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import MDLink from "@material-ui/core/Link";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import CheckBox from "@material-ui/core/CheckBox";
 import MLink from "@material-ui/core/Link";
@@ -101,6 +102,7 @@ const Comments = ({
 	trashComment,
 	count,
 	updateHeading,
+	loading,
 }) => {
 	const [edit, _toggleEdit] = useState("");
 	const [author, handleAuthor] = useState("");
@@ -282,13 +284,23 @@ const Comments = ({
 					))}
 				</TableBody>
 			</Table>
+			{loading ? (
+				<div style={{ padding: "20px", textAlign: "center" }}>
+					<CircularProgress />
+				</div>
+			) : _comments?.length === 0 ? (
+				<div style={{ padding: "20px", textAlign: "center" }}>
+					<h1>NO COMMENTS</h1>
+				</div>
+			) : null}
 		</Paper>
 	);
 };
 
-const mapStateToProps = ({ comments: { comments, count } }) => ({
+const mapStateToProps = ({ comments: { comments, count }, notification }) => ({
 	comments,
 	count,
+	loading: notification.loading,
 });
 
 const mapDispatchToProps = (dispatch) => ({

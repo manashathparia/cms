@@ -16,6 +16,7 @@ export const updateUserDetails = ({ username, email, avatar, id }) => ({
 export const verifyLogin = () => async (dispatch) => {
 	try {
 		const token = localStorage.getItem("token");
+		if (!token) throw Error("Token not found");
 		await Axios.get(`/api/auth/verify/${token}`);
 	} catch (e) {
 		localStorage.removeItem("token");

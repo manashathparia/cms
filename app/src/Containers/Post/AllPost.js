@@ -9,7 +9,6 @@ import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Fab from "@material-ui/core/Fab";
 import CheckBox from "@material-ui/core/Checkbox";
-import Button from "@material-ui/core/Button";
 import Comment from "@material-ui/icons/CommentTwoTone";
 import Delete from "@material-ui/icons/Delete";
 import DeleteForever from "@material-ui/icons/DeleteForever";
@@ -267,16 +266,7 @@ function AllPosts({
 													(category, i) =>
 														category && (
 															<React.Fragment key={category?._id || i}>
-																{/* <Link
-																style={{
-																	textDecoration: "none",
-																	color: "#3f51b5",
-																}}
-																key={category._id}
-																to={`category/${category.category}`}
-															> */}
 																{category.category}
-																{/* </Link> */}
 																{post.category.length > 1 &&
 																i !== post.category.length - 1
 																	? ", "
