@@ -23,7 +23,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { changeHeaderHeading } from "../../Actions/navigationActions";
 
-const styles = (theme) => ({
+export const styles = (theme) => ({
 	root: {
 		marginTop: theme.spacing(3),
 		overflowX: "hide",
@@ -60,7 +60,7 @@ const styles = (theme) => ({
 	},
 });
 
-const ActionBar = ({
+export const ActionBar = ({
 	classes,
 	selected,
 	handleDelete,

@@ -7,13 +7,8 @@ import TableRow from "@material-ui/core/TableRow";
 import TablePagination from "@material-ui/core/TablePagination";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Fab from "@material-ui/core/Fab";
 import CheckBox from "@material-ui/core/Checkbox";
-import Comment from "@material-ui/icons/CommentTwoTone";
-import Delete from "@material-ui/icons/Delete";
-import DeleteForever from "@material-ui/icons/DeleteForever";
 import { withStyles } from "@material-ui/core/styles";
-import MLink from "@material-ui/core/Link";
 import {
 	updateAllPosts,
 	deletePosts,
@@ -22,106 +17,7 @@ import {
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { changeHeaderHeading } from "../../Actions/navigationActions";
-
-const styles = (theme) => ({
-	root: {
-		marginTop: theme.spacing(3),
-		overflowX: "hide",
-	},
-	table: {
-		minWidth: 340,
-	},
-	tableCell: {
-		paddingRight: 10,
-		paddingLeft: 10,
-	},
-	link: {
-		paddingRight: "10px",
-		color: "#3f51b5",
-		textDecoration: "none",
-		fontSize: "15px",
-	},
-	tableCellHead: {
-		fontSize: "2em",
-	},
-	actionBar: {
-		width: "100%",
-		padding: 10,
-	},
-	mdLink: {
-		fontSize: "15px",
-		padding: "5px",
-	},
-	tableContainer: {
-		[theme.breakpoints.down("sm")]: {
-			overflowX: "auto",
-			maxWidth: "calc(100vw - 14px)", // 14px is padding of Paper
-		},
-	},
-});
-
-const ActionBar = ({
-	classes,
-	selected,
-	handleDelete,
-	show,
-	handleShow,
-	count,
-	remove,
-}) => {
-	return (
-		<div className={classes.actionBar}>
-			<div>
-				<MLink
-					onClick={() => handleShow("published,draft")}
-					component="button"
-					className={classes.mdLink}
-				>
-					All ({count["published,draft"]})
-				</MLink>
-				<MLink
-					onClick={() => handleShow("published")}
-					component="button"
-					className={classes.mdLink}
-				>
-					Published ({count.published})
-				</MLink>
-				<MLink
-					onClick={() => handleShow("draft")}
-					component="button"
-					className={classes.mdLink}
-				>
-					Draft ({count.draft})
-				</MLink>
-				<MLink
-					onClick={() => handleShow("trashed")}
-					component="button"
-					className={classes.mdLink}
-				>
-					Trash ({count.trashed})
-				</MLink>
-			</div>
-			{selected.length > 0 ? (
-				<Fab
-					color="secondary"
-					variant="round"
-					style={{
-						position: "fixed",
-						right: "20px",
-						bottom: "20px",
-						zIndex: 9999,
-						width: "48px",
-						height: "48px",
-					}}
-					onClick={handleDelete}
-					title={remove ? "Delete Forever" : "Move to trash"}
-				>
-					{remove ? <DeleteForever /> : <Delete />}
-				</Fab>
-			) : null}
-		</div>
-	);
-};
+import { ActionBar, styles } from "../Post/AllPost";
 
 function AllPages({
 	getPosts,
