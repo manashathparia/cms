@@ -187,7 +187,7 @@ const Category = ({
 				<List>
 					{categories.map((category) =>
 						checkedCategories(category._id) ? (
-							<ListItem>{category.category}</ListItem>
+							<ListItem key={category._id}>{category.category}</ListItem>
 						) : null
 					)}
 				</List>

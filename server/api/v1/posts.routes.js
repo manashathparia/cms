@@ -5,11 +5,11 @@ const isAuthenticated = require("../../middlewares/isAuthenticated");
 const Post = mongoose.model("Post");
 const router = express.Router();
 
-async function getCount(authenticated) {
+async function getCount(authenticated, type) {
 	if (!authenticated) return undefined;
-	const published = await Post.countDocuments({ status: "published" });
-	const draft = await Post.countDocuments({ status: "draft" });
-	const trashed = await Post.countDocuments({ status: "trashed" });
+	const published = await Post.countDocuments({ status: "published", type });
+	const draft = await Post.countDocuments({ status: "draft", type });
+	const trashed = await Post.countDocuments({ status: "trashed", type });
 	return {
 		published,
 		draft,
@@ -28,14 +28,15 @@ router
 			page = 0,
 			filter = "",
 			status = "published",
+			type, //post or page
 		} = req.query;
 		const authenticated = isAuthenticated(req, res, next, false);
 		const _status = authenticated ? status.split(",") : ["published"];
 		const _filter = filter.split(",").join(" ");
 
 		try {
-			const count = await getCount(authenticated);
-			const query = JSON.parse(JSON.stringify({ status: _status, slug })); //get rid of undefied fields
+			const query = JSON.parse(JSON.stringify({ status: _status, slug, type })); //get rid of undefied fields
+			const count = await getCount(authenticated, query.type);
 			if (id) {
 				const _post = await Post.findById(id)
 					.skip(Number(page) * Number(per_page))
@@ -47,7 +48,7 @@ router
 					.exec();
 				res.json(_post);
 			} else {
-				let _posts = await Post.find(query)
+				let _posts = await Post.find({ ...query })
 					.skip(Number(page) * Number(per_page))
 					.limit(Number(per_page))
 					.select(_filter)

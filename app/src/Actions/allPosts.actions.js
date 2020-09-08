@@ -10,11 +10,12 @@ export const UPDATE_PUBLISHED_AND_DRAFT_POSTS = "UPDATE_PUBLISHED,DRAFT_POSTS";
 export const updateAllPosts = (
 	status = "published,draft",
 	page,
-	perPage
+	perPage,
+	type
 ) => async (dispatch) => {
 	dispatch(toggleLoader(true));
 	const res = await Axios.get(
-		`/api/posts/?embed=true&status=${status}&page=${page}&per_page=${perPage}`
+		`/api/posts/?embed=true&status=${status}&page=${page}&per_page=${perPage}&type=${type}`
 	);
 	dispatch({
 		type: `UPDATE_${status.toUpperCase()}_POSTS`,
@@ -27,7 +28,7 @@ export const updateAllPosts = (
 		type: UPDATE_POSTS_COUNT,
 		payload: {
 			...res.data.count,
-			"published,draft": res.data.count.published + res.data.count.draft,
+			"published,draft": res.data.count?.published + res.data.count?.draft,
 		},
 	});
 	dispatch(toggleLoader(false));

@@ -5,10 +5,13 @@ import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import Dashboard from "@material-ui/icons/Dashboard";
 import Description from "@material-ui/icons/Description";
+import InsertDriveFile from "@material-ui/icons/InsertDriveFile";
 import Comment from "@material-ui/icons/Comment";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import Image from "@material-ui/icons/Image";
+import People from "@material-ui/icons/People";
+import Collections from "@material-ui/icons/Collections";
+import Settings from "@material-ui/icons/Settings";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Collapse from "@material-ui/core/Collapse";
@@ -81,6 +84,7 @@ const menuItems = [
 			},
 		],
 	},
+
 	{
 		name: "Comments",
 		icon: Comment,
@@ -88,9 +92,33 @@ const menuItems = [
 		count: "comments",
 	},
 	{
+		name: "Pages",
+		icon: InsertDriveFile,
+		child: [
+			{
+				name: "New Page",
+				to: "/pages/new",
+			},
+			{
+				name: "All Pages",
+				to: "/pages/all",
+			},
+		],
+	},
+	{
 		name: "Media",
-		icon: Image,
+		icon: Collections,
 		to: "/media/images",
+	},
+	{
+		name: "Users",
+		icon: People,
+		to: "/users",
+	},
+	{
+		name: "Settings",
+		icon: Settings,
+		to: "/settings",
 	},
 ];
 

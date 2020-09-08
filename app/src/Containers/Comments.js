@@ -6,11 +6,13 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
+import Fab from "@material-ui/core/Fab";
 import MDLink from "@material-ui/core/Link";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Button from "@material-ui/core/Button";
 import CheckBox from "@material-ui/core/CheckBox";
 import MLink from "@material-ui/core/Link";
+import Delete from "@material-ui/icons/Delete";
+import DeleteForever from "@material-ui/icons/DeleteForever";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { connect } from "react-redux";
 import {
@@ -82,15 +84,24 @@ const ActionBar = ({
 				</MLink>
 			</div>
 
-			<Button
-				color="secondary"
-				variant="contained"
-				disabled={!selected.length > 0}
-				style={{ float: "right" }}
-				onClick={console.log}
-			>
-				{remove ? "Remove" : "Trash"}
-			</Button>
+			{selected.length > 0 ? (
+				<Fab
+					color="secondary"
+					variant="round"
+					style={{
+						position: "fixed",
+						right: "20px",
+						bottom: "20px",
+						zIndex: 9999,
+						width: "48px",
+						height: "48px",
+					}}
+					onClick={handleDelete}
+					title={remove ? "Delete Forever" : "Move to trash"}
+				>
+					{remove ? <DeleteForever /> : <Delete />}
+				</Fab>
+			) : null}
 		</div>
 	);
 };
@@ -192,7 +203,11 @@ const Comments = ({
 				<TableHead>
 					<TableRow>
 						<TableCell padding="checkbox">
-							<CheckBox checked={allSelected} onChange={handleAllSelect} />
+							<CheckBox
+								disabled={_comments.length < 1}
+								checked={allSelected}
+								onChange={handleAllSelect}
+							/>
 						</TableCell>
 						{tableHead.map((c) => (
 							<TableCell key={c}>{c}</TableCell>

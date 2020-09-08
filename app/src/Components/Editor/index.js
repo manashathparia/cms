@@ -25,7 +25,7 @@ const capitalize = (s) => {
 	return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
-function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
+function Editor({ edit, initilizeEditor, clearEditorOnExit, page, ...props }) {
 	const editorRef = useRef();
 
 	const postID = props.path.split("/")[3];
@@ -82,8 +82,13 @@ function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
 				</Grid>
 				<Grid style={{ padding: "10px", paddingTop: 0 }} item xs={12} sm={2}>
 					<FeaturedImage />
-					<Categories />
-					<Tags />
+					{!page ? (
+						<>
+							<Categories />
+							<Tags />
+						</>
+					) : null}
+
 					<br />
 					<div>
 						<Select
@@ -101,7 +106,9 @@ function Editor({ edit, initilizeEditor, clearEditorOnExit, ...props }) {
 					<Button
 						variant="outlined"
 						disabled={submitDisabled}
-						onClick={() => props.handleSubmit(...submitUrl)}
+						onClick={() =>
+							props.handleSubmit(...submitUrl, page ? "page" : "post")
+						}
 					>
 						Save
 					</Button>

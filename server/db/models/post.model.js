@@ -37,7 +37,6 @@ const PostSchema = new mongoose.Schema({
 	type: {
 		type: String,
 		enum: ["post", "page"],
-		default: "post",
 		required: true,
 	},
 });
@@ -53,7 +52,7 @@ PostSchema.pre("updateOne", function(next) {
 
 PostSchema.pre("save", function(next) {
 	this.excerpt = getExcerpt(this.body);
-	if (this.category.length <= 0) {
+	if (this.category.length <= 0 && this.type === "post") {
 		mongoose
 			.model("Category")
 			.find({ category: "Uncategorised" })

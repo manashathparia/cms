@@ -9,6 +9,9 @@ import Categories from "../Containers/Post/Categories";
 import Comments from "../Containers/Comments";
 import Dashboard from "../Containers/Dashboard";
 import Profile from "../Containers/Profile";
+import NewPage from "../Containers/Page/NewPage";
+import AllPages from "../Containers/Page/AllPages";
+import EditPage from "../Containers/Page/EditPage";
 
 export default function(props) {
 	return (
@@ -17,6 +20,9 @@ export default function(props) {
 			<Route exact path="/posts/new" component={NewPost} />
 			<Route exact path="/posts/all" component={AllPost} />
 			<Route exact path="/posts/edit/:id" component={EditPost} />
+			<Route exact path="/pages/new" component={NewPage} />
+			<Route exact path="/pages/all" component={AllPages} />
+			<Route exact path="/pages/edit/:id" component={EditPage} />
 			<Route exact path="/media/images" component={MediaPage} />
 			<Route exact path="/posts/categories" component={Categories} />
 			<Route exact path="/comments" component={Comments} />

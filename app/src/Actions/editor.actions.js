@@ -57,7 +57,7 @@ export const clearEditor = () => ({
 	type: CLEAR_EDITOR,
 });
 
-export function submitPost(url, method) {
+export function submitPost(url, method, type) {
 	return async function submitPostThunk(dispatch, getState) {
 		try {
 			const state = getState();
@@ -67,7 +67,7 @@ export function submitPost(url, method) {
 			} = state;
 			const { data } = await axios({
 				url,
-				data: { ...editor, author: authorID },
+				data: { ...editor, author: authorID, type: type || "post" },
 				method,
 			});
 			dispatch(
@@ -77,7 +77,7 @@ export function submitPost(url, method) {
 					show: true,
 				})
 			);
-			dispatch(push(`/posts/edit/${data._id}`));
+			dispatch(push(`/${type}s/edit/${data._id}`));
 		} catch (e) {
 			dispatch(
 				newNotification({

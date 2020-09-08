@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
 	root: {
 		display: "flex",
 		flexWrap: "wrap",
-		justifyContent: "space-around",
 		overflow: "hidden",
 		backgroundColor: theme.palette.background.paper,
 	},
@@ -37,10 +36,12 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 	header: {
-		position: "relative",
+		position: "sticky",
 		height: "50px",
+		top: 0,
 		background: "white",
 		paddingRight: "0 !important",
+
 		[theme.breakpoints.up("sm")]: { paddingLeft: "20px" },
 	},
 	img: {
@@ -203,7 +204,7 @@ const AttachmentDetails = ({
 			onClose={handleDialogClose}
 			open={open}
 		>
-			<div>
+			<div style={{ position: "sticky", top: 0, zIndex: 99999 }}>
 				<AppBar className={classes.header}>
 					<div>
 						<Typography
@@ -294,7 +295,10 @@ function ImageSelector({ images, loadImages, uploadImage, updateImageData }) {
 					style={{ marginLeft: 10 }}
 				/>
 			</div>
-			<GridList cellHeight={160} cols={images.length < 5 ? images.length : 5}>
+			<GridList
+				cellHeight={160}
+				cols={5 || images.length < 5 ? images.length : 5}
+			>
 				{uploading ? (
 					<GridListTile>
 						<div style={{ padding: 10 }}>
@@ -313,7 +317,7 @@ function ImageSelector({ images, loadImages, uploadImage, updateImageData }) {
 					>
 						<img
 							src={`/${tile.thumbnails[0] || tile.path}`}
-							style={{ boxShadow: "0px 0px 20px -5px rgba(0,0,0,0.75)" }}
+							style={{ width: "200px" }}
 							alt={tile.title}
 						/>
 					</GridListTile>
@@ -366,7 +370,6 @@ const Imageinserter = ({
 	const [initalLoaded, updateInitalLoad] = useState(false);
 
 	useEffect(() => {
-		console.log(images);
 		if (images.length === 0 && !initalLoaded) {
 			loadImages();
 			updateInitalLoad(true);

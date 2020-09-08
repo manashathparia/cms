@@ -6,16 +6,16 @@ import { changeHeaderHeading } from "../../Actions/navigationActions";
 
 const LazyEditor = React.lazy(() => import("../../Components/Editor"));
 
-function NewPost({ updateHeading }) {
+function NewPage({ updateHeading }) {
 	useEffect(() => {
-		document.title = "New Post";
-		updateHeading("New Post");
+		document.title = "New Page";
+		updateHeading("New Page");
 	}, [updateHeading]);
 
 	return (
 		<div>
 			<React.Suspense fallback={<div>LOADING...</div>}>
-				<LazyEditor />
+				<LazyEditor page={true} />
 			</React.Suspense>
 		</div>
 	);
@@ -25,4 +25,4 @@ export default connect(null, (dispatch) => ({
 	updateHeading(heading) {
 		dispatch(changeHeaderHeading(heading));
 	},
-}))(NewPost);
+}))(NewPage);

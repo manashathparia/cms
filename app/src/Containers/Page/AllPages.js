@@ -123,7 +123,7 @@ const ActionBar = ({
 	);
 };
 
-function AllPosts({
+function AllPages({
 	getPosts,
 	classes,
 	posts,
@@ -140,12 +140,12 @@ function AllPosts({
 	const [page, changePage] = useState(0);
 
 	useEffect(() => {
-		document.title = "All posts";
-		updateHeading("All Posts");
+		document.title = "All Pages";
+		updateHeading("All Pages");
 	}, [updateHeading]);
 
 	useEffect(() => {
-		getPosts(show, page, perPage, "post");
+		getPosts(show, page, perPage, "page");
 	}, [getPosts, page, perPage, show]);
 
 	const handleSelect = (id) => {
@@ -195,16 +195,9 @@ function AllPosts({
 		changePage(0);
 	};
 
-	const tableOptions = [
-		"Title",
-		"Category",
-		"State",
-		"Author",
-		<Comment style={{ color: "rgba(0, 0, 0, 0.87)" }} />,
-		"Date",
-	];
+	const tableOptions = ["Title", "State", "Author", "Date"];
 
-	const _posts = posts[show][page].filter((post) => post.type === "post");
+	const _posts = posts[show][page].filter((post) => post.type === "page");
 	const count =
 		show === "published,draft"
 			? postsCount.published + postsCount.draft
@@ -258,36 +251,17 @@ function AllPosts({
 										<Link
 											title={`Edit: ${post.title}`}
 											className={classes.link}
-											to={"/posts/edit/" + post._id}
+											to={"/pages/edit/" + post._id}
 										>
 											{post.title}
 										</Link>
 									</TableCell>
 
 									<TableCell className={classes.tableCell}>
-										{Array.isArray(post.category)
-											? post.category.map(
-													(category, i) =>
-														category && (
-															<React.Fragment key={category?._id || i}>
-																{category.category}
-																{post.category.length > 1 &&
-																i !== post.category.length - 1
-																	? ", "
-																	: ""}
-															</React.Fragment>
-														)
-											  )
-											: null}
-									</TableCell>
-									<TableCell className={classes.tableCell}>
 										{post.status}
 									</TableCell>
 									<TableCell className={classes.tableCell}>
 										{post.author?.username}
-									</TableCell>
-									<TableCell className={classes.tableCell}>
-										{post.comments?.length}
 									</TableCell>
 
 									<TableCell className={classes.tableCell}>
@@ -348,9 +322,7 @@ const mapDispatchToProps = (dispatch) => ({
 	},
 });
 
-const AllPostsPageWithStyles = withStyles(styles)(AllPosts);
-
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(AllPostsPageWithStyles);
+)(withStyles(styles)(AllPages));
