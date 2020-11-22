@@ -1,10 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { changeHeaderHeading } from "../../Actions/navigationActions";
-
-//import Editor from "../../Components/Editor";
-
-const LazyEditor = React.lazy(() => import("../../Components/Editor"));
+import Editor from "../../Components/Editor";
 
 function NewPost({ updateHeading }) {
 	useEffect(() => {
@@ -12,13 +9,7 @@ function NewPost({ updateHeading }) {
 		updateHeading("New Post");
 	}, [updateHeading]);
 
-	return (
-		<div>
-			<React.Suspense fallback={<div>LOADING...</div>}>
-				<LazyEditor />
-			</React.Suspense>
-		</div>
-	);
+	return <Editor />;
 }
 
 export default connect(null, (dispatch) => ({

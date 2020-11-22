@@ -100,6 +100,14 @@ function AllPages({
 			: postsCount[show];
 
 	const isTrash = show === "trashed";
+
+	if (_posts?.length <= 0) {
+		return (
+			<div style={{ padding: "20px", textAlign: "center" }}>
+				<h1>NO PAGES</h1>
+			</div>
+		);
+	}
 	return (
 		<div>
 			<Paper className={classes.root}>
@@ -186,10 +194,6 @@ function AllPages({
 				{loading ? (
 					<div style={{ padding: "20px", textAlign: "center" }}>
 						<CircularProgress />
-					</div>
-				) : _posts?.length === 0 ? (
-					<div style={{ padding: "20px", textAlign: "center" }}>
-						<h1>NO POSTS</h1>
 					</div>
 				) : null}
 			</Paper>

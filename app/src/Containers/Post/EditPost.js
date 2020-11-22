@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { changeHeaderHeading } from "../../Actions/navigationActions";
-
-const LazyEditor = React.lazy(() => import("../../Components/Editor"));
+import Editor from "../../Components/Editor";
 
 function EditPost({ updateHeading }) {
 	useEffect(() => {
@@ -10,13 +9,7 @@ function EditPost({ updateHeading }) {
 		updateHeading("Edit Post");
 	}, [updateHeading]);
 
-	return (
-		<div>
-			<React.Suspense fallback={<div>LOADING...</div>}>
-				<LazyEditor edit={true} />
-			</React.Suspense>
-		</div>
-	);
+	return <Editor edit={true} />;
 }
 
 export default connect(null, (dispatch) => ({

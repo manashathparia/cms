@@ -144,6 +144,7 @@ function Profile({ id, notify }) {
 							fullWidth
 							variant="outlined"
 							value={userDetails.username}
+							title="Username cannot be changed"
 							className={styles.TextField}
 							onChange={(e) =>
 								updateUserDetails({ ...userDetails, username: e.target.value })

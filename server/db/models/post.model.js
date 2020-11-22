@@ -17,6 +17,7 @@ const PostSchema = new mongoose.Schema({
 	},
 	author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 	updatedAt: { type: String, default: moment().format("L") },
+	commentsEnabled: { type: Boolean, default: true },
 	body: String,
 	excerpt: String,
 	featuredImage: {
