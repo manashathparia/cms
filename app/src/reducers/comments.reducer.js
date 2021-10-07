@@ -1,7 +1,7 @@
 import {
 	ADD_NEW_COMMENT,
 	REMOVE_COMMENT,
-	UPDATE_COUNT,
+	UPDATE_COMMENTS_COUNT,
 	SET_APPROVED_COMMENTS,
 	SET_APPROVED_AND_WAITING_COMMENTS,
 	SET_WAITING_COMMENTS,
@@ -90,7 +90,7 @@ export default function commentsReducer(state = initial, { type, payload }) {
 				},
 			};
 
-		case UPDATE_COUNT:
+		case UPDATE_COMMENTS_COUNT:
 			return { ...state, count: payload };
 		default:
 			return state;

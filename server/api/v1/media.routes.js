@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const imageThumbnails = require("../../lib/imageThumbnails");
 const isAuthenticated = require("../../middlewares/isAuthenticated");
 
-const Image = mongoose.model("Image");
+const Image = mongoose.model("Media");
 
 router
 	.get("/", async (req, res) => {

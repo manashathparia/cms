@@ -31,7 +31,12 @@ router
 			type, //post or page
 		} = req.query;
 		const authenticated = isAuthenticated(req, res, next, false);
-		const _status = authenticated ? status.split(",") : ["published"];
+		console.log(status);
+		const _status = authenticated
+			? status === "all"
+				? ["published", "draft"]
+				: status.split(",")
+			: ["published"];
 		const _filter = filter.split(",").join(" ");
 
 		try {
@@ -137,3 +142,4 @@ router
 	});
 
 module.exports = router;
+module.exports.getPostsCount = getCount;

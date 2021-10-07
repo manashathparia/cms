@@ -8,7 +8,7 @@ export const SET_APPROVED_AND_WAITING_COMMENTS =
 	"SET_APPROVEDANDWAITING_COMMENTS";
 export const SET_WAITING_COMMENTS = "SET_WAITING_COMMENTS";
 export const SET_TRASHED_COMMENTS = "SET_TRASHED_COMMENTS";
-export const UPDATE_COUNT = "UPDATE_COUNT";
+export const UPDATE_COMMENTS_COUNT = "UPDATE_COMMENTS_COUNT";
 
 export const addNewComment = (comment) => ({
 	type: ADD_NEW_COMMENT,
@@ -27,7 +27,7 @@ export const updateComments = (status, comments, page) => ({
 	},
 });
 export const updateCounts = (counts) => ({
-	type: UPDATE_COUNT,
+	type: UPDATE_COMMENTS_COUNT,
 	payload: {
 		...counts,
 		approvedAndWaiting: counts.approved + counts.waiting,
@@ -46,8 +46,8 @@ export const getComments = (status, page, perPage) => async (dispatch) => {
 		} = await axios.get(
 			`/api/comments/?status=${_status}&per_page=${perPage}&page=${page}`
 		);
-		dispatch(toggleLoader(false));
 		dispatch(updateComments(status, comments, page));
+		dispatch(toggleLoader(false));
 		dispatch(updateCounts(counts));
 	} catch (error) {
 		dispatch(toggleLoader(false));

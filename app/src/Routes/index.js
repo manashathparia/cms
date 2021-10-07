@@ -16,7 +16,11 @@ import EditPage from "../Containers/Page/EditPage";
 export default function(props) {
 	return (
 		<Switch>
-			<Route exact path="/" component={Dashboard} />
+			<Route
+				exact
+				path="/"
+				component={() => <Dashboard counts={props.counts} />}
+			/>
 			<Route exact path="/posts/new" component={NewPost} />
 			<Route exact path="/posts/all" component={AllPost} />
 			<Route exact path="/posts/edit/:id" component={EditPost} />

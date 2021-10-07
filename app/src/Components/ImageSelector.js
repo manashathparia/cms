@@ -335,21 +335,25 @@ function ImageSelector({ images, loadImages, uploadImage, updateImageData }) {
 
 const ImageUploadButton = ({ uploadHandler, style }) => {
 	return (
-		<Button
-			//onClick={() => inputRef.current.click()}
-			style={style}
-			variant="outlined"
-		>
-			<label>
-				<input
-					onChange={uploadHandler}
-					type="file"
-					style={{ display: "none" }}
-					accept="image/*"
-				/>
-				Upload
+		<>
+			<input
+				onChange={uploadHandler}
+				type="file"
+				style={{ display: "none" }}
+				accept="image/*"
+				id="image-upload-btn"
+			/>
+			<label htmlFor="image-upload-btn">
+				<Button
+					//onClick={() => inputRef.current.click()}
+					style={style}
+					variant="outlined"
+					component="span"
+				>
+					Upload
+				</Button>
 			</label>
-		</Button>
+		</>
 	);
 };
 

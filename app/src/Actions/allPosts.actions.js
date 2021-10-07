@@ -5,14 +5,12 @@ export const UPDATE_POSTS_COUNT = "UPDATE_POSTS_COUNT";
 export const UPDATE_PUBLISHED_POSTS = "UPDATE_PUBLISHED_POSTS";
 export const UPDATE_DRAFT_POSTS = "UPDATE_DRAFT_POSTS";
 export const UPDATE_TRASHED_POSTS = "UPDATE_TRASHED_POSTS";
-export const UPDATE_PUBLISHED_AND_DRAFT_POSTS = "UPDATE_PUBLISHED,DRAFT_POSTS";
+export const UPDATE_ALL_POSTS = "UPDATE_ALL_POSTS";
+export const UPDATE_PAGE_COUNT = "UPDATE_PAGE_COUNT";
 
-export const updateAllPosts = (
-	status = "published,draft",
-	page,
-	perPage,
-	type
-) => async (dispatch) => {
+export const updateAllPosts = (status = "all", page, perPage, type) => async (
+	dispatch
+) => {
 	dispatch(toggleLoader(true));
 	const res = await Axios.get(
 		`/api/posts/?embed=true&status=${status}&page=${page}&per_page=${perPage}&type=${type}`
@@ -24,13 +22,24 @@ export const updateAllPosts = (
 			posts: res.data.posts,
 		},
 	});
-	dispatch({
-		type: UPDATE_POSTS_COUNT,
-		payload: {
-			...res.data.count,
-			"published,draft": res.data.count?.published + res.data.count?.draft,
-		},
-	});
+	if (type === "post") {
+		dispatch({
+			type: UPDATE_POSTS_COUNT,
+			payload: {
+				...res.data.count,
+				all: res.data.count?.published + res.data.count?.draft,
+			},
+		});
+	}
+	if (type === "page") {
+		dispatch({
+			type: UPDATE_PAGE_COUNT,
+			payload: {
+				...res.data.count,
+				all: res.data.count?.published + res.data.count?.draft,
+			},
+		});
+	}
 	dispatch(toggleLoader(false));
 };
 

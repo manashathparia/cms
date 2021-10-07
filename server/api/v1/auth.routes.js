@@ -46,6 +46,7 @@ router
 	});
 
 router.post("/signup", (req, res) => {
+	console.log(req.body);
 	bcrypt.hash(req.body.password, 10, (err, hash) => {
 		if (err) {
 			console.error(err);
@@ -74,6 +75,7 @@ router.post("/signup", (req, res) => {
 });
 
 router.post("/signin", (req, res) => {
+	console.log(req.body);
 	const rememberTillDeath = req.body.remember;
 	User.findOne({ email: req.body.email })
 		.exec()

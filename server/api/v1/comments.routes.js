@@ -94,3 +94,4 @@ router
 	});
 
 module.exports = router;
+module.exports.getCommentsCount = getCount;

@@ -22,6 +22,8 @@ import {
 } from "../Actions/comments.acctions";
 import { Link } from "react-router-dom";
 import { changeHeaderHeading } from "../Actions/navigationActions";
+import { TablePagination } from "@material-ui/core";
+import { toggleLoader } from "../Actions/notification.actions";
 // import categories from "../Components/Editor/categories";
 
 const styles = makeStyles((theme) => ({
@@ -50,6 +52,7 @@ const ActionBar = ({
 	handleShow,
 	count,
 	remove,
+	page,
 }) => {
 	return (
 		<div className={classes.actionBar}>
@@ -82,6 +85,9 @@ const ActionBar = ({
 				>
 					Trashed ({count.trashed})
 				</MLink>
+				<span style={{ float: "right", marginRight: 10 }}>
+					Page No: {page + 1}
+				</span>
 			</div>
 
 			{selected.length > 0 ? (
@@ -114,6 +120,7 @@ const Comments = ({
 	count,
 	updateHeading,
 	loading,
+	updateLoading,
 }) => {
 	const [edit, _toggleEdit] = useState("");
 	const [author, handleAuthor] = useState("");
@@ -186,9 +193,131 @@ const Comments = ({
 		_handleSelect([]);
 	};
 
+	const handlePageChange = (e, p) => {
+		updateLoading();
+		_handleSelect([]);
+		setPage(p);
+		getComments(showPage, p, rowsPerPage);
+	};
+
 	const tableHead = ["Author", "Comment", "In Respose To", "Status", "Date"];
 	const _comments = comments[showPage][page];
 	const classes = styles();
+
+	const CommentsTable = () => (
+		<Table>
+			<TableHead>
+				<TableRow>
+					<TableCell padding="checkbox">
+						<CheckBox
+							disabled={_comments.length < 1}
+							checked={allSelected}
+							onChange={handleAllSelect}
+						/>
+					</TableCell>
+					{tableHead.map((c) => (
+						<TableCell key={c}>{c}</TableCell>
+					))}
+				</TableRow>
+			</TableHead>
+			<TableBody>
+				{_comments.map((comment) => (
+					<React.Fragment key={comment._id}>
+						<TableRow
+							style={{
+								background:
+									comment.status === "waiting" ? "gainsboro" : "initial",
+							}}
+						>
+							<TableCell padding="checkbox">
+								<CheckBox
+									onChange={() => handleSelect(comment._id)}
+									checked={selected.includes(comment._id)}
+								/>
+							</TableCell>
+							<TableCell>
+								{edit === comment._id ? (
+									<TextField
+										onChange={(e) => handleAuthor(e.target.value)}
+										value={author}
+									/>
+								) : (
+									comment.authorName
+								)}
+							</TableCell>
+							<TableCell>
+								{edit === comment._id ? (
+									<TextField
+										fullWidth
+										multiline
+										onChange={(e) => handleContent(e.target.value)}
+										value={content}
+									/>
+								) : (
+									comment.content
+								)}
+								<div>
+									<MDLink
+										onClick={() => toggleStatus(comment._id, comment.status)}
+										href="#"
+										className={classes.link}
+									>
+										{comment.status === "approved" ? "Unapprove" : "Approve"}
+									</MDLink>
+									<MDLink
+										onClick={() =>
+											toggleEdit(
+												comment._id,
+												comment.authorName,
+												comment.content
+											)
+										}
+										href="#"
+										className={classes.link}
+									>
+										{edit === comment._id ? "Save" : "Edit"}
+									</MDLink>
+									<MDLink
+										//onClick={() => toggleStatus(comment._id, comment.status)}
+										href="#"
+										className={classes.link}
+									>
+										Reply
+									</MDLink>
+									<MDLink
+										onClick={() => trashComment(comment._id)}
+										href="#"
+										className={classes.link}
+									>
+										Trash
+									</MDLink>
+								</div>
+							</TableCell>
+							<TableCell>
+								<Link to={`/posts/edit/${comment.responseTo._id}`}>
+									{comment.responseTo?.title}
+								</Link>
+							</TableCell>
+							<TableCell>{comment.status}</TableCell>
+							<TableCell>{comment.date.split("T")[0]}</TableCell>
+						</TableRow>
+					</React.Fragment>
+				))}
+				<TableRow>
+					{_comments?.length > 0 && (
+						<TablePagination
+							rowsPerPageOptions={[10, 20, 30]}
+							page={page}
+							rowsPerPage={rowsPerPage}
+							onChangePage={handlePageChange}
+							onChangeRowsPerPage={() => {}}
+							count={count.approvedAndWaiting}
+						/>
+					)}
+				</TableRow>
+			</TableBody>
+		</Table>
+	);
 	return (
 		<Paper>
 			<ActionBar
@@ -198,107 +327,9 @@ const Comments = ({
 				classes={classes}
 				selected={selected}
 				handleDelete={() => trashComments(selected)}
+				page={page}
 			/>
-			<Table>
-				<TableHead>
-					<TableRow>
-						<TableCell padding="checkbox">
-							<CheckBox
-								disabled={_comments.length < 1}
-								checked={allSelected}
-								onChange={handleAllSelect}
-							/>
-						</TableCell>
-						{tableHead.map((c) => (
-							<TableCell key={c}>{c}</TableCell>
-						))}
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{_comments.map((comment) => (
-						<React.Fragment key={comment._id}>
-							<TableRow
-								style={{
-									background:
-										comment.status === "waiting" ? "gainsboro" : "initial",
-								}}
-							>
-								<TableCell padding="checkbox">
-									<CheckBox
-										onChange={() => handleSelect(comment._id)}
-										checked={selected.includes(comment._id)}
-									/>
-								</TableCell>
-								<TableCell>
-									{edit === comment._id ? (
-										<TextField
-											onChange={(e) => handleAuthor(e.target.value)}
-											value={author}
-										/>
-									) : (
-										comment.authorName
-									)}
-								</TableCell>
-								<TableCell>
-									{edit === comment._id ? (
-										<TextField
-											fullWidth
-											multiline
-											onChange={(e) => handleContent(e.target.value)}
-											value={content}
-										/>
-									) : (
-										comment.content
-									)}
-									<div>
-										<MDLink
-											onClick={() => toggleStatus(comment._id, comment.status)}
-											href="#"
-											className={classes.link}
-										>
-											{comment.status === "approved" ? "Unapprove" : "Approve"}
-										</MDLink>
-										<MDLink
-											onClick={() =>
-												toggleEdit(
-													comment._id,
-													comment.authorName,
-													comment.content
-												)
-											}
-											href="#"
-											className={classes.link}
-										>
-											{edit === comment._id ? "Save" : "Edit"}
-										</MDLink>
-										<MDLink
-											//onClick={() => toggleStatus(comment._id, comment.status)}
-											href="#"
-											className={classes.link}
-										>
-											Reply
-										</MDLink>
-										<MDLink
-											onClick={() => trashComment(comment._id)}
-											href="#"
-											className={classes.link}
-										>
-											Trash
-										</MDLink>
-									</div>
-								</TableCell>
-								<TableCell>
-									<Link to={`/posts/edit/${comment.responseTo._id}`}>
-										{comment.responseTo?.title}
-									</Link>
-								</TableCell>
-								<TableCell>{comment.status}</TableCell>
-								<TableCell>{comment.date.split("T")[0]}</TableCell>
-							</TableRow>
-						</React.Fragment>
-					))}
-				</TableBody>
-			</Table>
+
 			{loading ? (
 				<div style={{ padding: "20px", textAlign: "center" }}>
 					<CircularProgress />
@@ -307,7 +338,9 @@ const Comments = ({
 				<div style={{ padding: "20px", textAlign: "center" }}>
 					<h1>NO COMMENTS</h1>
 				</div>
-			) : null}
+			) : (
+				<CommentsTable />
+			)}
 		</Paper>
 	);
 };
@@ -330,6 +363,9 @@ const mapDispatchToProps = (dispatch) => ({
 	},
 	updateHeading(heading) {
 		dispatch(changeHeaderHeading(heading));
+	},
+	updateLoading() {
+		dispatch(toggleLoader());
 	},
 });
 

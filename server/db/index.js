@@ -9,7 +9,7 @@ require("./models/comments.model");
 
 module.exports.connect = () => {
 	mongoose
-		.connect(`mongodb://localhost/${config.database}`, {
+		.connect(`mongodb://localhost:27017/cms`, {
 			useNewUrlParser: true,
 			useCreateIndex: true,
 		})

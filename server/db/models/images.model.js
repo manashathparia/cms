@@ -15,4 +15,4 @@ const ImageSchema = new mongoose.Schema({
 	date: { type: String, default: moment().format("L") },
 });
 
-mongoose.model("Image", ImageSchema);
+mongoose.model("Media", ImageSchema);

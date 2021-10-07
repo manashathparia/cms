@@ -1,0 +1,14 @@
+<%- include('header'); -%>
+
+<div style="text-align:center; margin-top: 20px; width: 70%; margin:auto">
+    <div>
+        <% posts.forEach(post => { %>
+        <div style="padding: 10px">
+            <a href=<%=post.slug %> class="h1"><%= post.title %></a>
+        </div>
+        <% }) %>
+
+
+    </div>
+</div>
+<%- include('footer'); -%>

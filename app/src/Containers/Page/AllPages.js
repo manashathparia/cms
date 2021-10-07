@@ -31,7 +31,7 @@ function AllPages({
 }) {
 	const [selected, _handleSelect] = useState([]);
 	const [allSelected, _handleAllSelect] = useState(false);
-	const [show, _updateShow] = React.useState("published,draft");
+	const [show, _updateShow] = React.useState("all");
 	const [perPage, setPerPage] = useState(10);
 	const [page, changePage] = useState(0);
 
@@ -95,13 +95,11 @@ function AllPages({
 
 	const _posts = posts[show][page].filter((post) => post.type === "page");
 	const count =
-		show === "published,draft"
-			? postsCount.published + postsCount.draft
-			: postsCount[show];
+		show === "all" ? postsCount.published + postsCount.draft : postsCount[show];
 
 	const isTrash = show === "trashed";
 
-	if (_posts?.length <= 0) {
+	if (!loading && _posts?.length <= 0) {
 		return (
 			<div style={{ padding: "20px", textAlign: "center" }}>
 				<h1>NO PAGES</h1>
@@ -203,7 +201,7 @@ function AllPages({
 
 const mapStateToProps = ({ posts, notification }) => ({
 	posts: posts.data,
-	postsCount: posts.count,
+	postsCount: posts.pageCount,
 	loading: notification.loading,
 });
 
